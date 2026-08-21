@@ -1,0 +1,50 @@
+{
+  "menstrual": {
+    "hydration_liters": 2.5,
+    "micronutrients": ["iron", "vitamin_b12", "vitamin_c"],
+    "meal_templates": [
+      { "meal": "breakfast", "focus": "Iron + gentle fiber", "examples": ["Fortified oats with berries", "Eggs with spinach"] },
+      { "meal": "lunch", "focus": "Lean protein + complex carbs", "examples": ["Lentil soup", "Chicken + quinoa bowl"] },
+      { "meal": "dinner", "focus": "Anti-inflammatory fats", "examples": ["Salmon + sweet potato", "Tofu stir-fry with greens"] }
+    ],
+    "snacks": ["Dark chocolate (70%+)", "Pumpkin seeds", "Citrus fruit"]
+  },
+  "follicular": {
+    "hydration_liters": 2.6,
+    "micronutrients": ["zinc", "folate", "omega_3"],
+    "meal_templates": [
+      { "meal": "breakfast", "focus": "Higher carb tolerance", "examples": ["Greek yogurt + granola", "Wholegrain toast + avocado"] },
+      { "meal": "lunch", "focus": "Balanced plate for progressive training", "examples": ["Turkey wrap + salad", "Chickpea bowl"] },
+      { "meal": "dinner", "focus": "Recovery protein", "examples": ["Grilled fish + rice", "Bean chili"] }
+    ],
+    "snacks": ["Fruit + nuts", "Protein smoothie"]
+  },
+  "ovulatory": {
+    "hydration_liters": 2.7,
+    "micronutrients": ["magnesium", "choline"],
+    "meal_templates": [
+      { "meal": "breakfast", "focus": "Sustained energy", "examples": ["Omelette + oats", "Chia pudding"] },
+      { "meal": "lunch", "focus": "Moderate GI carbs", "examples": ["Sushi bowl", "Pasta + vegetables"] },
+      { "meal": "dinner", "focus": "Lean protein", "examples": ["Steak or tempeh + greens", "Poke bowl"] }
+    ],
+    "snacks": ["Banana + peanut butter", "Electrolyte drink (low sugar)"]
+  },
+  "luteal": {
+    "hydration_liters": 2.8,
+    "micronutrients": ["magnesium", "vitamin_b6", "tryptophan_sources"],
+    "meal_templates": [
+      { "meal": "breakfast", "focus": "Stable glucose", "examples": ["Protein oats", "Cottage cheese + fruit"] },
+      { "meal": "lunch", "focus": "Comfort + fiber", "examples": ["Brown rice bowl", "Soup + wholegrain bread"] },
+      { "meal": "dinner", "focus": "Serotonin-friendly carbs + protein", "examples": ["Turkey + potato", "Salmon + pasta"] }
+    ],
+    "snacks": ["Yogurt + seeds", "Warm herbal tea + wholegrain crackers"]
+  },
+  "unknown": {
+    "hydration_liters": 2.5,
+    "micronutrients": ["balanced_multivitamin_discuss_with_coach"],
+    "meal_templates": [
+      { "meal": "general", "focus": "Balanced plate", "examples": ["Half plate vegetables", "Quarter protein", "Quarter carbs"] }
+    ],
+    "snacks": ["Mixed nuts", "Fruit"]
+  }
+}

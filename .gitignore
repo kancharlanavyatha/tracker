@@ -1,0 +1,12 @@
+backend/.venv/
+backend/.env
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+.env
+.env.local
+*.log
+backend/artifacts/*.joblib

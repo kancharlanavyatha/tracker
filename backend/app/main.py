@@ -1,0 +1,48 @@
+from contextlib import asynccontextmanager
+from pathlib import Path
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.config import settings
+from app.database import Base, engine
+from app.routers import analytics, cycles, dashboard, health, notifications, pipeline, symptoms, users, wearables
+from app.services.scheduler_jobs import shutdown_scheduler, start_scheduler
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Path(settings.artifacts_dir).mkdir(parents=True, exist_ok=True)
+    Base.metadata.create_all(bind=engine)
+    start_scheduler()
+    yield
+    shutdown_scheduler()
+
+
+app = FastAPI(
+    title="Menstrual Health Framework API",
+    version="0.2.0",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+API = "/api/v1"
+app.include_router(health.router, prefix=API)
+app.include_router(users.router, prefix=API)
+app.include_router(cycles.router, prefix=API)
+app.include_router(symptoms.router, prefix=API)
+app.include_router(wearables.router, prefix=API)
+app.include_router(pipeline.router, prefix=API)
+app.include_router(dashboard.router, prefix=API)
+app.include_router(analytics.router, prefix=API)
+app.include_router(notifications.router, prefix=API)
