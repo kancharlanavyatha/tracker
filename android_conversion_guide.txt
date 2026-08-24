@@ -1,0 +1,118 @@
+========================================================================
+             ANDROID CONVERSION & MOBILE INTEGRATION GUIDE
+========================================================================
+
+This guide outlines how to convert this full-stack menstrual health tracker 
+web application into a mobile Android application (.apk). It covers when to 
+do the transition, different integration approaches, and step-by-step guides.
+
+------------------------------------------------------------------------
+1. WHEN TO DO THE CONVERSION
+------------------------------------------------------------------------
+Perform the mobile conversion AFTER:
+  - The software is fully verified (all model training scripts are stable).
+  - The ESP32 wearable hardware integration is tested and successfully 
+    transmitting vitals to the backend over your Wi-Fi network.
+  - The local database schema and recommendations are final.
+
+------------------------------------------------------------------------
+2. APPROACH 1: CLIENT-SERVER ARCHITECTURE (RECOMMENDED)
+------------------------------------------------------------------------
+In this approach, the mobile app serves as a frontend UI, while the machine 
+learning models (LSTM, XGBoost) and the database run on a laptop/server.
+
+Benefits:
+  - Fastest setup (takes ~15 minutes).
+  - No need to rewrite PyTorch/XGBoost prediction code in Java/Kotlin.
+  - Uses your existing, unified FastAPI backend code directly.
+
+STEP-BY-STEP CONVERSION USING CAPACITORJS:
+------------------------------------------
+Capacitor wraps your React production build into a native Android WebView 
+wrapper, generating an Android Studio project from your web files.
+
+Prerequisites:
+  - Install Android Studio on your laptop.
+  - Install the Android SDK and command-line tools via Android Studio.
+
+Step 1: Set up Laptop IP Address (Crucial for Real Phones)
+  - When running on a phone, "localhost" refers to the phone itself, not 
+    your laptop.
+  - Find your laptop's local IP address (open CMD and run 'ipconfig').
+  - Suppose your laptop's IP is 192.168.1.10.
+  - Go to 'frontend/src/api.ts' and change the base API URL to point to 
+    your laptop's IP and port 8000:
+    Change: 'const API = "/api/v1";' 
+    To: 'const API = "http://192.168.1.10:8000/api/v1";'
+  - Re-run 'npm run build' inside the frontend folder.
+
+Step 2: Install Capacitor
+  - Open terminal in your 'frontend/' folder and run:
+    npm install @capacitor/core @capacitor/cli
+
+Step 3: Initialize Capacitor Configuration
+  - In the 'frontend/' folder, run:
+    npx cap init "Menstrual Tracker" "com.fyp.tracker" --web-dir=dist
+
+Step 4: Add Android Support
+  - Install the Android package and add the platform folder:
+    npm install @capacitor/android
+    npx cap add android
+
+Step 5: Copy Build Assets to Android Project
+  - Every time you change React code and build it, sync it to Android:
+    npx cap sync android
+
+Step 6: Build the APK using Android Studio
+  - Open the generated project in Android Studio:
+    npx cap open android
+  - In Android Studio, wait for Gradle sync to complete.
+  - Go to Build -> Build Bundle(s) / APK(s) -> Build APK(s).
+  - Locate the generated 'app-debug.apk' file and install it on your phone!
+
+------------------------------------------------------------------------
+3. APPROACH 2: ON-DEVICE EDGE ML (OFFLINE LOCAL INFERENCE)
+------------------------------------------------------------------------
+In this approach, the machine learning models (LSTM, XGBoost) are loaded 
+and executed directly on the phone's CPU/NPU without any backend server.
+
+Benefits:
+  - 100% offline; works without any internet or local server connection.
+  - Zero latency/network overhead.
+
+STEP-BY-STEP PORTING ARCHITECTURE:
+----------------------------------
+Step 1: Convert PyTorch LSTM to Mobile Format (TorchScript)
+  - In Python, load your trained model checkpoint and trace it:
+    import torch
+    # Import your CycleLSTMClassifier class
+    model = CycleLSTMClassifier()
+    checkpoint = torch.load("artifacts/lstm_phase.pth")
+    model.load_state_dict(checkpoint["model_state_dict"])
+    model.eval()
+    
+    # Trace the model with dummy sequence inputs
+    dummy_seq = torch.rand(1, 3, 2) # (batch, sequence_len, features)
+    dummy_static = torch.rand(1, 2) # (batch, static_features)
+    traced_model = torch.jit.trace(model, (dummy_seq, dummy_static))
+    traced_model.save("lstm_phase_mobile.pt")
+
+Step 2: Convert XGBoost to ONNX
+  - Convert the XGBoost model to ONNX using 'onnxmltools' and 'skl2onnx'.
+  - Save the output as 'intensity_xgb.onnx'.
+
+Step 3: Integrate Models into Android assets/
+  - Create a new Android Studio project (Kotlin/Java).
+  - Paste 'lstm_phase_mobile.pt' and 'intensity_xgb.onnx' into the 
+    'app/src/main/assets/' directory.
+
+Step 4: Load and Run Inference on Android
+  - Add PyTorch Mobile and ONNX Runtime dependencies in 'build.gradle':
+    implementation 'org.pytorch:pytorch_android_lite:2.1.0'
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.16.0'
+  - Write Java/Kotlin code to load the models:
+    // Loading PyTorch mobile model:
+    Module module = LiteModuleLoader.load(assetFilePath(this, "lstm_phase_mobile.pt"));
+  - **Pre-Processing in Kotlin/Java:** You must manually write the 
+    code that structures sequence inputs (historical cycle lengths) and 
+    wearable metrics into Tensors before executing the run function.
