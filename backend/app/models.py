@@ -14,9 +14,7 @@ def utcnow() -> datetime:
 
 
 
-from sqlalchemy import Boolean, ForeignKey, JSON, Date, DateTime, Float, Integer, String, Text
-
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Boolean, ForeignKey, JSON, Date, DateTime, Float, Integer, String, Text, UUID
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

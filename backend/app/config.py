@@ -9,9 +9,7 @@ _BACKEND_ROOT = Path(__file__).resolve().parent.parent
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    database_url: str = (
-        "postgresql+psycopg2://cycleapp:cycleapp@localhost:5432/menstrual_health"
-    )
+    database_url: str = "sqlite:///./menstrual_health.db"
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.2"
     artifacts_dir: Path = Field(default=_BACKEND_ROOT / "artifacts")

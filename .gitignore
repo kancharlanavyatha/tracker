@@ -10,3 +10,6 @@ Thumbs.db
 .env.local
 *.log
 backend/artifacts/*.joblib
+backend/artifacts/*.pth
+backend/menstrual_health.db
+

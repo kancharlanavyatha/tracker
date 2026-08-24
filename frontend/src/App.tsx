@@ -33,6 +33,7 @@ export default function App() {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [dash, setDash] = useState<Dashboard | null>(null);
 
   const [periodStart, setPeriodStart] = useState(() => new Date().toISOString().slice(0, 10));
@@ -40,6 +41,13 @@ export default function App() {
   const [logDate, setLogDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [mood, setMood] = useState("6");
   const [fatigue, setFatigue] = useState("5");
+  const [cramps, setCramps] = useState("1");
+  const [bloating, setBloating] = useState(false);
+  const [headache, setHeadache] = useState(false);
+  const [backache, setBackache] = useState(false);
+  const [discharge, setDischarge] = useState("none");
+  const [water, setWater] = useState("2.0");
+  const [sleep, setSleep] = useState("8.0");
 
   const [chatIn, setChatIn] = useState("What should I prioritize in training this week?");
   const [chatLog, setChatLog] = useState<Array<{ role: "user" | "assistant"; text: string; source?: string }>>([]);
@@ -131,12 +139,15 @@ export default function App() {
     if (!userId) return;
     setBusy(true);
     setErr(null);
+    setSuccessMsg(null);
     try {
       await apiPost("/cycles/", {
         user_id: userId,
         period_start: periodStart,
         flow_intensity: flow ? Number(flow) : null,
       });
+      setSuccessMsg("Cycle entry saved successfully!");
+      setTimeout(() => setSuccessMsg(null), 4000);
       await loadDashboard();
     } catch (e: unknown) {
       setErr(String(e));
@@ -149,14 +160,25 @@ export default function App() {
     if (!userId) return;
     setBusy(true);
     setErr(null);
+    setSuccessMsg(null);
     try {
       await apiPost("/symptom-logs/", {
         user_id: userId,
         log_date: logDate,
         mood: mood ? Number(mood) : null,
         fatigue: fatigue ? Number(fatigue) : null,
-        symptoms: { cramps: false, bloating: false },
+        symptoms: {
+          cramps: Number(cramps),
+          bloating,
+          headache,
+          backache,
+          discharge,
+          water_l: Number(water),
+          sleep_h: Number(sleep),
+        },
       });
+      setSuccessMsg("Symptom log saved successfully!");
+      setTimeout(() => setSuccessMsg(null), 4000);
       await loadDashboard();
     } catch (e: unknown) {
       setErr(String(e));
@@ -169,6 +191,7 @@ export default function App() {
     if (!userId) return;
     setBusy(true);
     setErr(null);
+    setSuccessMsg(null);
     try {
       const now = new Date().toISOString();
       await apiPost("/wearable-sync", {
@@ -185,6 +208,8 @@ export default function App() {
           },
         ],
       });
+      setSuccessMsg("Demo wearable row inserted successfully!");
+      setTimeout(() => setSuccessMsg(null), 4000);
       await loadDashboard();
     } catch (e: unknown) {
       setErr(String(e));
@@ -302,6 +327,7 @@ export default function App() {
             </button>
           </div>
           {err ? <p className="error">{err}</p> : null}
+          {successMsg ? <p className="success">{successMsg}</p> : null}
 
           {tab === "dashboard" ? (
             <div className="grid grid-2">
@@ -507,7 +533,7 @@ export default function App() {
               </div>
               <div className="panel">
                 <h2>Symptom log</h2>
-                <div className="row">
+                <div className="row" style={{ gap: '12px' }}>
                   <label>
                     Date
                     <input type="date" value={logDate} onChange={(e) => setLogDate(e.target.value)} />
@@ -518,15 +544,49 @@ export default function App() {
                   </label>
                   <label>
                     Fatigue 1–10
-                    <input
-                      type="number"
-                      min={1}
-                      max={10}
-                      value={fatigue}
-                      onChange={(e) => setFatigue(e.target.value)}
-                    />
+                    <input type="number" min={1} max={10} value={fatigue} onChange={(e) => setFatigue(e.target.value)} />
                   </label>
-                  <button className="primary" type="button" disabled={busy} onClick={() => void submitSymptom()}>
+                  <label>
+                    Cramps 1–5
+                    <input type="number" min={1} max={5} value={cramps} onChange={(e) => setCramps(e.target.value)} />
+                  </label>
+
+                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center', minWidth: '100%', margin: '4px 0' }}>
+                    <label style={{ flexDirection: 'row', gap: '6px', cursor: 'pointer', alignItems: 'center' }}>
+                      <input type="checkbox" checked={bloating} onChange={(e) => setBloating(e.target.checked)} style={{ minWidth: 'auto', width: '18px', height: '18px' }} />
+                      Bloating
+                    </label>
+                    <label style={{ flexDirection: 'row', gap: '6px', cursor: 'pointer', alignItems: 'center' }}>
+                      <input type="checkbox" checked={headache} onChange={(e) => setHeadache(e.target.checked)} style={{ minWidth: 'auto', width: '18px', height: '18px' }} />
+                      Headache
+                    </label>
+                    <label style={{ flexDirection: 'row', gap: '6px', cursor: 'pointer', alignItems: 'center' }}>
+                      <input type="checkbox" checked={backache} onChange={(e) => setBackache(e.target.checked)} style={{ minWidth: 'auto', width: '18px', height: '18px' }} />
+                      Backache
+                    </label>
+                  </div>
+
+                  <label>
+                    Discharge
+                    <select value={discharge} onChange={(e) => setDischarge(e.target.value)}>
+                      <option value="none">None</option>
+                      <option value="dry">Dry</option>
+                      <option value="sticky">Sticky</option>
+                      <option value="creamy">Creamy</option>
+                      <option value="eggwhite">Eggwhite (Fertile)</option>
+                      <option value="watery">Watery</option>
+                    </select>
+                  </label>
+                  <label>
+                    Water (Liters)
+                    <input type="number" step="0.25" min="0" value={water} onChange={(e) => setWater(e.target.value)} />
+                  </label>
+                  <label>
+                    Sleep (Hours)
+                    <input type="number" step="0.5" min="0" value={sleep} onChange={(e) => setSleep(e.target.value)} />
+                  </label>
+
+                  <button className="primary" type="button" disabled={busy} onClick={() => void submitSymptom()} style={{ minWidth: '100%', marginTop: '8px' }}>
                     Save log
                   </button>
                 </div>

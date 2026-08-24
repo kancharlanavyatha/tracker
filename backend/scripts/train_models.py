@@ -1,10 +1,10 @@
 """
-Train a small gradient boosting regressor on synthetic data (placeholder for XGBoost + real datasets).
+Train an XGBoost regressor on synthetic data (XGBoost + real datasets).
 
 Run from repo root:
-  cd backend && .venv\\Scripts\\python scripts/train_models.py
+  cd backend && .venv\Scripts\python scripts/train_models.py
 
-Produces: backend/artifacts/intensity_gb.joblib
+Produces: backend/artifacts/intensity_xgb.joblib
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import joblib
 import numpy as np
-from sklearn.ensemble import GradientBoostingRegressor
+from xgboost import XGBRegressor
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -41,12 +41,12 @@ def main() -> None:
     y = base[phase_idx] + 0.35 * (X[:, 5] - 42) - 2.0 * np.clip(X[:, 8] - 5, 0, None) + rng.normal(0, 3, size=n)
     y = np.clip(y, 32, 94)
 
-    model = GradientBoostingRegressor(random_state=42, max_depth=3, n_estimators=120, learning_rate=0.08)
+    model = XGBRegressor(random_state=42, max_depth=3, n_estimators=120, learning_rate=0.08)
     model.fit(X, y)
 
     out_dir = ROOT / "artifacts"
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / "intensity_gb.joblib"
+    path = out_dir / "intensity_xgb.joblib"
     joblib.dump({"model": model, "feature_names": names}, path)
     print(f"Wrote {path} with features {names}")
 

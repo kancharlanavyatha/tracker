@@ -24,7 +24,7 @@ _FEATURE_NAMES = [
 
 
 def _artifact_path() -> Path:
-    return settings.artifacts_dir / "intensity_gb.joblib"
+    return settings.artifacts_dir / "intensity_xgb.joblib"
 
 
 def _vectorize(phase: str, features: dict[str, float]) -> np.ndarray:
@@ -56,7 +56,7 @@ def predict_intensity(features: dict[str, float], phase: str) -> tuple[int, str]
         vec = _vectorize(phase, features)
         raw = float(model.predict(vec)[0])
         score = int(round(max(30.0, min(95.0, raw))))
-        return score, "sklearn_gradient_boosting_regressor"
+        return score, "xgboost_regressor"
     except Exception:
         return _rules_fallback(phase, features)
 

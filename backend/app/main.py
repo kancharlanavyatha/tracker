@@ -46,3 +46,10 @@ app.include_router(pipeline.router, prefix=API)
 app.include_router(dashboard.router, prefix=API)
 app.include_router(analytics.router, prefix=API)
 app.include_router(notifications.router, prefix=API)
+
+from fastapi.staticfiles import StaticFiles
+
+static_dir = Path(__file__).resolve().parent / "static"
+if static_dir.exists():
+    app.mount("/", StaticFiles(directory=str(static_dir), html=True), name="static")
+

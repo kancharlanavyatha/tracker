@@ -1,12 +1,13 @@
 :root {
-  color-scheme: light dark;
-  --bg: #0f1115;
-  --panel: #171a21;
-  --border: #262b36;
-  --text: #e8eaef;
-  --muted: #9aa3b2;
-  --accent: #7c6cf0;
-  --accent2: #3dd6c7;
+  color-scheme: dark;
+  --bg: #061812;
+  --panel: #0d2a20;
+  --border: #184234;
+  --text: #f7f4d5;
+  --muted: #a4b8a2;
+  --accent: #d3968c;
+  --accent2: #839958;
+  --accent3: #105666;
   --danger: #f07178;
   --radius: 14px;
   font-family: "DM Sans", system-ui, sans-serif;
@@ -143,8 +144,8 @@ textarea {
 
 button.primary {
   border: none;
-  background: linear-gradient(135deg, var(--accent), #5aa7ff);
-  color: white;
+  background: linear-gradient(135deg, var(--accent), #e2aba2);
+  color: #061812;
   padding: 10px 16px;
   border-radius: 10px;
   cursor: pointer;
@@ -166,11 +167,16 @@ button.ghost {
   font-size: 0.9rem;
 }
 
+.success {
+  color: var(--accent2);
+  font-size: 0.9rem;
+}
+
 .phase-card {
   border-radius: var(--radius);
   padding: 18px;
   border: 1px solid var(--border);
-  background: radial-gradient(1200px 400px at 10% 0%, rgba(124, 108, 240, 0.25), transparent),
+  background: radial-gradient(1200px 400px at 10% 0%, rgba(211, 150, 140, 0.2), transparent),
     var(--panel);
 }
 
