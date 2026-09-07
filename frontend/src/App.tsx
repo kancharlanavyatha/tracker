@@ -178,8 +178,10 @@ export default function App() {
   }, [userId]);
 
   useEffect(() => {
-    if (!userId || tab !== "analytics") return;
-    void loadAnalytics().catch((e: unknown) => setErr(String(e)));
+    if (!userId) return;
+    if (tab === "analytics" || tab === "calendar") {
+      void loadAnalytics().catch((e: unknown) => setErr(String(e)));
+    }
   }, [userId, tab, loadAnalytics]);
 
   const loadNotifications = useCallback(async () => {
@@ -805,7 +807,13 @@ export default function App() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <CycleCalendar
                 phase={phase}
-                recentPeriods={dash?.cycles.map((c) => c.period_start) ?? []}
+                recentPeriods={
+                  cycA?.period_starts && cycA.period_starts.length > 0
+                    ? cycA.period_starts
+                    : dash?.last_cycle
+                    ? [dash.last_cycle.period_start]
+                    : []
+                }
                 onLogForDate={(d) => {
                   setLogDate(d);
                   setPeriodStart(d);
@@ -815,11 +823,11 @@ export default function App() {
               />
               <div className="panel">
                 <h2>Historical Periods Logged</h2>
-                {dash && dash.cycles.length > 0 ? (
+                {cycA?.period_starts && cycA.period_starts.length > 0 ? (
                   <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                    {dash.cycles.map((c) => (
+                    {cycA.period_starts.map((pDate, idx) => (
                       <li
-                        key={c.id}
+                        key={idx}
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -827,13 +835,31 @@ export default function App() {
                           borderBottom: "1px solid var(--border)",
                         }}
                       >
-                        <span>📅 <strong>{c.period_start}</strong></span>
-                        <span className="muted">Flow Intensity: {c.flow_intensity ?? "—"}/5</span>
+                        <span>📅 <strong>{pDate}</strong></span>
+                        <span className="muted">
+                          {cycA.inferred_cycle_lengths?.[idx]
+                            ? `Cycle duration: ~${cycA.inferred_cycle_lengths[idx]}d`
+                            : "Recorded Period"}
+                        </span>
                       </li>
                     ))}
                   </ul>
+                ) : dash?.last_cycle ? (
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                    <li
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "8px 0",
+                        borderBottom: "1px solid var(--border)",
+                      }}
+                    >
+                      <span>📅 <strong>{dash.last_cycle.period_start}</strong></span>
+                      <span className="muted">Flow Intensity: {dash.last_cycle.flow_intensity ?? "—"}/5</span>
+                    </li>
+                  </ul>
                 ) : (
-                  <p className="muted">No cycles logged yet. Use the "Log data" tab to record your period start dates.</p>
+                  <p className="muted">No cycles logged yet. Use the "Daily Log" tab to record your period start dates.</p>
                 )}
               </div>
             </div>
@@ -987,7 +1013,9 @@ export default function App() {
                 </div>
                 <div className="stat-box">
                   <p className="stat-box__label">Cycles Tracked</p>
-                  <div className="stat-box__val" style={{ color: "#3dd6c7" }}>{dash?.cycles.length ?? 4}</div>
+                  <div className="stat-box__val" style={{ color: "#3dd6c7" }}>
+                    {cycA?.period_starts ? cycA.period_starts.length : dash?.last_cycle ? 1 : 0}
+                  </div>
                   <span className="muted" style={{ fontSize: "0.75rem" }}>Historical logs</span>
                 </div>
               </div>
