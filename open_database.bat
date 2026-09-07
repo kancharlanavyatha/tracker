@@ -1,0 +1,3 @@
+@echo off
+echo Opening database in DB Browser for SQLite...
+start "" "C:\Program Files\DB Browser for SQLite\DB Browser for SQLite.exe" "%~dp0backend\menstrual_health.db"
