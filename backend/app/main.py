@@ -12,6 +12,7 @@ from app.routers import (
     cycles,
     dashboard,
     health,
+    journal,
     notifications,
     pipeline,
     storage,
@@ -64,6 +65,7 @@ app.include_router(pipeline.router, prefix=API)
 app.include_router(dashboard.router, prefix=API)
 app.include_router(analytics.router, prefix=API)
 app.include_router(notifications.router, prefix=API)
+app.include_router(journal.router, prefix=API)
 
 from fastapi.staticfiles import StaticFiles
 

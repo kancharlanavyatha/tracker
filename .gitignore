@@ -12,5 +12,6 @@ Thumbs.db
 backend/artifacts/*.joblib
 backend/artifacts/*.pth
 backend/menstrual_health.db
+*.db
 backend/storage/uploads/
 

@@ -79,6 +79,7 @@ class User(Base):
 
     stored_files: Mapped[list["StoredFile"]] = relationship(back_populates="user")
     reminders: Mapped[list["CalendarReminder"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    journal_entries: Mapped[list["JournalEntry"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     app_state: Mapped["UserAppState | None"] = relationship(
 
@@ -277,4 +278,21 @@ class CalendarReminder(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     user: Mapped["User"] = relationship(back_populates="reminders")
+
+
+class JournalEntry(Base):
+    __tablename__ = "journal_entries"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    entry_date: Mapped[str] = mapped_column(String(16), index=True)  # YYYY-MM-DD
+    # Encrypted payload fields (Client-Side AES-GCM-256)
+    encrypted_payload: Mapped[str] = mapped_column(Text)  # Base64 ciphertext of JSON {title, body, mood, images}
+    iv: Mapped[str] = mapped_column(String(64))  # Base64 12-byte IV
+    salt: Mapped[str] = mapped_column(String(64))  # Base64 16-byte PBKDF2 salt
+    tag: Mapped[str | None] = mapped_column(String(64), nullable=True)  # Category or mood tag
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+
+    user: Mapped["User"] = relationship(back_populates="journal_entries")
 

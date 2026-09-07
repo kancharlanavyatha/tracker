@@ -261,3 +261,33 @@ class CustomRecipeOut(BaseModel):
     instructions: list[str]
     nutritional_focus: str
 
+
+class JournalEntryCreate(BaseModel):
+    entry_date: str
+    encrypted_payload: str
+    iv: str
+    salt: str
+    tag: str | None = None
+
+
+class JournalEntryUpdate(BaseModel):
+    entry_date: str | None = None
+    encrypted_payload: str
+    iv: str
+    salt: str
+    tag: str | None = None
+
+
+class JournalEntryOut(BaseModel):
+    id: UUID
+    user_id: UUID
+    entry_date: str
+    encrypted_payload: str
+    iv: str
+    salt: str
+    tag: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+

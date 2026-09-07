@@ -47,6 +47,16 @@ export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+export async function apiPut<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${API}${path}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(await parseError(res));
+  return res.json() as Promise<T>;
+}
+
 export async function apiDelete<T>(path: string): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     method: "DELETE",
@@ -202,5 +212,33 @@ export type CustomRecipeOut = {
   ingredients: string[];
   instructions: string[];
   nutritional_focus: string;
+};
+
+export type JournalEntryCreate = {
+  entry_date: string;
+  encrypted_payload: string;
+  iv: string;
+  salt: string;
+  tag?: string;
+};
+
+export type JournalEntryUpdate = {
+  entry_date?: string;
+  encrypted_payload: string;
+  iv: string;
+  salt: string;
+  tag?: string;
+};
+
+export type JournalEntryOut = {
+  id: string;
+  user_id: string;
+  entry_date: string;
+  encrypted_payload: string;
+  iv: string;
+  salt: string;
+  tag?: string | null;
+  created_at: string;
+  updated_at: string;
 };
 

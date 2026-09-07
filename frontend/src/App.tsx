@@ -24,6 +24,7 @@ import { CycleCalendar } from "./components/CycleCalendar";
 import { TarotWidget } from "./components/TarotWidget";
 import { TaskChecklist } from "./components/TaskChecklist";
 import { RecipeModal } from "./components/RecipeModal";
+import { JournalTab } from "./components/JournalTab";
 import {
   ALLERGY_FILTERS,
   CUISINES,
@@ -37,7 +38,7 @@ import type { CustomRecipeOut } from "./api";
 
 const USER_KEY = "mh_user_id";
 
-type Tab = "dashboard" | "calendar" | "plans" | "analytics" | "alerts" | "data" | "chat";
+type Tab = "dashboard" | "calendar" | "plans" | "journal" | "analytics" | "alerts" | "data" | "chat";
 
 function recFromDashboard(lr: Record<string, unknown> | null | undefined): RecommendOut | null {
   if (!lr || typeof lr !== "object") return null;
@@ -632,6 +633,7 @@ export default function App() {
         { id: "dashboard" as const, label: "Cycle Wheel" },
         { id: "calendar" as const, label: "Calendar" },
         { id: "plans" as const, label: "Nutrition & Plans" },
+        { id: "journal" as const, label: "Private Journal" },
         { id: "analytics" as const, label: "Body Analysis" },
         { id: "alerts" as const, label: "Reminders" },
         { id: "data" as const, label: "Daily Log" },
@@ -1660,6 +1662,14 @@ export default function App() {
                 </div>
               </div>
             </div>
+          ) : null}
+
+          {tab === "journal" ? (
+            <JournalTab
+              userId={userId}
+              currentPhase={phase?.phase}
+              onShowToast={showToast}
+            />
           ) : null}
 
           {tab === "analytics" ? (
