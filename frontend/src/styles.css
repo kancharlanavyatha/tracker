@@ -385,3 +385,353 @@ button.ghost {
   margin-bottom: 10px;
 }
 
+/* =========================================================================
+   CLUE APP & ETHEREAL LOTUS / NYMPH DESIGN STYLES
+   ========================================================================= */
+
+.cycle-wheel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: radial-gradient(circle at 50% 30%, rgba(131, 153, 88, 0.12), rgba(6, 24, 18, 0.95)),
+              var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.cycle-wheel-container::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(211, 150, 140, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.wheel-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.wheel-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+
+.wheel-cycle-summary {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.wheel-graphic-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 320px;
+}
+
+.wheel-svg {
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.4));
+}
+
+.wheel-center-content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 180px;
+  height: 180px;
+  pointer-events: none;
+}
+
+.lotus-icon {
+  font-size: 1.8rem;
+  margin-bottom: 2px;
+  animation: floatLotus 4s ease-in-out infinite;
+}
+
+@keyframes floatLotus {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.wheel-phase-title {
+  font-size: 1.15rem;
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.wheel-insight-text {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 6px 0 0;
+  line-height: 1.35;
+  padding: 0 8px;
+}
+
+.wheel-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  width: 100%;
+  max-width: 360px;
+  justify-content: center;
+}
+
+.clue-pill-button {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.clue-pill-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.clue-pill-button.period {
+  background: linear-gradient(135deg, #d3968c, #e2aba2);
+  color: #061812;
+}
+
+.clue-pill-button.symptoms {
+  background: rgba(131, 153, 88, 0.18);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.clue-pill-button.symptoms:hover {
+  background: rgba(131, 153, 88, 0.28);
+}
+
+/* Clue Metric Cards Grid */
+.clue-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.clue-card {
+  border-radius: 20px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.clue-card:hover {
+  border-color: var(--accent2);
+  transform: translateY(-2px);
+}
+
+.clue-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.clue-card__icon {
+  font-size: 1.25rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(247, 244, 213, 0.08);
+}
+
+.clue-card__title {
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  margin: 0;
+}
+
+.clue-card__value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 4px 0;
+  color: var(--text);
+}
+
+.clue-card__subtitle {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.clue-card.highlight {
+  background: linear-gradient(145deg, rgba(16, 86, 102, 0.25), var(--panel));
+  border-color: rgba(16, 86, 102, 0.5);
+}
+
+.clue-card.readiness {
+  background: linear-gradient(145deg, rgba(131, 153, 88, 0.2), var(--panel));
+  border-color: rgba(131, 153, 88, 0.4);
+}
+
+/* Calendar Styling */
+.cycle-calendar-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+.calendar-nav-btn {
+  font-size: 1.3rem;
+  padding: 4px 12px;
+  line-height: 1;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 0.88rem;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.calendar-day.muted-day {
+  color: rgba(164, 184, 162, 0.25);
+  cursor: default;
+}
+
+.calendar-day.current-month-day:hover {
+  background: rgba(247, 244, 213, 0.08);
+}
+
+.calendar-day.today {
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.calendar-day.selected {
+  background: rgba(211, 150, 140, 0.35);
+  border-color: var(--accent);
+}
+
+.calendar-day.period-day {
+  background: rgba(211, 150, 140, 0.25);
+  color: #f7f4d5;
+}
+
+.period-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d3968c;
+  position: absolute;
+  bottom: 4px;
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.legend-indicator.period-indicator { background: #d3968c; }
+.legend-indicator.follicular-indicator { background: #839958; }
+.legend-indicator.fertile-indicator { background: #105666; }
+.legend-indicator.luteal-indicator { background: #0a3323; border: 1px solid #184234; }
+
+.calendar-selected-info {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--accent2);
+}
+

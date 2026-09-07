@@ -17,10 +17,12 @@ import {
 } from "./api";
 import { CycleLengthBars, SymptomSparkline, WearableDailyChart } from "./components/Charts";
 import { PhaseCard } from "./components/PhaseCard";
+import { CycleWheel } from "./components/CycleWheel";
+import { CycleCalendar } from "./components/CycleCalendar";
 
 const USER_KEY = "mh_user_id";
 
-type Tab = "dashboard" | "plans" | "analytics" | "alerts" | "data" | "chat";
+type Tab = "dashboard" | "calendar" | "plans" | "analytics" | "alerts" | "data" | "chat";
 
 function recFromDashboard(lr: Record<string, unknown> | null | undefined): RecommendOut | null {
   if (!lr || typeof lr !== "object") return null;
@@ -332,7 +334,8 @@ export default function App() {
   const headerTabs = useMemo(
     () =>
       [
-        { id: "dashboard" as const, label: "Dashboard" },
+        { id: "dashboard" as const, label: "Cycle Wheel" },
+        { id: "calendar" as const, label: "Calendar" },
         { id: "plans" as const, label: "Plans" },
         { id: "analytics" as const, label: "Analytics" },
         { id: "alerts" as const, label: "Alerts" },
@@ -433,72 +436,161 @@ export default function App() {
           {successMsg ? <p className="success">{successMsg}</p> : null}
 
           {tab === "dashboard" ? (
-            <div className="grid grid-2">
-              {phase ? <PhaseCard phase={phase} /> : <div className="panel muted">Loading phase…</div>}
-              <div className="panel">
-                <h2>Training / recovery</h2>
-                <p className="muted">
-                  Intensity: tree regressor if <code>artifacts/intensity_gb.joblib</code> exists, else rules. Source:{" "}
-                  <strong>{rec?.intensity_source ?? "—"}</strong>
-                </p>
-                <button className="primary" type="button" disabled={busy} onClick={() => void runRecommend()}>
-                  Refresh recommendation
-                </button>
-                {rec ? (
-                  <div className="metrics" style={{ marginTop: 14 }}>
-                    <div className="metric">
-                      Intensity score
-                      <strong>{rec.training_intensity_score}</strong>
-                    </div>
-                    <div className="metric">
-                      Recovery (h)
-                      <strong>{rec.recovery_hours_suggested}</strong>
-                    </div>
-                    <div className="metric">
-                      Hydration (L)
-                      <strong>{rec.hydration_liters}</strong>
-                    </div>
-                    <div className="metric">
-                      Focus
-                      <strong style={{ fontSize: "0.95rem" }}>{rec.focus.replaceAll("_", " ")}</strong>
-                    </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {/* Clue Circular Cycle Wheel */}
+              <CycleWheel
+                phase={phase}
+                onLogPeriodClick={() => setTab("data")}
+                onLogSymptomsClick={() => setTab("data")}
+              />
+
+              {/* Clue-Style Status & Readiness Cards Grid */}
+              <div className="clue-cards-grid">
+                <div className="clue-card highlight">
+                  <div className="clue-card__header">
+                    <span className="clue-card__icon">🌸</span>
+                    <h4 className="clue-card__title">Cycle Status</h4>
                   </div>
-                ) : (
-                  <p className="muted" style={{ marginTop: 12 }}>
-                    No recommendation loaded yet — tap refresh or open Plans.
+                  <div className="clue-card__value">
+                    {phase?.phase ? phase.phase.toUpperCase() : "UNKNOWN"}
+                  </div>
+                  <p className="clue-card__subtitle">
+                    Day {phase?.day_in_cycle ?? 1} of ~{phase?.cycle_length_assumed ?? 28}d
                   </p>
-                )}
-                <p className="muted" style={{ marginTop: 12 }}>
-                  {rec?.model_note}
-                </p>
+                </div>
+
+                <div className="clue-card readiness">
+                  <div className="clue-card__header">
+                    <span className="clue-card__icon">⚡</span>
+                    <h4 className="clue-card__title">Athletic Readiness</h4>
+                  </div>
+                  <div className="clue-card__value">
+                    {rec?.training_intensity_score ?? "75"}/100
+                  </div>
+                  <p className="clue-card__subtitle">
+                    Target: {rec?.focus ? rec.focus.replaceAll("_", " ") : "Dynamic Load"}
+                  </p>
+                </div>
+
+                <div className="clue-card">
+                  <div className="clue-card__header">
+                    <span className="clue-card__icon">💧</span>
+                    <h4 className="clue-card__title">Optimal Hydration</h4>
+                  </div>
+                  <div className="clue-card__value">
+                    {rec?.hydration_liters ?? "2.5"} L
+                  </div>
+                  <p className="clue-card__subtitle">
+                    Suggested Recovery: {rec?.recovery_hours_suggested ?? "24"}h
+                  </p>
+                </div>
+
+                <div className="clue-card">
+                  <div className="clue-card__header">
+                    <span className="clue-card__icon">🧬</span>
+                    <h4 className="clue-card__title">Phase Transition</h4>
+                  </div>
+                  <div className="clue-card__value">
+                    {phase?.irregularity_score !== undefined
+                      ? `CV ${(phase.irregularity_score * 100).toFixed(0)}%`
+                      : "Regular"}
+                  </div>
+                  <p className="clue-card__subtitle">
+                    Inference: {phase?.method === "lstm" ? "Sequential LSTM" : "Median Rule"}
+                  </p>
+                </div>
               </div>
-              <div className="panel" style={{ gridColumn: "1 / -1" }}>
-                <h2>Latest wearable snapshot</h2>
+
+              {/* Training Plan & Macro Focus Snapshot */}
+              <div className="grid grid-2">
+                <div className="panel">
+                  <h2>Training / Recovery Engine</h2>
+                  <p className="muted">
+                    XGBoost regressor trained on HRV, SpO2 & fatigue. Source:{" "}
+                    <strong>{rec?.intensity_source ?? "xgboost_regressor"}</strong>
+                  </p>
+                  <button className="primary" type="button" disabled={busy} onClick={() => void runRecommend()}>
+                    Refresh AI Recommendation
+                  </button>
+                  {rec ? (
+                    <div className="metrics" style={{ marginTop: 14 }}>
+                      <div className="metric">
+                        Intensity cap
+                        <strong>{rec.training_intensity_score}%</strong>
+                      </div>
+                      <div className="metric">
+                        Recovery (h)
+                        <strong>{rec.recovery_hours_suggested}</strong>
+                      </div>
+                      <div className="metric">
+                        Hydration (L)
+                        <strong>{rec.hydration_liters}</strong>
+                      </div>
+                      <div className="metric">
+                        Primary Focus
+                        <strong style={{ fontSize: "0.95rem" }}>{rec.focus.replaceAll("_", " ")}</strong>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="muted" style={{ marginTop: 12 }}>
+                      No recommendation loaded yet — tap refresh or open Plans.
+                    </p>
+                  )}
+                  <p className="muted" style={{ marginTop: 12 }}>
+                    {rec?.model_note}
+                  </p>
+                </div>
+
+                {phase ? <PhaseCard phase={phase} /> : <div className="panel muted">Loading phase…</div>}
+              </div>
+
+              {/* Latest Wearable Signals */}
+              <div className="panel">
+                <h2>Latest Wearable Vitals</h2>
                 {dash?.latest_wearable ? (
                   <pre style={{ margin: 0, overflow: "auto", fontSize: 13 }}>
                     {JSON.stringify(dash.latest_wearable, null, 2)}
                   </pre>
                 ) : (
-                  <p className="muted">No wearable rows yet — use “Log data” or your ESP32 firmware.</p>
+                  <p className="muted">No wearable data logged yet — connect your ESP32 or use "Log data".</p>
                 )}
               </div>
-              {dash && dash.recent_notifications.length > 0 ? (
-                <div className="panel" style={{ gridColumn: "1 / -1" }}>
-                  <h2>Recent alerts</h2>
-                  <ul className="alert-list">
-                    {dash.recent_notifications.map((n) => (
-                      <li key={n.id}>
-                        <strong>{n.title}</strong>
-                        <span className="muted"> · {new Date(n.created_at).toLocaleString()}</span>
-                        {!n.is_read ? <span className="pill">new</span> : null}
-                        <div className="muted" style={{ marginTop: 4 }}>
-                          {n.body}
-                        </div>
+            </div>
+          ) : null}
+
+          {tab === "calendar" ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <CycleCalendar
+                phase={phase}
+                recentPeriods={dash?.cycles.map((c) => c.period_start) ?? []}
+                onSelectDate={(d) => {
+                  setLogDate(d);
+                  setTab("data");
+                }}
+              />
+              <div className="panel">
+                <h2>Historical Periods Logged</h2>
+                {dash && dash.cycles.length > 0 ? (
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                    {dash.cycles.map((c) => (
+                      <li
+                        key={c.id}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          padding: "8px 0",
+                          borderBottom: "1px solid var(--border)",
+                        }}
+                      >
+                        <span>📅 <strong>{c.period_start}</strong></span>
+                        <span className="muted">Flow Intensity: {c.flow_intensity ?? "—"}/5</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-              ) : null}
+                ) : (
+                  <p className="muted">No cycles logged yet. Use the "Log data" tab to record your period start dates.</p>
+                )}
+              </div>
             </div>
           ) : null}
 
