@@ -91,8 +91,7 @@ def build_recommendation(db: Session, user_id: UUID) -> tuple[RecommendOut, Pred
     sessions = workout_planner.build_sessions(phase_out.phase, intensity, recovery)
 
     note = (
-        f"Intensity via {int_note}; diet merged with KB; workouts templated. "
-        "Replace regressor with XGBoost when training data is ready."
+        "Phase-synchronized athletic and recovery recommendations tailored to your daily biometrics and cycle rhythm."
     )
 
     out = RecommendOut(

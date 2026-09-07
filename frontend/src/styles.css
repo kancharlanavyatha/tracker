@@ -735,3 +735,283 @@ button.ghost {
   color: var(--accent2);
 }
 
+/* =========================================================================
+   PUBLIC CLUE-STYLE HEALTH CARDS, VITALS, AND REMINDERS
+   ========================================================================= */
+
+/* Human-Readable Vitals Cards */
+.vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.vital-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.vital-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.vital-card__badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(131, 153, 88, 0.2);
+  color: var(--accent2);
+}
+
+.vital-card__val {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 6px 0 2px;
+}
+
+.vital-card__unit {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.vital-card__desc {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Clue Category Selector Tags */
+.clue-category-group {
+  margin-bottom: 18px;
+}
+
+.clue-category-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.clue-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.clue-tag-btn {
+  background: rgba(247, 244, 213, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: var(--text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.clue-tag-btn:hover {
+  background: rgba(247, 244, 213, 0.1);
+  border-color: var(--accent2);
+}
+
+.clue-tag-btn.active {
+  background: rgba(211, 150, 140, 0.25);
+  border-color: #d3968c;
+  color: #f7f4d5;
+  font-weight: 600;
+}
+
+/* Cycle Stats Banner in Analytics */
+.stats-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  background: linear-gradient(145deg, rgba(16, 86, 102, 0.15), var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-box__val {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 4px 0;
+}
+
+.stat-box__label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+/* Printable / Exportable Doctor Report */
+.doctor-report-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+/* Toggle Switches for Reminders */
+.reminder-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.reminder-item:last-child {
+  border-bottom: none;
+}
+
+.reminder-info h4 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.reminder-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(247, 244, 213, 0.15);
+  transition: .3s;
+  border-radius: 34px;
+  border: 1px solid var(--border);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #839958;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* Recipe & Meal Cards in Plans */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.recipe-card {
+  background: rgba(13, 42, 32, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.recipe-card h4 {
+  margin: 0 0 6px;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.recipe-card__tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(211, 150, 140, 0.2);
+  color: #d3968c;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.recipe-card p {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+/* 1-Tap Assistant Starter Chips */
+.suggestion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chip-btn {
+  background: rgba(247, 244, 213, 0.08);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip-btn:hover {
+  background: rgba(131, 153, 88, 0.25);
+  border-color: var(--accent2);
+}
+
+

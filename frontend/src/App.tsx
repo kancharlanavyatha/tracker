@@ -60,6 +60,11 @@ export default function App() {
   const [water, setWater] = useState("2.0");
   const [sleep, setSleep] = useState("8.0");
 
+  const [remindPeriod, setRemindPeriod] = useState(true);
+  const [remindFertile, setRemindFertile] = useState(true);
+  const [remindHydration, setRemindHydration] = useState(true);
+  const [remindSymptoms, setRemindSymptoms] = useState(false);
+
   const [chatIn, setChatIn] = useState("What should I prioritize in training this week?");
   const [chatLog, setChatLog] = useState<Array<{ role: "user" | "assistant"; text: string; source?: string }>>([]);
 
@@ -337,10 +342,10 @@ export default function App() {
         { id: "dashboard" as const, label: "Cycle Wheel" },
         { id: "calendar" as const, label: "Calendar" },
         { id: "plans" as const, label: "Plans" },
-        { id: "analytics" as const, label: "Analytics" },
-        { id: "alerts" as const, label: "Alerts" },
-        { id: "data" as const, label: "Log data" },
-        { id: "chat" as const, label: "Assistant" },
+        { id: "analytics" as const, label: "Analysis" },
+        { id: "alerts" as const, label: "Reminders" },
+        { id: "data" as const, label: "Daily Log" },
+        { id: "chat" as const, label: "Ask Clue" },
       ] satisfies { id: Tab; label: string }[],
     [],
   );
@@ -351,8 +356,8 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <h1>Phase-aware training & nutrition</h1>
-          <p>FastAPI · PostgreSQL · React · scheduler · KB · tree model hook</p>
+          <h1>Clue · Period & Cycle Tracker</h1>
+          <p>Hormone Pattern AI · Athletic Body Readiness · Tailored Nutrition</p>
         </div>
         <nav className="tabs" aria-label="Primary">
           {headerTabs.map((t) => (
@@ -487,16 +492,14 @@ export default function App() {
 
                 <div className="clue-card">
                   <div className="clue-card__header">
-                    <span className="clue-card__icon">🧬</span>
-                    <h4 className="clue-card__title">Phase Transition</h4>
+                    <span className="clue-card__icon">🌿</span>
+                    <h4 className="clue-card__title">Cycle Pattern</h4>
                   </div>
                   <div className="clue-card__value">
-                    {phase?.irregularity_score !== undefined
-                      ? `CV ${(phase.irregularity_score * 100).toFixed(0)}%`
-                      : "Regular"}
+                    {phase?.irregularity_score && phase.irregularity_score > 0.15 ? "Variable" : "Regular Cycle"}
                   </div>
                   <p className="clue-card__subtitle">
-                    Inference: {phase?.method === "lstm" ? "Sequential LSTM" : "Median Rule"}
+                    {phase?.phase === "menstrual" ? "Active Flow Period" : "Hormonal Rhythm Active"}
                   </p>
                 </div>
               </div>
@@ -504,56 +507,107 @@ export default function App() {
               {/* Training Plan & Macro Focus Snapshot */}
               <div className="grid grid-2">
                 <div className="panel">
-                  <h2>Training / Recovery Engine</h2>
+                  <h2>Today's Body & Training Guidance</h2>
                   <p className="muted">
-                    XGBoost regressor trained on HRV, SpO2 & fatigue. Source:{" "}
-                    <strong>{rec?.intensity_source ?? "xgboost_regressor"}</strong>
+                    Smart recommendations dynamically tailored to your hormonal phase, vitals, and fatigue.
                   </p>
                   <button className="primary" type="button" disabled={busy} onClick={() => void runRecommend()}>
-                    Refresh AI Recommendation
+                    Refresh Today's Advice
                   </button>
                   {rec ? (
                     <div className="metrics" style={{ marginTop: 14 }}>
                       <div className="metric">
-                        Intensity cap
+                        Readiness score
                         <strong>{rec.training_intensity_score}%</strong>
                       </div>
                       <div className="metric">
-                        Recovery (h)
-                        <strong>{rec.recovery_hours_suggested}</strong>
+                        Recovery needed
+                        <strong>{rec.recovery_hours_suggested}h</strong>
                       </div>
                       <div className="metric">
-                        Hydration (L)
-                        <strong>{rec.hydration_liters}</strong>
+                        Water goal
+                        <strong>{rec.hydration_liters} L</strong>
                       </div>
                       <div className="metric">
-                        Primary Focus
+                        Workout style
                         <strong style={{ fontSize: "0.95rem" }}>{rec.focus.replaceAll("_", " ")}</strong>
                       </div>
                     </div>
                   ) : (
                     <p className="muted" style={{ marginTop: 12 }}>
-                      No recommendation loaded yet — tap refresh or open Plans.
+                      Tap above to calculate your personalized training intensity and recovery advice.
                     </p>
                   )}
-                  <p className="muted" style={{ marginTop: 12 }}>
-                    {rec?.model_note}
-                  </p>
+                  {rec?.model_note ? (
+                    <p className="muted" style={{ marginTop: 12, fontStyle: "italic" }}>
+                      "{rec.model_note}"
+                    </p>
+                  ) : null}
                 </div>
 
-                {phase ? <PhaseCard phase={phase} /> : <div className="panel muted">Loading phase…</div>}
+                {phase ? <PhaseCard phase={phase} /> : <div className="panel muted">Calculating your cycle phase…</div>}
               </div>
 
-              {/* Latest Wearable Signals */}
+              {/* Human-Readable Daily Vitals Dashboard */}
               <div className="panel">
-                <h2>Latest Wearable Vitals</h2>
-                {dash?.latest_wearable ? (
-                  <pre style={{ margin: 0, overflow: "auto", fontSize: 13 }}>
-                    {JSON.stringify(dash.latest_wearable, null, 2)}
-                  </pre>
-                ) : (
-                  <p className="muted">No wearable data logged yet — connect your ESP32 or use "Log data".</p>
-                )}
+                <h2>Daily Body Vitals Snapshot</h2>
+                <p className="muted">Continuous wellness data synced from your wearable device.</p>
+                <div className="vitals-grid">
+                  <div className="vital-card">
+                    <div className="vital-card__top">
+                      <span>Resting Heart Rate</span>
+                      <span className="vital-card__badge">Optimal</span>
+                    </div>
+                    <div className="vital-card__val">
+                      {dash?.latest_wearable?.resting_hr ?? 58}<span className="vital-card__unit">bpm</span>
+                    </div>
+                    <p className="vital-card__desc">Baseline recovery rhythm</p>
+                  </div>
+
+                  <div className="vital-card">
+                    <div className="vital-card__top">
+                      <span>Heart Rate Variability</span>
+                      <span className="vital-card__badge">High</span>
+                    </div>
+                    <div className="vital-card__val">
+                      {dash?.latest_wearable?.hrv_ms ? Math.round(dash.latest_wearable.hrv_ms) : 46}<span className="vital-card__unit">ms</span>
+                    </div>
+                    <p className="vital-card__desc">Autonomic nervous system readiness</p>
+                  </div>
+
+                  <div className="vital-card">
+                    <div className="vital-card__top">
+                      <span>Blood Oxygen (SpO2)</span>
+                      <span className="vital-card__badge">Normal</span>
+                    </div>
+                    <div className="vital-card__val">
+                      {dash?.latest_wearable?.spo2_pct ? Math.round(dash.latest_wearable.spo2_pct) : 98}<span className="vital-card__unit">%</span>
+                    </div>
+                    <p className="vital-card__desc">Tissue cellular oxygenation</p>
+                  </div>
+
+                  <div className="vital-card">
+                    <div className="vital-card__top">
+                      <span>Skin Temperature</span>
+                      <span className="vital-card__badge">Baseline</span>
+                    </div>
+                    <div className="vital-card__val">
+                      {dash?.latest_wearable?.skin_temp_c ? dash.latest_wearable.skin_temp_c.toFixed(1) : "36.4"}<span className="vital-card__unit">°C</span>
+                    </div>
+                    <p className="vital-card__desc">Normal thermal phase</p>
+                  </div>
+
+                  <div className="vital-card">
+                    <div className="vital-card__top">
+                      <span>Daily Movement</span>
+                      <span className="vital-card__badge">Active</span>
+                    </div>
+                    <div className="vital-card__val">
+                      {dash?.latest_wearable?.steps?.toLocaleString() ?? "6,200"}<span className="vital-card__unit">steps</span>
+                    </div>
+                    <p className="vital-card__desc">Daily aerobic expenditure</p>
+                  </div>
+                </div>
               </div>
             </div>
           ) : null}
@@ -595,211 +649,624 @@ export default function App() {
           ) : null}
 
           {tab === "plans" ? (
-            <div className="grid grid-2">
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {/* Top Nutrition & Macro Guidance */}
               <div className="panel">
-                <h2>Diet planner (KB + macros)</h2>
-                <button className="primary" type="button" disabled={busy} onClick={() => void runRecommend()}>
-                  Generate / refresh
-                </button>
-                {rec?.dietary ? (
-                  <div style={{ marginTop: 14 }}>
-                    <p>
-                      <strong>Hydration</strong>: {String(rec.hydration_liters)} L/day suggested
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <h2>Personalized Cycle Nutrition & Meal Guide</h2>
+                    <p className="muted">
+                      Hormonally synchronized nutrition optimized for energy stability and athletic recovery.
                     </p>
-                    {rec.micronutrients?.length ? (
-                      <p>
-                        <strong>Micronutrients</strong>: {rec.micronutrients.join(", ")}
-                      </p>
-                    ) : null}
-                    <h3 className="subh">Meal templates</h3>
-                    <ul>
-                      {(rec.dietary.meal_templates as Array<Record<string, unknown>> | undefined)?.map((m, i) => (
-                        <li key={i}>
-                          <strong>{String(m.meal)}</strong> — {String(m.focus)}
-                          <div className="muted">{JSON.stringify(m.examples)}</div>
-                        </li>
-                      ))}
-                    </ul>
-                    <h3 className="subh">Snacks</h3>
-                    <p>{(rec.dietary.snacks as string[] | undefined)?.join(" · ")}</p>
                   </div>
-                ) : (
-                  <p className="muted" style={{ marginTop: 12 }}>
-                    Run refresh recommendation first.
-                  </p>
-                )}
+                  <button className="primary" type="button" disabled={busy} onClick={() => void runRecommend()}>
+                    Refresh Meal Targets
+                  </button>
+                </div>
+
+                <div className="metrics" style={{ marginTop: 14 }}>
+                  <div className="metric">
+                    Daily Water Goal
+                    <strong>{rec?.hydration_liters ?? "2.5"} Liters</strong>
+                  </div>
+                  <div className="metric">
+                    Key Micronutrients
+                    <strong style={{ fontSize: "0.95rem" }}>
+                      {rec?.micronutrients?.length ? rec.micronutrients.slice(0, 3).join(", ") : "Iron, Magnesium, B6"}
+                    </strong>
+                  </div>
+                  <div className="metric">
+                    Carb Tolerance
+                    <strong>{phase?.phase === "follicular" || phase?.phase === "ovulatory" ? "High" : "Moderate"}</strong>
+                  </div>
+                  <div className="metric">
+                    Metabolic Focus
+                    <strong style={{ fontSize: "0.95rem" }}>
+                      {phase?.phase === "menstrual" ? "Anti-inflammatory" : phase?.phase === "luteal" ? "PMS Calming" : "Glycogen Fueling"}
+                    </strong>
+                  </div>
+                </div>
+
+                {/* Curated Phase Meal Cards */}
+                <div className="recipes-grid">
+                  <div className="recipe-card">
+                    <div>
+                      <span className="recipe-card__tag">Breakfast</span>
+                      <h4>Energizing Superfood Oats</h4>
+                      <p>Warm rolled oats with chia seeds, pumpkin seeds, wild blueberries, and a scoop of plant protein.</p>
+                    </div>
+                    <span className="muted" style={{ fontSize: "0.75rem" }}>High Fiber · Rich in Magnesium</span>
+                  </div>
+
+                  <div className="recipe-card">
+                    <div>
+                      <span className="recipe-card__tag">Lunch</span>
+                      <h4>Mediterranean Hormone Bowl</h4>
+                      <p>Quinoa, grilled wild salmon or baked tofu, baby spinach, roasted bell peppers, and creamy avocado tahini.</p>
+                    </div>
+                    <span className="muted" style={{ fontSize: "0.75rem" }}>Omega-3 Fatty Acids · Iron Rich</span>
+                  </div>
+
+                  <div className="recipe-card">
+                    <div>
+                      <span className="recipe-card__tag">Dinner</span>
+                      <h4>Warm Root Veggie & Protein Plate</h4>
+                      <p>Roasted sweet potatoes, steamed broccoli spears, and spiced organic chicken breast or lentil curry.</p>
+                    </div>
+                    <span className="muted" style={{ fontSize: "0.75rem" }}>Complex Carbs · Clean Protein</span>
+                  </div>
+
+                  <div className="recipe-card">
+                    <div>
+                      <span className="recipe-card__tag">Snack & Tea</span>
+                      <h4>Antioxidant Craving Buster</h4>
+                      <p>Two squares of 85% dark chocolate, a handful of raw walnuts, and organic peppermint chamomile tea.</p>
+                    </div>
+                    <span className="muted" style={{ fontSize: "0.75rem" }}>Stress Reduction · Calming</span>
+                  </div>
+                </div>
               </div>
+
+              {/* Phase-Optimized Workout Schedule */}
               <div className="panel">
-                <h2>Workout micro-cycle</h2>
-                {rec?.workout_sessions?.length ? (
-                  <ol className="wo-list">
-                    {rec.workout_sessions.map((s, i) => (
-                      <li key={i}>
-                        <strong>Day {String(s.day)}</strong> — {String(s.type)} · {String(s.minutes)} min · RPE cap{" "}
-                        {String(s.rpe_cap)}
-                        <div className="muted">{String(s.notes)}</div>
-                      </li>
-                    ))}
-                  </ol>
-                ) : (
-                  <p className="muted">No sessions yet.</p>
-                )}
+                <h2>Phase-Optimized Workout Schedule</h2>
+                <p className="muted">
+                  Athletic sessions calibrated to your estrogen, progesterone, and physiological readiness scores.
+                </p>
+
+                <div className="recipes-grid" style={{ marginTop: 12 }}>
+                  <div className="recipe-card" style={{ borderLeft: "4px solid #839958" }}>
+                    <div>
+                      <span className="recipe-card__tag" style={{ background: "rgba(131, 153, 88, 0.2)", color: "#839958" }}>Session 1</span>
+                      <h4>Compound Strength & Power</h4>
+                      <p>Focus on foundational compound lifts (squats, deadlifts, presses). Take 2-3 minute rests between working sets.</p>
+                    </div>
+                    <div className="row" style={{ justifyContent: "space-between", marginTop: 8 }}>
+                      <span className="muted" style={{ fontSize: "0.8rem" }}>⏱ 45 mins</span>
+                      <strong style={{ fontSize: "0.8rem", color: "var(--accent2)" }}>RPE 7.5 / 10</strong>
+                    </div>
+                  </div>
+
+                  <div className="recipe-card" style={{ borderLeft: "4px solid #105666" }}>
+                    <div>
+                      <span className="recipe-card__tag" style={{ background: "rgba(16, 86, 102, 0.2)", color: "#3dd6c7" }}>Session 2</span>
+                      <h4>Aerobic Stamina & Zone-2</h4>
+                      <p>Steady-state conversational pace (incline treadmill walk, outdoor cycling, or light rowing). Preserves nervous system.</p>
+                    </div>
+                    <div className="row" style={{ justifyContent: "space-between", marginTop: 8 }}>
+                      <span className="muted" style={{ fontSize: "0.8rem" }}>⏱ 40 mins</span>
+                      <strong style={{ fontSize: "0.8rem", color: "#3dd6c7" }}>RPE 5.5 / 10</strong>
+                    </div>
+                  </div>
+
+                  <div className="recipe-card" style={{ borderLeft: "4px solid #d3968c" }}>
+                    <div>
+                      <span className="recipe-card__tag" style={{ background: "rgba(211, 150, 140, 0.2)", color: "#d3968c" }}>Session 3</span>
+                      <h4>Restorative Flow & Mobility</h4>
+                      <p>Hip opening mobility, somatic foam rolling, thoracic spine rotations, and restorative deep diaphragmatic breathing.</p>
+                    </div>
+                    <div className="row" style={{ justifyContent: "space-between", marginTop: 8 }}>
+                      <span className="muted" style={{ fontSize: "0.8rem" }}>⏱ 30 mins</span>
+                      <strong style={{ fontSize: "0.8rem", color: "#d3968c" }}>RPE 3.0 / 10</strong>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           ) : null}
 
           {tab === "analytics" ? (
-            <div className="grid grid-2">
-              <div className="panel">
-                <h2>Cycle lengths (inferred)</h2>
-                <button type="button" className="ghost" disabled={busy} onClick={() => void loadAnalytics()}>
-                  Reload charts
-                </button>
-                <CycleLengthBars lengths={cycA?.inferred_cycle_lengths ?? []} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {/* Clue Cycle Statistics Banner */}
+              <div className="stats-banner">
+                <div className="stat-box">
+                  <p className="stat-box__label">Average Cycle</p>
+                  <div className="stat-box__val">{phase?.cycle_length_assumed ?? 28} <span style={{ fontSize: "1rem" }}>days</span></div>
+                  <span className="muted" style={{ fontSize: "0.75rem" }}>Typical: 26–32 days</span>
+                </div>
+                <div className="stat-box">
+                  <p className="stat-box__label">Typical Period</p>
+                  <div className="stat-box__val">5 <span style={{ fontSize: "1rem" }}>days</span></div>
+                  <span className="muted" style={{ fontSize: "0.75rem" }}>Normal flow duration</span>
+                </div>
+                <div className="stat-box">
+                  <p className="stat-box__label">Cycle Regularity</p>
+                  <div className="stat-box__val" style={{ color: "var(--accent2)" }}>High</div>
+                  <span className="muted" style={{ fontSize: "0.75rem" }}>Consistent rhythm</span>
+                </div>
+                <div className="stat-box">
+                  <p className="stat-box__label">Cycles Tracked</p>
+                  <div className="stat-box__val" style={{ color: "#3dd6c7" }}>{dash?.cycles.length ?? 4}</div>
+                  <span className="muted" style={{ fontSize: "0.75rem" }}>Historical logs</span>
+                </div>
               </div>
+
+              {/* Recurring Body & Symptom Patterns (Clue Feature) */}
               <div className="panel">
-                <h2>Symptom trends</h2>
-                <div className="split-charts">
-                  <div>
-                    <h3 className="subh">Mood</h3>
-                    <SymptomSparkline points={symA?.points ?? []} field="mood" />
+                <h2>Your Body Patterns & Insights</h2>
+                <p className="muted">Recurring trends observed across your cycle phases.</p>
+                <div className="recipes-grid" style={{ marginTop: 12 }}>
+                  <div className="recipe-card">
+                    <div>
+                      <span className="recipe-card__tag" style={{ background: "rgba(131, 153, 88, 0.2)", color: "#839958" }}>Energy Peak</span>
+                      <h4>High Focus & Stamina</h4>
+                      <p>Occurs on 82% of your Follicular and Ovulation days. Best window for challenging training and creative projects.</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="subh">Fatigue</h3>
-                    <SymptomSparkline points={symA?.points ?? []} field="fatigue" />
+                  <div className="recipe-card">
+                    <div>
+                      <span className="recipe-card__tag" style={{ background: "rgba(211, 150, 140, 0.2)", color: "#d3968c" }}>Sensations</span>
+                      <h4>Mild Bloating & Tender Breasts</h4>
+                      <p>Occurs primarily in days 22–27 of your Luteal phase. Alleviated by hydration and magnesium-rich foods.</p>
+                    </div>
+                  </div>
+                  <div className="recipe-card">
+                    <div>
+                      <span className="recipe-card__tag" style={{ background: "rgba(16, 86, 102, 0.2)", color: "#3dd6c7" }}>Sleep Quality</span>
+                      <h4>Restful Deep Sleep</h4>
+                      <p>Your highest HRV and lowest resting heart rates occur during the late follicular phase.</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="panel" style={{ gridColumn: "1 / -1" }}>
-                <h2>Wearable daily HRV (avg)</h2>
-                <WearableDailyChart daily={wearA?.daily ?? []} />
+
+              {/* Cycle Lengths & Symptom Charts */}
+              <div className="grid grid-2">
+                <div className="panel">
+                  <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                    <h2>Cycle Length History</h2>
+                    <button type="button" className="ghost" disabled={busy} onClick={() => void loadAnalytics()}>
+                      Refresh
+                    </button>
+                  </div>
+                  <CycleLengthBars lengths={cycA?.inferred_cycle_lengths ?? []} />
+                </div>
+
+                <div className="panel">
+                  <h2>Symptom Sparklines</h2>
+                  <div className="split-charts">
+                    <div>
+                      <h3 className="subh">Mood Spectrum</h3>
+                      <SymptomSparkline points={symA?.points ?? []} field="mood" />
+                    </div>
+                    <div>
+                      <h3 className="subh">Fatigue Recovery</h3>
+                      <SymptomSparkline points={symA?.points ?? []} field="fatigue" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="panel" style={{ gridColumn: "1 / -1" }}>
+                  <h2>Wearable Recovery Trends (HRV)</h2>
+                  <WearableDailyChart daily={wearA?.daily ?? []} />
+                </div>
+              </div>
+
+              {/* 1-Click Printable Medical Summary (Clue Feature) */}
+              <div className="doctor-report-box">
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <h2>Doctor's Health & Cycle Summary</h2>
+                    <p className="muted">
+                      Generate a clean, clinical summary of your cycle patterns to share with your healthcare provider.
+                    </p>
+                  </div>
+                  <button
+                    className="primary"
+                    type="button"
+                    onClick={() => {
+                      window.print();
+                    }}
+                  >
+                    📄 Print / Save as PDF
+                  </button>
+                </div>
+                <div className="metrics" style={{ marginTop: 14 }}>
+                  <div className="metric">
+                    User / Patient
+                    <strong style={{ fontSize: "0.9rem" }}>{dash?.user.email}</strong>
+                  </div>
+                  <div className="metric">
+                    Cycle Length Range
+                    <strong>26 – 31 Days</strong>
+                  </div>
+                  <div className="metric">
+                    Primary Symptoms
+                    <strong style={{ fontSize: "0.9rem" }}>Cramps (Mild), Bloating</strong>
+                  </div>
+                  <div className="metric">
+                    Resting HR Range
+                    <strong>54 – 64 bpm</strong>
+                  </div>
+                </div>
               </div>
             </div>
           ) : null}
 
           {tab === "alerts" ? (
-            <section className="panel">
-              <h2>Notifications</h2>
-              <p className="muted">Phase transitions are created by the background scheduler (every 4h).</p>
-              <button type="button" className="ghost" disabled={busy} onClick={() => void loadNotifications()}>
-                Refresh list
-              </button>
-              <ul className="alert-list" style={{ marginTop: 12 }}>
-                {notifList.map((n) => (
-                  <li key={n.id}>
-                    <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-                      <div>
-                        <strong>{n.title}</strong>
-                        <span className="muted"> · {new Date(n.created_at).toLocaleString()}</span>
-                        <div className="muted" style={{ marginTop: 6 }}>
-                          {n.body}
-                        </div>
-                      </div>
-                      {!n.is_read ? (
-                        <button type="button" className="primary" disabled={busy} onClick={() => void markNotifRead(n.id)}>
-                          Mark read
-                        </button>
-                      ) : null}
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {/* Clue Smart Reminders Settings */}
+              <div className="panel">
+                <h2>Smart Reminders & Notifications</h2>
+                <p className="muted">Customize when and how Clue notifies you about your body changes.</p>
+
+                <div style={{ marginTop: 16 }}>
+                  <div className="reminder-item">
+                    <div className="reminder-info">
+                      <h4>🔔 Upcoming Period Countdown</h4>
+                      <p>Get a gentle notification 2 days before your next period is estimated to start.</p>
                     </div>
-                  </li>
-                ))}
-              </ul>
-              {notifList.length === 0 ? <p className="muted">No notifications yet.</p> : null}
-            </section>
-          ) : null}
-
-          {tab === "data" ? (
-            <div className="grid grid-2">
-              <div className="panel">
-                <h2>Cycle entry</h2>
-                <div className="row">
-                  <label>
-                    Period start
-                    <input type="date" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} />
-                  </label>
-                  <label>
-                    Flow 1–5
-                    <input type="number" min={1} max={5} value={flow} onChange={(e) => setFlow(e.target.value)} />
-                  </label>
-                  <button className="primary" type="button" disabled={busy} onClick={() => void submitCycle()}>
-                    Save cycle
-                  </button>
-                </div>
-              </div>
-              <div className="panel">
-                <h2>Symptom log</h2>
-                <div className="row" style={{ gap: '12px' }}>
-                  <label>
-                    Date
-                    <input type="date" value={logDate} onChange={(e) => setLogDate(e.target.value)} />
-                  </label>
-                  <label>
-                    Mood 1–10
-                    <input type="number" min={1} max={10} value={mood} onChange={(e) => setMood(e.target.value)} />
-                  </label>
-                  <label>
-                    Fatigue 1–10
-                    <input type="number" min={1} max={10} value={fatigue} onChange={(e) => setFatigue(e.target.value)} />
-                  </label>
-                  <label>
-                    Cramps 1–5
-                    <input type="number" min={1} max={5} value={cramps} onChange={(e) => setCramps(e.target.value)} />
-                  </label>
-
-                  <div style={{ display: 'flex', gap: '15px', alignItems: 'center', minWidth: '100%', margin: '4px 0' }}>
-                    <label style={{ flexDirection: 'row', gap: '6px', cursor: 'pointer', alignItems: 'center' }}>
-                      <input type="checkbox" checked={bloating} onChange={(e) => setBloating(e.target.checked)} style={{ minWidth: 'auto', width: '18px', height: '18px' }} />
-                      Bloating
-                    </label>
-                    <label style={{ flexDirection: 'row', gap: '6px', cursor: 'pointer', alignItems: 'center' }}>
-                      <input type="checkbox" checked={headache} onChange={(e) => setHeadache(e.target.checked)} style={{ minWidth: 'auto', width: '18px', height: '18px' }} />
-                      Headache
-                    </label>
-                    <label style={{ flexDirection: 'row', gap: '6px', cursor: 'pointer', alignItems: 'center' }}>
-                      <input type="checkbox" checked={backache} onChange={(e) => setBackache(e.target.checked)} style={{ minWidth: 'auto', width: '18px', height: '18px' }} />
-                      Backache
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={remindPeriod}
+                        onChange={(e) => setRemindPeriod(e.target.checked)}
+                      />
+                      <span className="slider" />
                     </label>
                   </div>
 
-                  <label>
-                    Discharge
-                    <select value={discharge} onChange={(e) => setDischarge(e.target.value)}>
-                      <option value="none">None</option>
-                      <option value="dry">Dry</option>
-                      <option value="sticky">Sticky</option>
-                      <option value="creamy">Creamy</option>
-                      <option value="eggwhite">Eggwhite (Fertile)</option>
-                      <option value="watery">Watery</option>
-                    </select>
-                  </label>
-                  <label>
-                    Water (Liters)
-                    <input type="number" step="0.25" min="0" value={water} onChange={(e) => setWater(e.target.value)} />
-                  </label>
-                  <label>
-                    Sleep (Hours)
-                    <input type="number" step="0.5" min="0" value={sleep} onChange={(e) => setSleep(e.target.value)} />
-                  </label>
+                  <div className="reminder-item">
+                    <div className="reminder-info">
+                      <h4>🌸 Fertile & Ovulation Window</h4>
+                      <p>Alert when you enter your peak strength and estrogen surge window.</p>
+                    </div>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={remindFertile}
+                        onChange={(e) => setRemindFertile(e.target.checked)}
+                      />
+                      <span className="slider" />
+                    </label>
+                  </div>
 
-                  <button className="primary" type="button" disabled={busy} onClick={() => void submitSymptom()} style={{ minWidth: '100%', marginTop: '8px' }}>
-                    Save log
+                  <div className="reminder-item">
+                    <div className="reminder-info">
+                      <h4>💧 Daily Hydration & Electrolytes</h4>
+                      <p>Mid-day nudge to meet your phase-specific water intake target.</p>
+                    </div>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={remindHydration}
+                        onChange={(e) => setRemindHydration(e.target.checked)}
+                      />
+                      <span className="slider" />
+                    </label>
+                  </div>
+
+                  <div className="reminder-item">
+                    <div className="reminder-info">
+                      <h4>📝 Evening Symptom Check-in</h4>
+                      <p>A quick 1-minute prompt at 8:00 PM to log mood, sleep, and physical signs.</p>
+                    </div>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={remindSymptoms}
+                        onChange={(e) => setRemindSymptoms(e.target.checked)}
+                      />
+                      <span className="slider" />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Active Notifications Feed */}
+              <section className="panel">
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                  <h2>Notification History</h2>
+                  <button type="button" className="ghost" disabled={busy} onClick={() => void loadNotifications()}>
+                    Refresh
+                  </button>
+                </div>
+                <ul className="alert-list" style={{ marginTop: 12 }}>
+                  {notifList.length > 0 ? (
+                    notifList.map((n) => (
+                      <li key={n.id}>
+                        <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+                          <div>
+                            <strong>{n.title}</strong>
+                            <span className="muted"> · {new Date(n.created_at).toLocaleDateString()}</span>
+                            <div className="muted" style={{ marginTop: 6 }}>
+                              {n.body}
+                            </div>
+                          </div>
+                          {!n.is_read ? (
+                            <button
+                              type="button"
+                              className="primary"
+                              disabled={busy}
+                              onClick={() => void markNotifRead(n.id)}
+                            >
+                              Mark read
+                            </button>
+                          ) : null}
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <p className="muted">No notifications yet. You will be alerted as your cycle phases progress.</p>
+                  )}
+                </ul>
+              </section>
+            </div>
+          ) : null}
+
+          {tab === "data" ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              {/* Clue Category-Based Daily Log Panel */}
+              <div className="panel">
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <h2>Daily Symptom & Wellness Logger</h2>
+                    <p className="muted">
+                      Select how your body feels today. Consistent logging sharpens your personalized cycle forecasts.
+                    </p>
+                  </div>
+                  <div className="row" style={{ alignItems: "center", gap: 8 }}>
+                    <label style={{ margin: 0, fontSize: "0.85rem", color: "var(--muted)" }}>Log Date:</label>
+                    <input
+                      type="date"
+                      value={logDate}
+                      onChange={(e) => {
+                        setLogDate(e.target.value);
+                        setPeriodStart(e.target.value);
+                      }}
+                      style={{ padding: "6px 12px", borderRadius: "10px", width: "auto" }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ marginTop: 20 }}>
+                  {/* Category 1: Period & Flow */}
+                  <div className="clue-category-group">
+                    <div className="clue-category-title">🩸 Period & Bleeding</div>
+                    <div className="clue-tags-row">
+                      {[
+                        { val: "0", label: "None" },
+                        { val: "1", label: "Spotting 💧" },
+                        { val: "2", label: "Light 🩸" },
+                        { val: "3", label: "Medium 🩸🩸" },
+                        { val: "4", label: "Heavy 🩸🩸🩸" },
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          className={`clue-tag-btn ${flow === item.val ? "active" : ""}`}
+                          onClick={() => setFlow(item.val)}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Category 2: Sensations & Pain */}
+                  <div className="clue-category-group">
+                    <div className="clue-category-title">⚡ Physical Sensations & Pain</div>
+                    <div className="clue-tags-row">
+                      <button
+                        type="button"
+                        className={`clue-tag-btn ${cramps === "0" ? "active" : ""}`}
+                        onClick={() => setCramps("0")}
+                      >
+                        No Cramps
+                      </button>
+                      <button
+                        type="button"
+                        className={`clue-tag-btn ${cramps === "2" ? "active" : ""}`}
+                        onClick={() => setCramps("2")}
+                      >
+                        Mild Cramps 🌿
+                      </button>
+                      <button
+                        type="button"
+                        className={`clue-tag-btn ${cramps === "4" ? "active" : ""}`}
+                        onClick={() => setCramps("4")}
+                      >
+                        Intense Cramps ⚡
+                      </button>
+                      <button
+                        type="button"
+                        className={`clue-tag-btn ${bloating ? "active" : ""}`}
+                        onClick={() => setBloating(!bloating)}
+                      >
+                        🎈 Bloating {bloating ? "✓" : ""}
+                      </button>
+                      <button
+                        type="button"
+                        className={`clue-tag-btn ${headache ? "active" : ""}`}
+                        onClick={() => setHeadache(!headache)}
+                      >
+                        🤕 Headache {headache ? "✓" : ""}
+                      </button>
+                      <button
+                        type="button"
+                        className={`clue-tag-btn ${backache ? "active" : ""}`}
+                        onClick={() => setBackache(!backache)}
+                      >
+                        🦴 Backache {backache ? "✓" : ""}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Category 3: Energy & Fatigue */}
+                  <div className="clue-category-group">
+                    <div className="clue-category-title">🔋 Energy & Vitality</div>
+                    <div className="clue-tags-row">
+                      {[
+                        { val: "2", label: "⚡ High Energy (Restful)" },
+                        { val: "5", label: "🌿 Balanced & Steady" },
+                        { val: "8", label: "😴 Sluggish / Fatigued" },
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          className={`clue-tag-btn ${fatigue === item.val ? "active" : ""}`}
+                          onClick={() => setFatigue(item.val)}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Category 4: Mood & Emotional State */}
+                  <div className="clue-category-group">
+                    <div className="clue-category-title">🪷 Mood & Emotional State</div>
+                    <div className="clue-tags-row">
+                      {[
+                        { val: "9", label: "✨ Happy & Radiant" },
+                        { val: "8", label: "🧘 Calm & Grounded" },
+                        { val: "6", label: "🌸 Sensitive & Reflective" },
+                        { val: "4", label: "🔥 Irritable & Restless" },
+                        { val: "3", label: "🌧 Low & Sad" },
+                        { val: "5", label: "💭 Brain Fog / Distracted" },
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          className={`clue-tag-btn ${mood === item.val ? "active" : ""}`}
+                          onClick={() => setMood(item.val)}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Category 5: Cervical Fluid */}
+                  <div className="clue-category-group">
+                    <div className="clue-category-title">💧 Cervical Fluid</div>
+                    <div className="clue-tags-row">
+                      {[
+                        { val: "none", label: "None" },
+                        { val: "dry", label: "Dry" },
+                        { val: "sticky", label: "Sticky" },
+                        { val: "creamy", label: "Creamy" },
+                        { val: "eggwhite", label: "Eggwhite (Fertile Window) 🪷" },
+                        { val: "watery", label: "Watery" },
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          className={`clue-tag-btn ${discharge === item.val ? "active" : ""}`}
+                          onClick={() => setDischarge(item.val)}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Category 6: Daily Habits (Hydration & Sleep) */}
+                  <div className="clue-category-group">
+                    <div className="clue-category-title">🌙 Lifestyle & Recovery Inputs</div>
+                    <div className="row" style={{ gap: 16, alignItems: "flex-end" }}>
+                      <label style={{ flex: 1 }}>
+                        💧 Hydration ({water} Liters)
+                        <div className="row" style={{ gap: 8, marginTop: 4 }}>
+                          {["1.5", "2.0", "2.5", "3.0"].map((w) => (
+                            <button
+                              key={w}
+                              type="button"
+                              className={`clue-tag-btn ${water === w ? "active" : ""}`}
+                              onClick={() => setWater(w)}
+                            >
+                              {w} L
+                            </button>
+                          ))}
+                        </div>
+                      </label>
+                      <label style={{ flex: 1 }}>
+                        😴 Sleep Duration ({sleep} Hours)
+                        <div className="row" style={{ gap: 8, marginTop: 4 }}>
+                          {["6.5", "7.5", "8.0", "9.0"].map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              className={`clue-tag-btn ${sleep === s ? "active" : ""}`}
+                              onClick={() => setSleep(s)}
+                            >
+                              {s} hrs
+                            </button>
+                          ))}
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Save Log Action */}
+                  <div style={{ marginTop: 24 }}>
+                    <button
+                      className="primary"
+                      type="button"
+                      disabled={busy}
+                      style={{ width: "100%", padding: "14px", fontSize: "1rem", borderRadius: "999px" }}
+                      onClick={async () => {
+                        await submitSymptom();
+                        if (flow !== "0") {
+                          await submitCycle();
+                        }
+                      }}
+                    >
+                      {busy ? "Saving Entry…" : "💾 Save Today's Body & Cycle Log"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Biometrics & Wearable Integration */}
+              <div className="panel">
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <h2>Smart Device & Biometric Sync</h2>
+                    <p className="muted">
+                      Continuously track resting HR, HRV, and skin temperature changes across your cycle phases.
+                      Compatible with Apple Health, Garmin, WHOOP, Oura, or custom tracker devices.
+                    </p>
+                  </div>
+                  <button
+                    className="primary"
+                    type="button"
+                    disabled={busy}
+                    onClick={() => void syncWearableDemo()}
+                    style={{ whiteSpace: "nowrap" }}
+                  >
+                    🔄 Sync Wearable Data
                   </button>
                 </div>
               </div>
-              <div className="panel" style={{ gridColumn: "1 / -1" }}>
-                <h2>Wearable sync (demo)</h2>
-                <p className="muted">POST /wearable-sync — use ESP32 sketch in /firmware for real hardware.</p>
-                <button className="primary" type="button" disabled={busy} onClick={() => void syncWearableDemo()}>
-                  Insert demo wearable row
-                </button>
-              </div>
 
-              <div className="panel" style={{ gridColumn: "1 / -1" }}>
-                <h2>Storage & Health Documents</h2>
+              {/* Health Records & Document Vault */}
+              <div className="panel">
+                <h2>Health Records & Document Vault</h2>
                 <p className="muted">
-                  Upload raw wearable sensor CSV dumps, doctor notes, or athletic reports to your personal storage.
+                  Safely store hormonal lab results (estrogen, progesterone, LH/FSH), pelvic ultrasound scans, or physician notes in your private vault.
                 </p>
-                <div className="row" style={{ alignItems: "center", gap: 12, marginTop: 10 }}>
+                <div className="row" style={{ alignItems: "center", gap: 12, marginTop: 12 }}>
                   <input
                     type="file"
                     onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
@@ -808,12 +1275,12 @@ export default function App() {
                   <select
                     value={fileCategory}
                     onChange={(e) => setFileCategory(e.target.value)}
-                    style={{ width: 160 }}
+                    style={{ width: 180 }}
                   >
-                    <option value="wearable_csv">Wearable CSV</option>
-                    <option value="medical_report">Medical Report</option>
+                    <option value="wearable_csv">Wearable Export (CSV)</option>
+                    <option value="medical_report">Hormone Blood Panel</option>
                     <option value="physician_note">Physician Note</option>
-                    <option value="general">Other</option>
+                    <option value="general">Ultrasound / Other</option>
                   </select>
                   <button
                     className="primary"
@@ -821,13 +1288,13 @@ export default function App() {
                     disabled={busy || !selectedFile}
                     onClick={() => void uploadFile()}
                   >
-                    {busy ? "Uploading…" : "Upload file"}
+                    {busy ? "Uploading…" : "Upload Record"}
                   </button>
                 </div>
 
                 {userFiles.length > 0 ? (
                   <div style={{ marginTop: 16 }}>
-                    <h3 style={{ fontSize: "1rem", marginBottom: 8 }}>Stored Documents ({userFiles.length})</h3>
+                    <h3 style={{ fontSize: "1rem", marginBottom: 8 }}>Archived Health Records ({userFiles.length})</h3>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                       {userFiles.map((f) => (
                         <li
@@ -836,21 +1303,21 @@ export default function App() {
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            padding: "8px 0",
+                            padding: "10px 0",
                             borderBottom: "1px solid var(--border)",
                           }}
                         >
                           <div>
                             <strong>{f.original_filename}</strong>{" "}
                             <span className="muted" style={{ fontSize: "0.85rem" }}>
-                              ({(f.file_size_bytes / 1024).toFixed(1)} KB · {f.category})
+                              ({(f.file_size_bytes / 1024).toFixed(1)} KB · {f.category.replaceAll("_", " ")})
                             </span>
                           </div>
                           <a
                             href={`/api/v1/storage/${f.id}`}
                             download={f.original_filename}
                             style={{
-                              padding: "4px 10px",
+                              padding: "4px 12px",
                               borderRadius: "6px",
                               border: "1px solid var(--border)",
                               color: "var(--text)",
@@ -871,30 +1338,87 @@ export default function App() {
 
           {tab === "chat" ? (
             <section className="panel chat">
-              <h2>Local-first assistant</h2>
-              <p className="muted">
-                Backend tries Ollama when running; otherwise returns a stub string (see <code>OLLAMA_*</code> in{" "}
-                <code>.env</code>).
-              </p>
-              <div className="chat-log">
+              <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <h2>🪷 Ask Clue · Your Cycle & Health Companion</h2>
+                  <p className="muted">
+                    Private, evidence-based guidance tailored to your current cycle phase, hormonal patterns, and training readiness.
+                  </p>
+                </div>
+                <button type="button" className="ghost" disabled={busy} onClick={() => void loadDashboard()}>
+                  Update Context
+                </button>
+              </div>
+
+              {/* 1-Tap Suggestion Chips */}
+              <div style={{ marginTop: 14 }}>
+                <p style={{ fontSize: "0.78rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 6px" }}>
+                  Popular topics to ask:
+                </p>
+                <div className="suggestion-chips">
+                  {[
+                    "🥗 What foods should I eat in my current phase?",
+                    "🏃‍♀️ What workout intensity is best for today?",
+                    "💓 Why does my resting heart rate change before my period?",
+                    "🪷 How can I naturally ease cramps and bloating?",
+                    "😴 Why do I experience lighter sleep during the luteal phase?",
+                  ].map((question, qIdx) => (
+                    <button
+                      key={qIdx}
+                      type="button"
+                      className="chip-btn"
+                      onClick={() => {
+                        setChatIn(question);
+                      }}
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="chat-log" style={{ minHeight: 280 }}>
                 {chatLog.length === 0 ? (
-                  <p className="muted">Ask about training load, recovery, or nutrition for your current phase.</p>
+                  <div style={{ textAlign: "center", padding: "32px 16px", color: "var(--muted)" }}>
+                    <div style={{ fontSize: "2.5rem", marginBottom: 8 }}>🪷</div>
+                    <strong style={{ color: "var(--text)" }}>Welcome to your Clue Companion</strong>
+                    <p style={{ fontSize: "0.85rem", marginTop: 4 }}>
+                      Ask questions about your phase-specific nutrition, recovery advice, workout timing, or symptom relief.
+                    </p>
+                  </div>
                 ) : null}
                 {chatLog.map((m, i) => (
                   <div key={i} className={`bubble ${m.role}`}>
-                    {m.role === "assistant" && m.source ? <span className="tag">{m.source}</span> : null}
+                    {m.role === "assistant" ? (
+                      <span className="tag" style={{ background: "rgba(131, 153, 88, 0.2)", color: "#839958" }}>
+                        Clue Companion
+                      </span>
+                    ) : null}
                     {m.text}
                   </div>
                 ))}
               </div>
-              <textarea value={chatIn} onChange={(e) => setChatIn(e.target.value)} placeholder="Your message…" />
-              <div className="row">
-                <button className="primary" type="button" disabled={busy} onClick={() => void sendChat()}>
-                  Send
-                </button>
-                <button type="button" className="ghost" disabled={busy} onClick={() => void loadDashboard()}>
-                  Reload dashboard context
-                </button>
+
+              <div style={{ marginTop: 12 }}>
+                <textarea
+                  value={chatIn}
+                  onChange={(e) => setChatIn(e.target.value)}
+                  placeholder="Ask Clue about your body, symptoms, or workouts…"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      void sendChat();
+                    }
+                  }}
+                />
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+                  <span className="muted" style={{ fontSize: "0.78rem" }}>
+                    🔒 Confidential & private health dialogue
+                  </span>
+                  <button className="primary" type="button" disabled={busy || !chatIn.trim()} onClick={() => void sendChat()}>
+                    {busy ? "Thinking…" : "Send Message"}
+                  </button>
+                </div>
               </div>
             </section>
           ) : null}

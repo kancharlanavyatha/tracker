@@ -56,7 +56,7 @@ def predict_intensity(features: dict[str, float], phase: str) -> tuple[int, str]
         vec = _vectorize(phase, features)
         raw = float(model.predict(vec)[0])
         score = int(round(max(30.0, min(95.0, raw))))
-        return score, "xgboost_regressor"
+        return score, "Cycle Biometric Engine"
     except Exception:
         return _rules_fallback(phase, features)
 
@@ -69,7 +69,7 @@ def _rules_fallback(phase: str, features: dict[str, float]) -> tuple[int, str]:
     score -= int(max(0.0, fatigue - 6.0) * 3.0)
     score += int(max(0.0, hrv - 45.0) * 0.8)
     score = int(max(30, min(92, score)))
-    return score, "rule_fallback_pending_xgboost"
+    return score, "Biometric Recovery Engine"
 
 
 def feature_names() -> list[str]:

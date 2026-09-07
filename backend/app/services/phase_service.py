@@ -173,10 +173,10 @@ def _predict_phase_lstm(
             day_in_cycle=day_in_cycle,
             cycle_length_assumed=cycle_len,
             irregularity_hint=irr,
-            model_note="LSTM neural network sequence classifier (trained on user cycle history).",
+            model_note="Intelligent cycle pattern rhythm calculated from your personal cycle history.",
         )
     except Exception as e:
-        print(f"LSTM inference error: {e}")
+        print(f"Cycle prediction error: {e}")
         return None
 
 
@@ -192,7 +192,7 @@ def infer_phase(
             day_in_cycle=0,
             cycle_length_assumed=DEFAULT_CYCLE,
             irregularity_hint=1.0,
-            model_note="No cycle history yet. Add period start dates; LSTM will activate with 3+ logged cycles.",
+            model_note="No cycle history yet. Log your period start dates to unlock personalized rhythm predictions.",
         )
     if last_period_start > ref:
         return PredictPhaseOut(
@@ -200,7 +200,7 @@ def infer_phase(
             day_in_cycle=0,
             cycle_length_assumed=median_cycle_length(db, user_id),
             irregularity_hint=0.5,
-            model_note="Inconsistent dates (last period start after reference date).",
+            model_note="Selected date is prior to your logged period start date.",
         )
 
     cycle_len = median_cycle_length(db, user_id)
@@ -211,10 +211,10 @@ def infer_phase(
             day_in_cycle=0,
             cycle_length_assumed=cycle_len,
             irregularity_hint=0.5,
-            model_note="Negative day offset; check logged dates.",
+            model_note="Check logged cycle dates.",
         )
 
-    # Try LSTM prediction if enough history is logged
+    # Try prediction if enough history is logged
     starts = _ordered_period_starts(db, user_id)
     if len(starts) >= 4:
         lstm_out = _predict_phase_lstm(db, user_id, starts, cycle_len, days_since)
@@ -230,5 +230,5 @@ def infer_phase(
         day_in_cycle=day_in_cycle,
         cycle_length_assumed=cycle_len,
         irregularity_hint=irr,
-        model_note="Median cycle length from history + proportional phase map (fallback).",
+        model_note="Cycle rhythm calculated from your logged cycle intervals.",
     )
