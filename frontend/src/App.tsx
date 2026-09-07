@@ -3,6 +3,8 @@ import {
   apiGet,
   apiPatch,
   apiPost,
+  apiUpload,
+  TOKEN_KEY,
   type AnalyticsCycles,
   type AnalyticsSymptoms,
   type AnalyticsWearable,
@@ -10,6 +12,7 @@ import {
   type Dashboard,
   type NotificationRow,
   type RecommendOut,
+  type StoredFile,
   type User,
 } from "./api";
 import { CycleLengthBars, SymptomSparkline, WearableDailyChart } from "./components/Charts";
@@ -30,11 +33,17 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [userId, setUserId] = useState<string | null>(() => localStorage.getItem(USER_KEY));
   const [email, setEmail] = useState("demo@university.edu");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("athlete");
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [dash, setDash] = useState<Dashboard | null>(null);
+  const [userFiles, setUserFiles] = useState<StoredFile[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileCategory, setFileCategory] = useState("wearable_csv");
 
   const [periodStart, setPeriodStart] = useState(() => new Date().toISOString().slice(0, 10));
   const [flow, setFlow] = useState("3");
@@ -104,18 +113,70 @@ export default function App() {
     void loadNotifications().catch((e: unknown) => setErr(String(e)));
   }, [userId, tab, loadNotifications]);
 
-  const register = async () => {
+  const loadUserFiles = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const files = await apiGet<StoredFile[]>("/storage/files");
+      setUserFiles(files);
+    } catch {
+      // Ignore if unauthenticated or empty
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      void loadUserFiles();
+    }
+  }, [userId, loadUserFiles]);
+
+  const handleAuth = async () => {
     setBusy(true);
     setErr(null);
     try {
-      const u = await apiPost<User>("/users/", {
-        email,
-        display_name: name || null,
-      });
-      localStorage.setItem(USER_KEY, u.id);
-      setUserId(u.id);
-      setDash(null);
-      await loadDashboard(u.id);
+      if (authMode === "login") {
+        const res = await apiPost<{ access_token: string; user: User }>("/auth/login", {
+          email,
+          password,
+        });
+        localStorage.setItem(TOKEN_KEY, res.access_token);
+        localStorage.setItem(USER_KEY, res.user.id);
+        setUserId(res.user.id);
+        setDash(null);
+        await loadDashboard(res.user.id);
+      } else {
+        const res = await apiPost<{ access_token: string; user: User }>("/auth/register", {
+          email,
+          password,
+          display_name: name || null,
+          role,
+        });
+        localStorage.setItem(TOKEN_KEY, res.access_token);
+        localStorage.setItem(USER_KEY, res.user.id);
+        setUserId(res.user.id);
+        setDash(null);
+        await loadDashboard(res.user.id);
+      }
+    } catch (e: unknown) {
+      setErr(String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const uploadFile = async () => {
+    if (!selectedFile) return;
+    setBusy(true);
+    setErr(null);
+    setSuccessMsg(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("category", fileCategory);
+      await apiUpload<StoredFile>("/storage/upload", formData);
+      setSuccessMsg("File uploaded successfully to storage!");
+      setSelectedFile(null);
+      await loadUserFiles();
+      setTimeout(() => setSuccessMsg(null), 4000);
     } catch (e: unknown) {
       setErr(String(e));
     } finally {
@@ -125,6 +186,7 @@ export default function App() {
 
   const logout = () => {
     localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
     setUserId(null);
     setDash(null);
     setRec(null);
@@ -133,6 +195,7 @@ export default function App() {
     setSymA(null);
     setWearA(null);
     setNotifList([]);
+    setUserFiles([]);
   };
 
   const submitCycle = async () => {
@@ -299,19 +362,59 @@ export default function App() {
 
       {!userId ? (
         <section className="panel">
-          <h2>Create a demo user</h2>
-          <p className="muted">Stores your profile in Postgres; no external accounts.</p>
+          <div className="row" style={{ gap: 8, marginBottom: 12 }}>
+            <button
+              type="button"
+              className={authMode === "login" ? "primary" : "ghost"}
+              onClick={() => setAuthMode("login")}
+            >
+              Sign in
+            </button>
+            <button
+              type="button"
+              className={authMode === "register" ? "primary" : "ghost"}
+              onClick={() => setAuthMode("register")}
+            >
+              Create account
+            </button>
+          </div>
+          <h2>{authMode === "login" ? "Welcome back" : "Register new account"}</h2>
+          <p className="muted">
+            {authMode === "login"
+              ? "Sign in with your email and password to access your personalized training dashboard."
+              : "Create an account with role-based permissions (Athlete or Coach)."}
+          </p>
           <div className="row" style={{ marginTop: 14 }}>
             <label>
               Email
               <input value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
             </label>
             <label>
-              Display name (optional)
-              <input value={name} onChange={(e) => setName(e.target.value)} />
+              Password
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete={authMode === "login" ? "current-password" : "new-password"}
+              />
             </label>
-            <button className="primary" type="button" disabled={busy} onClick={() => void register()}>
-              {busy ? "Working…" : "Register & continue"}
+            {authMode === "register" ? (
+              <>
+                <label>
+                  Display name (optional)
+                  <input value={name} onChange={(e) => setName(e.target.value)} />
+                </label>
+                <label>
+                  Account role
+                  <select value={role} onChange={(e) => setRole(e.target.value)}>
+                    <option value="athlete">Athlete / User</option>
+                    <option value="coach">Coach / Trainer</option>
+                  </select>
+                </label>
+              </>
+            ) : null}
+            <button className="primary" type="button" disabled={busy} onClick={() => void handleAuth()}>
+              {busy ? "Working…" : authMode === "login" ? "Sign in" : "Create account"}
             </button>
           </div>
           {err ? <p className="error">{err}</p> : null}
@@ -320,10 +423,10 @@ export default function App() {
         <>
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 16 }}>
             <p className="muted" style={{ margin: 0 }}>
-              Signed in as <strong>{dash?.user.email ?? "…"}</strong>
+              Signed in as <strong>{dash?.user.email ?? "…"}</strong> ({dash?.user.role ?? "athlete"})
             </p>
             <button type="button" className="ghost" onClick={logout}>
-              Clear local session
+              Sign out
             </button>
           </div>
           {err ? <p className="error">{err}</p> : null}
@@ -597,6 +700,79 @@ export default function App() {
                 <button className="primary" type="button" disabled={busy} onClick={() => void syncWearableDemo()}>
                   Insert demo wearable row
                 </button>
+              </div>
+
+              <div className="panel" style={{ gridColumn: "1 / -1" }}>
+                <h2>Storage & Health Documents</h2>
+                <p className="muted">
+                  Upload raw wearable sensor CSV dumps, doctor notes, or athletic reports to your personal storage.
+                </p>
+                <div className="row" style={{ alignItems: "center", gap: 12, marginTop: 10 }}>
+                  <input
+                    type="file"
+                    onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
+                    style={{ flex: 1 }}
+                  />
+                  <select
+                    value={fileCategory}
+                    onChange={(e) => setFileCategory(e.target.value)}
+                    style={{ width: 160 }}
+                  >
+                    <option value="wearable_csv">Wearable CSV</option>
+                    <option value="medical_report">Medical Report</option>
+                    <option value="physician_note">Physician Note</option>
+                    <option value="general">Other</option>
+                  </select>
+                  <button
+                    className="primary"
+                    type="button"
+                    disabled={busy || !selectedFile}
+                    onClick={() => void uploadFile()}
+                  >
+                    {busy ? "Uploading…" : "Upload file"}
+                  </button>
+                </div>
+
+                {userFiles.length > 0 ? (
+                  <div style={{ marginTop: 16 }}>
+                    <h3 style={{ fontSize: "1rem", marginBottom: 8 }}>Stored Documents ({userFiles.length})</h3>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                      {userFiles.map((f) => (
+                        <li
+                          key={f.id}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            padding: "8px 0",
+                            borderBottom: "1px solid var(--border)",
+                          }}
+                        >
+                          <div>
+                            <strong>{f.original_filename}</strong>{" "}
+                            <span className="muted" style={{ fontSize: "0.85rem" }}>
+                              ({(f.file_size_bytes / 1024).toFixed(1)} KB · {f.category})
+                            </span>
+                          </div>
+                          <a
+                            href={`/api/v1/storage/${f.id}`}
+                            download={f.original_filename}
+                            style={{
+                              padding: "4px 10px",
+                              borderRadius: "6px",
+                              border: "1px solid var(--border)",
+                              color: "var(--text)",
+                              textDecoration: "none",
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            Download
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
               </div>
             </div>
           ) : null}

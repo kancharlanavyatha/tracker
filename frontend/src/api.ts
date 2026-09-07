@@ -1,4 +1,14 @@
 const API = "/api/v1";
+export const TOKEN_KEY = "mh_token";
+
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  return headers;
+}
 
 async function parseError(res: Response): Promise<string> {
   try {
@@ -12,7 +22,7 @@ async function parseError(res: Response): Promise<string> {
 export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(await parseError(res));
@@ -20,7 +30,9 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
 }
 
 export async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetch(`${API}${path}`);
+  const res = await fetch(`${API}${path}`, {
+    headers: getAuthHeaders(),
+  });
   if (!res.ok) throw new Error(await parseError(res));
   return res.json() as Promise<T>;
 }
@@ -28,8 +40,23 @@ export async function apiGet<T>(path: string): Promise<T> {
 export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
     body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(await parseError(res));
+  return res.json() as Promise<T>;
+}
+
+export async function apiUpload<T>(path: string, formData: FormData): Promise<T> {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  const res = await fetch(`${API}${path}`, {
+    method: "POST",
+    headers,
+    body: formData,
   });
   if (!res.ok) throw new Error(await parseError(res));
   return res.json() as Promise<T>;
@@ -39,6 +66,19 @@ export type User = {
   id: string;
   email: string;
   display_name: string | null;
+  role?: string;
+  is_active?: boolean;
+  created_at: string;
+};
+
+export type StoredFile = {
+  id: string;
+  user_id: string;
+  filename: string;
+  original_filename: string;
+  content_type: string;
+  file_size_bytes: number;
+  category: string;
   created_at: string;
 };
 

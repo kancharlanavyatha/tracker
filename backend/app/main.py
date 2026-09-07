@@ -6,13 +6,26 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import Base, engine
-from app.routers import analytics, cycles, dashboard, health, notifications, pipeline, symptoms, users, wearables
+from app.routers import (
+    analytics,
+    auth,
+    cycles,
+    dashboard,
+    health,
+    notifications,
+    pipeline,
+    storage,
+    symptoms,
+    users,
+    wearables,
+)
 from app.services.scheduler_jobs import shutdown_scheduler, start_scheduler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Path(settings.artifacts_dir).mkdir(parents=True, exist_ok=True)
+    Path(settings.storage_dir / "uploads").mkdir(parents=True, exist_ok=True)
     Base.metadata.create_all(bind=engine)
     start_scheduler()
     yield
@@ -30,6 +43,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "*",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -38,6 +54,8 @@ app.add_middleware(
 
 API = "/api/v1"
 app.include_router(health.router, prefix=API)
+app.include_router(auth.router, prefix=API)
+app.include_router(storage.router, prefix=API)
 app.include_router(users.router, prefix=API)
 app.include_router(cycles.router, prefix=API)
 app.include_router(symptoms.router, prefix=API)

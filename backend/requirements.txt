@@ -13,3 +13,7 @@ APScheduler
 xgboost
 torch
 psycopg2-binary
+pyjwt
+passlib
+bcrypt
+python-multipart

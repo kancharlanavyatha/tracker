@@ -43,6 +43,9 @@ class User(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
 
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    hashed_password: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    role: Mapped[str] = mapped_column(String(32), default="athlete")
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     display_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
 
@@ -59,6 +62,8 @@ class User(Base):
     recommendations: Mapped[list["Recommendation"]] = relationship(back_populates="user")
 
     notifications: Mapped[list["Notification"]] = relationship(back_populates="user")
+
+    stored_files: Mapped[list["StoredFile"]] = relationship(back_populates="user")
 
     app_state: Mapped["UserAppState | None"] = relationship(
 
@@ -227,4 +232,20 @@ class Recommendation(Base):
 
 
     user: Mapped["User"] = relationship(back_populates="recommendations")
+ 
+ 
+class StoredFile(Base):
+    __tablename__ = "stored_files"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
+    filename: Mapped[str] = mapped_column(String(255))
+    original_filename: Mapped[str] = mapped_column(String(255))
+    content_type: Mapped[str] = mapped_column(String(100))
+    file_size_bytes: Mapped[int] = mapped_column(Integer)
+    storage_path: Mapped[str] = mapped_column(String(512))
+    category: Mapped[str] = mapped_column(String(64), default="general")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    user: Mapped["User"] = relationship(back_populates="stored_files")
 
