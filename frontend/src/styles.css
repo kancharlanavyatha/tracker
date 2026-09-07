@@ -77,8 +77,11 @@ a {
 }
 
 .tabs button.active {
-  border-color: var(--accent);
-  background: linear-gradient(135deg, #2a2450, var(--panel));
+  border-color: var(--accent2);
+  background: linear-gradient(135deg, rgba(131, 153, 88, 0.35), rgba(16, 86, 102, 0.3));
+  color: #f7f4d5;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(131, 153, 88, 0.25);
 }
 
 .grid {
@@ -1013,5 +1016,129 @@ input:checked + .slider:before {
   background: rgba(131, 153, 88, 0.25);
   border-color: var(--accent2);
 }
+
+/* Floating Toast Notification System */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast-notification {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: #0d2a20;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: slideInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 260px;
+  max-width: 420px;
+}
+
+.toast-notification.success {
+  border-color: #839958;
+  background: linear-gradient(135deg, rgba(131, 153, 88, 0.25), #0d2a20);
+}
+
+.toast-notification.error {
+  border-color: #f07178;
+  background: linear-gradient(135deg, rgba(240, 113, 120, 0.25), #0d2a20);
+}
+
+.toast-notification.info {
+  border-color: #105666;
+  background: linear-gradient(135deg, rgba(16, 86, 102, 0.25), #0d2a20);
+}
+
+.toast-close-btn {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.toast-close-btn:hover {
+  color: var(--text);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Welcome & Public Demo Onboarding Banner */
+.welcome-hero-panel {
+  background: radial-gradient(800px 300px at 50% 0%, rgba(131, 153, 88, 0.18), transparent), var(--panel);
+  border: 1px solid rgba(131, 153, 88, 0.35);
+  border-radius: 24px;
+  padding: 28px 24px;
+}
+
+.welcome-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(131, 153, 88, 0.2);
+  color: #839958;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.demo-access-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(211, 150, 140, 0.15), rgba(16, 86, 102, 0.15));
+  border: 1px solid rgba(211, 150, 140, 0.3);
+  border-radius: 18px;
+  padding: 16px 20px;
+  margin-top: 14px;
+}
+
+.demo-btn {
+  background: linear-gradient(135deg, #d3968c, #e2aba2) !important;
+  color: #061812 !important;
+  font-weight: 700 !important;
+  padding: 10px 20px !important;
+  border-radius: 999px !important;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(211, 150, 140, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.demo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(211, 150, 140, 0.45);
+}
+
 
 

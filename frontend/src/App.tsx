@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   apiGet,
   apiPatch,
@@ -35,13 +35,14 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [userId, setUserId] = useState<string | null>(() => localStorage.getItem(USER_KEY));
   const [email, setEmail] = useState("demo@university.edu");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("demopass123");
   const [role, setRole] = useState("athlete");
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "error" | "info" } | null>(null);
   const [dash, setDash] = useState<Dashboard | null>(null);
   const [userFiles, setUserFiles] = useState<StoredFile[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -69,6 +70,21 @@ export default function App() {
   const [chatLog, setChatLog] = useState<Array<{ role: "user" | "assistant"; text: string; source?: string }>>([]);
 
   const [rec, setRec] = useState<RecommendOut | null>(null);
+
+  const chatBottomRef = useRef<HTMLDivElement>(null);
+
+  const showToast = useCallback((msg: string, type: "success" | "error" | "info" = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => {
+      setToast((curr) => (curr?.msg === msg ? null : curr));
+    }, 4000);
+  }, []);
+
+  useEffect(() => {
+    if (tab === "chat") {
+      chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatLog, tab, busy]);
 
   const [cycA, setCycA] = useState<AnalyticsCycles | null>(null);
   const [symA, setSymA] = useState<AnalyticsSymptoms | null>(null);
@@ -150,6 +166,7 @@ export default function App() {
         setUserId(res.user.id);
         setDash(null);
         await loadDashboard(res.user.id);
+        showToast("✓ Signed in successfully! Welcome back.", "success");
       } else {
         const res = await apiPost<{ access_token: string; user: User }>("/auth/register", {
           email,
@@ -162,9 +179,33 @@ export default function App() {
         setUserId(res.user.id);
         setDash(null);
         await loadDashboard(res.user.id);
+        showToast("✨ Account created! Welcome to Clue.", "success");
       }
     } catch (e: unknown) {
       setErr(String(e));
+      showToast(String(e), "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setBusy(true);
+    setErr(null);
+    try {
+      const res = await apiPost<{ access_token: string; user: User }>("/auth/login", {
+        email: "demo@university.edu",
+        password: "demopass123",
+      });
+      localStorage.setItem(TOKEN_KEY, res.access_token);
+      localStorage.setItem(USER_KEY, res.user.id);
+      setUserId(res.user.id);
+      setDash(null);
+      await loadDashboard(res.user.id);
+      showToast("✨ Welcome to Clue! Loaded Demo Athlete with 4 cycle logs.", "success");
+    } catch (e: unknown) {
+      setErr(String(e));
+      showToast("Failed to load demo: " + String(e), "error");
     } finally {
       setBusy(false);
     }
@@ -174,18 +215,17 @@ export default function App() {
     if (!selectedFile) return;
     setBusy(true);
     setErr(null);
-    setSuccessMsg(null);
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("category", fileCategory);
       await apiUpload<StoredFile>("/storage/upload", formData);
-      setSuccessMsg("File uploaded successfully to storage!");
+      showToast("📁 Record uploaded securely to your private vault!", "success");
       setSelectedFile(null);
       await loadUserFiles();
-      setTimeout(() => setSuccessMsg(null), 4000);
     } catch (e: unknown) {
       setErr(String(e));
+      showToast(String(e), "error");
     } finally {
       setBusy(false);
     }
@@ -203,24 +243,24 @@ export default function App() {
     setWearA(null);
     setNotifList([]);
     setUserFiles([]);
+    showToast("Signed out. See you soon!", "info");
   };
 
   const submitCycle = async () => {
     if (!userId) return;
     setBusy(true);
     setErr(null);
-    setSuccessMsg(null);
     try {
       await apiPost("/cycles/", {
         user_id: userId,
         period_start: periodStart,
         flow_intensity: flow ? Number(flow) : null,
       });
-      setSuccessMsg("Cycle entry saved successfully!");
-      setTimeout(() => setSuccessMsg(null), 4000);
+      showToast("🩸 Cycle entry saved! Forecast updated.", "success");
       await loadDashboard();
     } catch (e: unknown) {
       setErr(String(e));
+      showToast(String(e), "error");
     } finally {
       setBusy(false);
     }
@@ -230,7 +270,6 @@ export default function App() {
     if (!userId) return;
     setBusy(true);
     setErr(null);
-    setSuccessMsg(null);
     try {
       await apiPost("/symptom-logs/", {
         user_id: userId,
@@ -247,11 +286,11 @@ export default function App() {
           sleep_h: Number(sleep),
         },
       });
-      setSuccessMsg("Symptom log saved successfully!");
-      setTimeout(() => setSuccessMsg(null), 4000);
+      showToast("✓ Today's symptom log saved successfully!", "success");
       await loadDashboard();
     } catch (e: unknown) {
       setErr(String(e));
+      showToast(String(e), "error");
     } finally {
       setBusy(false);
     }
@@ -261,7 +300,6 @@ export default function App() {
     if (!userId) return;
     setBusy(true);
     setErr(null);
-    setSuccessMsg(null);
     try {
       const now = new Date().toISOString();
       await apiPost("/wearable-sync", {
@@ -269,20 +307,20 @@ export default function App() {
         points: [
           {
             recorded_at: now,
-            hrv_ms: 42 + Math.random() * 8,
+            hrv_ms: 45 + Math.random() * 8,
             skin_temp_c: 36.4 + Math.random() * 0.3,
-            spo2_pct: 97 + Math.random(),
-            resting_hr: 58 + Math.floor(Math.random() * 6),
-            steps: 6200 + Math.floor(Math.random() * 2000),
+            spo2_pct: 97.5 + Math.random(),
+            resting_hr: 57 + Math.floor(Math.random() * 6),
+            steps: 7200 + Math.floor(Math.random() * 2000),
             workout_type: "strength",
           },
         ],
       });
-      setSuccessMsg("Demo wearable row inserted successfully!");
-      setTimeout(() => setSuccessMsg(null), 4000);
+      showToast("🔄 Wearable biometrics synced successfully!", "success");
       await loadDashboard();
     } catch (e: unknown) {
       setErr(String(e));
+      showToast(String(e), "error");
     } finally {
       setBusy(false);
     }
@@ -295,9 +333,11 @@ export default function App() {
     try {
       const out = await apiPost<RecommendOut>("/recommend", { user_id: userId });
       setRec(out);
+      showToast("⚡ Personalized advice updated for your current phase!", "success");
       await loadDashboard();
     } catch (e: unknown) {
       setErr(String(e));
+      showToast(String(e), "error");
     } finally {
       setBusy(false);
     }
@@ -305,16 +345,24 @@ export default function App() {
 
   const sendChat = async () => {
     if (!userId || !chatIn.trim()) return;
-    setBusy(true);
-    setErr(null);
     const msg = chatIn.trim();
     setChatIn("");
-    setChatLog((l) => [...l, { role: "user", text: msg }]);
+    await askQuestionDirectly(msg);
+  };
+
+  const askQuestionDirectly = async (question: string) => {
+    if (!userId) return;
+    setBusy(true);
+    setErr(null);
+    setChatLog((l) => [...l, { role: "user", text: question }]);
     try {
-      const out = await apiPost<ChatOut>("/chat", { user_id: userId, message: msg });
+      const out = await apiPost<ChatOut>("/chat", { user_id: userId, message: question });
       setChatLog((l) => [...l, { role: "assistant", text: out.reply, source: out.source }]);
     } catch (e: unknown) {
-      setChatLog((l) => [...l, { role: "assistant", text: String(e) }]);
+      setChatLog((l) => [
+        ...l,
+        { role: "assistant", text: "I'm having trouble retrieving advice right now. Please check back in a moment." },
+      ]);
     } finally {
       setBusy(false);
     }
@@ -325,6 +373,7 @@ export default function App() {
     setBusy(true);
     try {
       await apiPatch(`/notifications/${nid}?user_id=${userId}`, { is_read: true });
+      showToast("Notification marked as read", "info");
       await loadNotifications();
       await loadDashboard();
     } catch (e: unknown) {
@@ -339,13 +388,13 @@ export default function App() {
   const headerTabs = useMemo(
     () =>
       [
-        { id: "dashboard" as const, label: "Cycle Wheel" },
-        { id: "calendar" as const, label: "Calendar" },
-        { id: "plans" as const, label: "Plans" },
-        { id: "analytics" as const, label: "Analysis" },
-        { id: "alerts" as const, label: "Reminders" },
-        { id: "data" as const, label: "Daily Log" },
-        { id: "chat" as const, label: "Ask Clue" },
+        { id: "dashboard" as const, label: "🪷 Cycle Wheel" },
+        { id: "calendar" as const, label: "📅 Calendar" },
+        { id: "plans" as const, label: "🥗 Plans" },
+        { id: "analytics" as const, label: "📊 Analysis" },
+        { id: "alerts" as const, label: "🔔 Reminders" },
+        { id: "data" as const, label: "📝 Daily Log" },
+        { id: "chat" as const, label: "💬 Ask Clue" },
       ] satisfies { id: Tab; label: string }[],
     [],
   );
@@ -369,63 +418,85 @@ export default function App() {
       </header>
 
       {!userId ? (
-        <section className="panel">
-          <div className="row" style={{ gap: 8, marginBottom: 12 }}>
-            <button
-              type="button"
-              className={authMode === "login" ? "primary" : "ghost"}
-              onClick={() => setAuthMode("login")}
-            >
-              Sign in
-            </button>
-            <button
-              type="button"
-              className={authMode === "register" ? "primary" : "ghost"}
-              onClick={() => setAuthMode("register")}
-            >
-              Create account
-            </button>
-          </div>
-          <h2>{authMode === "login" ? "Welcome back" : "Register new account"}</h2>
-          <p className="muted">
-            {authMode === "login"
-              ? "Sign in with your email and password to access your personalized training dashboard."
-              : "Create an account with role-based permissions (Athlete or Coach)."}
+        <section className="panel welcome-hero-panel">
+          <div className="welcome-hero-badge">🪷 Welcome to Clue</div>
+          <h2 style={{ fontSize: "1.6rem", margin: "0 0 8px" }}>Your Cycle & Athletic Wellness Companion</h2>
+          <p className="muted" style={{ maxWidth: 640, margin: "0 0 18px", lineHeight: 1.5 }}>
+            Track your cycle rhythm, synchronize your biometric wearables, balance hormones through phase-targeted nutrition, and receive evidence-based athletic recovery guidance.
           </p>
-          <div className="row" style={{ marginTop: 14 }}>
-            <label>
-              Email
-              <input value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
-            </label>
-            <label>
-              Password
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete={authMode === "login" ? "current-password" : "new-password"}
-              />
-            </label>
-            {authMode === "register" ? (
-              <>
-                <label>
-                  Display name (optional)
-                  <input value={name} onChange={(e) => setName(e.target.value)} />
-                </label>
-                <label>
-                  Account role
-                  <select value={role} onChange={(e) => setRole(e.target.value)}>
-                    <option value="athlete">Athlete / User</option>
-                    <option value="coach">Coach / Trainer</option>
-                  </select>
-                </label>
-              </>
-            ) : null}
-            <button className="primary" type="button" disabled={busy} onClick={() => void handleAuth()}>
-              {busy ? "Working…" : authMode === "login" ? "Sign in" : "Create account"}
+
+          <div className="demo-access-banner">
+            <div>
+              <strong style={{ color: "var(--accent)", fontSize: "1.05rem" }}>⚡ Instant Public Demo Access</strong>
+              <p className="muted" style={{ fontSize: "0.85rem", margin: "4px 0 0" }}>
+                Explore all 7 tabs with pre-loaded cycle patterns, biometric charts, and training plans without having to create an account.
+              </p>
+            </div>
+            <button
+              className="primary demo-btn"
+              type="button"
+              disabled={busy}
+              onClick={() => void handleDemoLogin()}
+            >
+              {busy ? "Loading Demo…" : "Explore as Demo Athlete →"}
             </button>
           </div>
-          {err ? <p className="error">{err}</p> : null}
+
+          <div style={{ margin: "26px 0 10px", borderTop: "1px solid var(--border)", paddingTop: 20 }}>
+            <div className="row" style={{ gap: 8, marginBottom: 14 }}>
+              <button
+                type="button"
+                className={authMode === "login" ? "primary" : "ghost"}
+                onClick={() => setAuthMode("login")}
+              >
+                Sign in
+              </button>
+              <button
+                type="button"
+                className={authMode === "register" ? "primary" : "ghost"}
+                onClick={() => setAuthMode("register")}
+              >
+                Create personal account
+              </button>
+            </div>
+            <h3 style={{ fontSize: "1rem", margin: "0 0 6px" }}>
+              {authMode === "login" ? "Sign in to your account" : "Create new account"}
+            </h3>
+            <div className="row" style={{ marginTop: 12 }}>
+              <label>
+                Email
+                <input value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+              </label>
+              <label>
+                Password
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete={authMode === "login" ? "current-password" : "new-password"}
+                />
+              </label>
+              {authMode === "register" ? (
+                <>
+                  <label>
+                    Display name (optional)
+                    <input value={name} onChange={(e) => setName(e.target.value)} />
+                  </label>
+                  <label>
+                    Account role
+                    <select value={role} onChange={(e) => setRole(e.target.value)}>
+                      <option value="athlete">Athlete / User</option>
+                      <option value="coach">Coach / Trainer</option>
+                    </select>
+                  </label>
+                </>
+              ) : null}
+              <button className="primary" type="button" disabled={busy} onClick={() => void handleAuth()}>
+                {busy ? "Working…" : authMode === "login" ? "Sign in" : "Create account"}
+              </button>
+            </div>
+            {err ? <p className="error" style={{ marginTop: 12 }}>{err}</p> : null}
+          </div>
         </section>
       ) : (
         <>
@@ -445,8 +516,19 @@ export default function App() {
               {/* Clue Circular Cycle Wheel */}
               <CycleWheel
                 phase={phase}
-                onLogPeriodClick={() => setTab("data")}
-                onLogSymptomsClick={() => setTab("data")}
+                onLogPeriodClick={() => {
+                  setFlow("3");
+                  const today = new Date().toISOString().slice(0, 10);
+                  setPeriodStart(today);
+                  setLogDate(today);
+                  setTab("data");
+                  showToast("🩸 Period logger ready. Flow intensity pre-selected for today.", "info");
+                }}
+                onLogSymptomsClick={() => {
+                  setLogDate(new Date().toISOString().slice(0, 10));
+                  setTab("data");
+                  showToast("✎ Select today's symptoms, sensations & mood.", "info");
+                }}
               />
 
               {/* Clue-Style Status & Readiness Cards Grid */}
@@ -617,9 +699,11 @@ export default function App() {
               <CycleCalendar
                 phase={phase}
                 recentPeriods={dash?.cycles.map((c) => c.period_start) ?? []}
-                onSelectDate={(d) => {
+                onLogForDate={(d) => {
                   setLogDate(d);
+                  setPeriodStart(d);
                   setTab("data");
+                  showToast(`📝 Logging for ${d}. Choose symptoms & flow below.`, "info");
                 }}
               />
               <div className="panel">
@@ -920,7 +1004,10 @@ export default function App() {
                       <input
                         type="checkbox"
                         checked={remindPeriod}
-                        onChange={(e) => setRemindPeriod(e.target.checked)}
+                        onChange={(e) => {
+                          setRemindPeriod(e.target.checked);
+                          showToast(`🔔 Upcoming Period Countdown ${e.target.checked ? "enabled" : "muted"}`, "info");
+                        }}
                       />
                       <span className="slider" />
                     </label>
@@ -935,7 +1022,10 @@ export default function App() {
                       <input
                         type="checkbox"
                         checked={remindFertile}
-                        onChange={(e) => setRemindFertile(e.target.checked)}
+                        onChange={(e) => {
+                          setRemindFertile(e.target.checked);
+                          showToast(`🌸 Fertile & Ovulation alert ${e.target.checked ? "enabled" : "muted"}`, "info");
+                        }}
                       />
                       <span className="slider" />
                     </label>
@@ -950,7 +1040,10 @@ export default function App() {
                       <input
                         type="checkbox"
                         checked={remindHydration}
-                        onChange={(e) => setRemindHydration(e.target.checked)}
+                        onChange={(e) => {
+                          setRemindHydration(e.target.checked);
+                          showToast(`💧 Daily Hydration reminders ${e.target.checked ? "enabled" : "muted"}`, "info");
+                        }}
                       />
                       <span className="slider" />
                     </label>
@@ -965,7 +1058,10 @@ export default function App() {
                       <input
                         type="checkbox"
                         checked={remindSymptoms}
-                        onChange={(e) => setRemindSymptoms(e.target.checked)}
+                        onChange={(e) => {
+                          setRemindSymptoms(e.target.checked);
+                          showToast(`📝 Evening Symptom Check-in ${e.target.checked ? "enabled" : "muted"}`, "info");
+                        }}
                       />
                       <span className="slider" />
                     </label>
@@ -1367,9 +1463,8 @@ export default function App() {
                       key={qIdx}
                       type="button"
                       className="chip-btn"
-                      onClick={() => {
-                        setChatIn(question);
-                      }}
+                      disabled={busy}
+                      onClick={() => void askQuestionDirectly(question)}
                     >
                       {question}
                     </button>
@@ -1397,6 +1492,12 @@ export default function App() {
                     {m.text}
                   </div>
                 ))}
+                {busy && (
+                  <div className="bubble assistant" style={{ fontStyle: "italic", color: "var(--muted)" }}>
+                    <span>🪷 Clue is reflecting on your question…</span>
+                  </div>
+                )}
+                <div ref={chatBottomRef} />
               </div>
 
               <div style={{ marginTop: 12 }}>
@@ -1424,6 +1525,19 @@ export default function App() {
           ) : null}
         </>
       )}
+
+      {/* Floating Toast Feedback */}
+      {toast ? (
+        <div className="toast-container">
+          <div className={`toast-notification ${toast.type}`}>
+            <span>{toast.type === "success" ? "✓" : toast.type === "error" ? "⚠️" : "ℹ️"}</span>
+            <span>{toast.msg}</span>
+            <button type="button" className="toast-close-btn" onClick={() => setToast(null)}>
+              ×
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

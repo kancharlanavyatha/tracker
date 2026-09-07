@@ -5,15 +5,17 @@ interface CycleCalendarProps {
   phase: Phase | null;
   recentPeriods?: string[];
   onSelectDate?: (dateStr: string) => void;
+  onLogForDate?: (dateStr: string) => void;
 }
 
 export const CycleCalendar: React.FC<CycleCalendarProps> = ({
   phase,
   recentPeriods = [],
   onSelectDate,
+  onLogForDate,
 }) => {
   const [currentDate, setCurrentDate] = useState(() => new Date());
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selectedDay, setSelectedDay] = useState<string | null>(() => new Date().toISOString().slice(0, 10));
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -132,7 +134,7 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
         </div>
         <div className="legend-item">
           <span className="legend-indicator follicular-indicator" />
-          <span>Follicular</span>
+          <span>Follicular Phase</span>
         </div>
         <div className="legend-item">
           <span className="legend-indicator fertile-indicator" />
@@ -140,15 +142,43 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
         </div>
         <div className="legend-item">
           <span className="legend-indicator luteal-indicator" />
-          <span>Luteal</span>
+          <span>Luteal Phase</span>
         </div>
       </div>
 
       {selectedDay && (
-        <div className="calendar-selected-info">
-          <p>
-            Selected: <strong>{selectedDay}</strong> {selectedDay === todayStr ? "(Today)" : ""}
-          </p>
+        <div
+          className="calendar-selected-info"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            background: "rgba(13, 42, 32, 0.7)",
+            padding: "14px 18px",
+            borderRadius: "16px",
+            border: "1px solid var(--border)",
+            marginTop: "18px",
+          }}
+        >
+          <div>
+            <span style={{ fontSize: "0.75rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Selected Calendar Day
+            </span>
+            <div style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--text)", marginTop: "2px" }}>
+              {selectedDay} {selectedDay === todayStr ? "· Today" : ""}
+              {recentPeriods.includes(selectedDay) ? " · 🩸 Period Flow Logged" : ""}
+            </div>
+          </div>
+          {onLogForDate && (
+            <button
+              type="button"
+              className="primary"
+              style={{ fontSize: "0.85rem", padding: "8px 16px", borderRadius: "999px" }}
+              onClick={() => onLogForDate(selectedDay)}
+            >
+              ✎ Log Symptoms for This Day
+            </button>
+          )}
         </div>
       )}
     </div>

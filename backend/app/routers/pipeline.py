@@ -97,20 +97,118 @@ def chat(body: ChatIn, db: Session = Depends(get_db)) -> ChatOut:
     )
 
     reply = llm_client.generate_ollama_reply(prompt)
-
     if reply:
+        return ChatOut(reply=reply, source="Clue AI")
 
-        return ChatOut(reply=reply, source="ollama")
+    guidance = _generate_clue_guidance(phase_out.phase, phase_out.day_in_cycle, body.message)
+    return ChatOut(reply=guidance, source="Clue Health Companion")
 
-    stub = (
 
-        f"[Stub assistant] Phase estimate: {phase_out.phase} (day {phase_out.day_in_cycle}). "
+def _generate_clue_guidance(phase: str, day: int, message: str) -> str:
+    msg = message.lower()
+    phase_clean = phase.capitalize() if phase != "unknown" else "Current"
 
-        "Install and run Ollama with the configured model for full local LLM replies. "
+    if any(w in msg for w in ["eat", "food", "diet", "nutrition", "craving", "meal", "hungry"]):
+        if phase == "menstrual":
+            return (
+                f"🥗 **Nutrition Guidance for Menstrual Phase (Day {day}):**\n\n"
+                "• **Replenish Iron & Zinc:** Focus on grass-fed beef, lentils, spinach, and pumpkin seeds to restore iron lost through bleeding.\n"
+                "• **Anti-inflammatory Foods:** Warm bone broths, turmeric golden milk, and berries help reduce uterine prostaglandins.\n"
+                "• **Cacao & Magnesium:** Dark chocolate (>75% cacao) provides natural magnesium to relieve cramping and ease mood shifts.\n"
+                "• **Hydration:** Aim for at least 2.5L of warm water or herbal teas (ginger, raspberry leaf) to combat fluid retention."
+            )
+        elif phase == "follicular":
+            return (
+                f"🥗 **Nutrition Guidance for Follicular Phase (Day {day}):**\n\n"
+                "• **Lean Protein & Metabolism Support:** Estrogen is rising and insulin sensitivity is high. Prioritize eggs, wild salmon, chicken breast, and edamame.\n"
+                "• **Sprouted & Fermented Foods:** Kimchi, sauerkraut, and kefir support healthy gut flora to metabolize rising estrogen smoothly.\n"
+                "• **Complex Carbs:** Quinoa, oats, and sweet potatoes fuel higher training intensities without blood sugar spikes.\n"
+                "• **Hydration:** 2.2–2.5L daily with light electrolytes before training."
+            )
+        elif phase == "ovulatory":
+            return (
+                f"🥗 **Nutrition Guidance for Ovulation Window (Day {day}):**\n\n"
+                "• **Antioxidant & Fiber Dense:** High estrogen levels require fiber to support liver detoxification. Load up on cruciferous veggies (broccoli, Brussels sprouts, kale).\n"
+                "• **Glutathione & Vitamin C:** Citrus fruits, bell peppers, and avocados support ovarian follicle release.\n"
+                "• **Lighter, Vibrant Meals:** Metabolism runs slightly cooler; fresh salads with olive oil, seeds, and wild fish are ideal.\n"
+                "• **Hydration:** 2.5L with a pinch of Celtic sea salt or electrolyte powder."
+            )
+        else:
+            return (
+                f"🥗 **Nutrition Guidance for Luteal Phase (Day {day}):**\n\n"
+                "• **Sustain Serotonin & Complex Carbs:** Progesterone increases metabolic demand by ~100–300 kcal/day. Complex carbs (brown rice, roasted sweet potatoes, squash) prevent blood sugar crashes and PMS mood swings.\n"
+                "• **Magnesium & Vitamin B6:** Bananas, pumpkin seeds, salmon, and chickpeas stimulate progesterone synthesis and alleviate water retention.\n"
+                "• **Limit Caffeine & Excess Sodium:** Reducing excess salt and espresso helps minimize breast tenderness and bloating.\n"
+                "• **Hydration:** 2.5–3.0L warm herbal teas (peppermint, chamomile)."
+            )
 
-        f"You asked: {body.message!r}"
+    if any(w in msg for w in ["workout", "exercise", "training", "intensity", "run", "lift", "strength", "gym", "cardio"]):
+        if phase == "menstrual":
+            return (
+                f"🏃‍♀️ **Training Guidance for Menstrual Phase (Day {day}):**\n\n"
+                "• **Primary Focus:** Restorative movement, joint mobility, and low-impact steady state (LISS).\n"
+                "• **Recommended Sessions:** Gentle Yin yoga, pelvic floor stretching, 30-minute nature walks, or light swimming.\n"
+                "• **Intensity Target:** RPE 3–5 / 10. Avoid maximum strain PRs if feeling pelvic pressure or fatigue.\n"
+                "• **Listen to Your Body:** If you feel an unexpected burst of energy, moderate lifting is safe, but prioritize extra warmup time."
+            )
+        elif phase == "follicular":
+            return (
+                f"🏃‍♀️ **Training Guidance for Follicular Phase (Day {day}):**\n\n"
+                "• **Primary Focus:** Progressive strength overload, building muscle tissue, and speed.\n"
+                "• **Why it Works:** Estrogen is anabolic, promoting muscle protein synthesis, joint elasticity, and faster glycogen replenishment.\n"
+                "• **Recommended Sessions:** Heavy barbell lifts (squats, deadlifts), tempo intervals, and challenging HIIT sessions.\n"
+                "• **Intensity Target:** RPE 7–8.5 / 10. Your recovery capacity is at its monthly peak!"
+            )
+        elif phase == "ovulatory":
+            return (
+                f"🏃‍♀️ **Training Guidance for Ovulation Window (Day {day}):**\n\n"
+                "• **Primary Focus:** Personal records (PRs), maximum sprint power, and high-intensity competition.\n"
+                "• **Why it Works:** Peak estrogen combined with a subtle testosterone surge maximizes central nervous system output.\n"
+                "• **Recommended Sessions:** 1-rep max attempts, maximum-speed track sprints, powerlifting.\n"
+                "• **Caution:** Higher estrogen can temporarily increase joint laxity; ensure thorough warmups and pristine biomechanics."
+            )
+        else:
+            return (
+                f"🏃‍♀️ **Training Guidance for Luteal Phase (Day {day}):**\n\n"
+                "• **Primary Focus:** Zone-2 aerobic capacity, endurance volume, and functional hypertrophy.\n"
+                "• **Why it Works:** Higher progesterone raises core temperature and resting heart rate, shifting the body toward fat oxidation.\n"
+                "• **Recommended Sessions:** 45–60 min steady state cycling/jogging, Pilates, functional bodyweight circuits.\n"
+                "• **Intensity Target:** RPE 5–6.5 / 10. Prioritize 8+ hours of sleep and cooldown mobility to manage cortisol."
+            )
 
+    if any(w in msg for w in ["heart", "hrv", "resting", "pulse", "bpm", "vitals", "temperature"]):
+        return (
+            "💓 **Biometrics & Hormonal Fluctuations:**\n\n"
+            "• **Resting Heart Rate (RHR):** It is completely normal for your RHR to increase by 2–5 bpm following ovulation and remain elevated through the luteal phase due to progesterone's thermogenic effect.\n"
+            "• **Heart Rate Variability (HRV):** HRV generally peaks during the follicular phase (indicating high parasympathetic recovery) and dips slightly in the late luteal phase.\n"
+            "• **Skin / Basal Body Temperature:** Post-ovulation, your temperature rises by ~0.3°C to 0.5°C and drops right as menstruation commences.\n"
+            "• **Action Tip:** If your HRV is lower than your 7-day baseline, downscale high-intensity intervals in favor of restorative aerobic work."
+        )
+
+    if any(w in msg for w in ["cramp", "pain", "bloat", "tender", "headache", "symptom"]):
+        return (
+            "🪷 **Evidence-Based Symptom Relief:**\n\n"
+            "• **For Cramps & Uterine Spasms:** Apply continuous localized heat (heating pad at ~40°C), which clinical studies show is as effective as ibuprofen. Supplementing with magnesium glycinate (200–300 mg) relaxes smooth muscle contractions.\n"
+            "• **For Bloating & Fluid Retention:** Increase potassium-rich foods (bananas, coconut water, avocado) and sip dandelion root or ginger tea. Avoid artificial sweeteners and carbonated sodas.\n"
+            "• **For Headaches & Tension:** Hydrate with electrolytes. Hormonal drops trigger vasodilation—gentle neck mobility and peppermint oil at the temples offer natural relief."
+        )
+
+    if any(w in msg for w in ["sleep", "rest", "tired", "fatigue", "insomnia"]):
+        return (
+            "😴 **Sleep Architecture & Phase Rhythms:**\n\n"
+            "• **Luteal Shift:** Progesterone promotes initial drowsiness but can fragment REM sleep and raise core body temperature, leading to lighter rest.\n"
+            "• **Sleep Optimization Tips:**\n"
+            "  1. Keep your bedroom cool (around 18–19°C / 65–67°F) to offset elevated luteal body temperature.\n"
+            "  2. Establish a screen-free wind-down 45 minutes before sleep.\n"
+            "  3. Magnesium L-threonate or glycinate 30 minutes before bed supports deep restorative stages."
+        )
+
+    return (
+        f"🪷 **Clue Health Guidance · {phase_clean} Phase (Day {day}):**\n\n"
+        f"You are currently in your **{phase_clean} Phase** (Day {day}). During this window, your hormonal environment is uniquely calibrated:\n\n"
+        "• **Movement:** Match your session intensity to today's readiness score. Respect early signs of fatigue.\n"
+        "• **Nourishment:** Focus on whole, nutrient-dense foods supporting your phase's metabolic rate.\n"
+        "• **Recovery:** Stay hydrated and track your daily symptoms to keep your personalized cycle forecasts razor sharp.\n\n"
+        "Ask me anything about meals, training adjustments, or symptom relief!"
     )
-
-    return ChatOut(reply=stub, source="stub")
 

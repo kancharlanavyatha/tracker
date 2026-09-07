@@ -7,7 +7,7 @@ def generate_ollama_reply(prompt: str) -> str | None:
     base = settings.ollama_base_url.rstrip("/")
     url = f"{base}/api/generate"
     try:
-        with httpx.Client(timeout=60.0) as client:
+        with httpx.Client(timeout=httpx.Timeout(10.0, connect=1.0)) as client:
             r = client.post(
                 url,
                 json={
