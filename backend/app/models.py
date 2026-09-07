@@ -49,6 +49,13 @@ class User(Base):
 
     display_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
 
+    # Biometrics & Profile customization
+    age: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    height_cm: Mapped[float | None] = mapped_column(Float, nullable=True)
+    weight_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
+    training_level: Mapped[str | None] = mapped_column(String(64), nullable=True, default="Recreational Athlete")
+    cycle_goal: Mapped[str | None] = mapped_column(String(128), nullable=True, default="Athletic Performance & Health")
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 

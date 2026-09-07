@@ -91,6 +91,63 @@ export default function App() {
   const [wearA, setWearA] = useState<AnalyticsWearable | null>(null);
   const [notifList, setNotifList] = useState<NotificationRow[]>([]);
 
+  // User Profile & Biometrics Customization
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [profName, setProfName] = useState("");
+  const [profAge, setProfAge] = useState<string>("");
+  const [profHeight, setProfHeight] = useState<string>("");
+  const [profWeight, setProfWeight] = useState<string>("");
+  const [profTraining, setProfTraining] = useState<string>("Collegiate Distance Runner");
+  const [profGoal, setProfGoal] = useState<string>("Endurance Performance & Energy Optimization");
+
+  useEffect(() => {
+    if (dash?.user) {
+      setProfName(dash.user.display_name ?? "");
+      setProfAge(dash.user.age != null ? String(dash.user.age) : "");
+      setProfHeight(dash.user.height_cm != null ? String(dash.user.height_cm) : "");
+      setProfWeight(dash.user.weight_kg != null ? String(dash.user.weight_kg) : "");
+      if (dash.user.training_level) setProfTraining(dash.user.training_level);
+      if (dash.user.cycle_goal) setProfGoal(dash.user.cycle_goal);
+    }
+  }, [dash?.user]);
+
+  const liveBmi = useMemo(() => {
+    const h = parseFloat(profHeight);
+    const w = parseFloat(profWeight);
+    if (!h || !w || h <= 0 || w <= 0) return null;
+    const val = w / Math.pow(h / 100, 2);
+    let category = "Normal";
+    if (val < 18.5) category = "Underweight";
+    else if (val >= 25 && val < 30) category = "Overweight";
+    else if (val >= 30) category = "Obese";
+    return { val: val.toFixed(1), category };
+  }, [profHeight, profWeight]);
+
+  const handleSaveProfile = async () => {
+    if (!userId) return;
+    setSavingProfile(true);
+    try {
+      const updated = await apiPatch<User>(`/users/${userId}/profile`, {
+        display_name: profName.trim() || null,
+        age: profAge ? parseInt(profAge, 10) : null,
+        height_cm: profHeight ? parseFloat(profHeight) : null,
+        weight_kg: profWeight ? parseFloat(profWeight) : null,
+        training_level: profTraining.trim() || null,
+        cycle_goal: profGoal.trim() || null,
+      });
+      if (dash) {
+        setDash({ ...dash, user: updated });
+      }
+      setProfileModalOpen(false);
+      showToast("✓ Personal biometrics and profile updated successfully!", "success");
+    } catch (e: unknown) {
+      showToast(`Failed to update profile: ${String(e)}`, "error");
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
   const loadDashboard = useCallback(
     async (uid?: string) => {
       const id = uid ?? userId;
@@ -500,19 +557,69 @@ export default function App() {
         </section>
       ) : (
         <>
-          <div className="row" style={{ justifyContent: "space-between", marginBottom: 16 }}>
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <p className="muted" style={{ margin: 0 }}>
-              Signed in as <strong>{dash?.user.email ?? "…"}</strong> ({dash?.user.role ?? "athlete"})
+              Signed in as <strong>{dash?.user.display_name || dash?.user.email || "…"}</strong> ({dash?.user.role ?? "athlete"})
             </p>
-            <button type="button" className="ghost" onClick={logout}>
-              Sign out
-            </button>
+            <div className="row" style={{ gap: 8, alignItems: "center" }}>
+              <button
+                type="button"
+                className="secondary"
+                style={{ fontSize: "0.82rem", padding: "6px 12px", display: "inline-flex", alignItems: "center", gap: 6 }}
+                onClick={() => setProfileModalOpen(true)}
+              >
+                ⚙️ Profile & Biometrics
+              </button>
+              <button type="button" className="ghost" onClick={logout}>
+                Sign out
+              </button>
+            </div>
           </div>
           {err ? <p className="error">{err}</p> : null}
           {successMsg ? <p className="success">{successMsg}</p> : null}
 
           {tab === "dashboard" ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {/* Biometrics & Customization Summary Pill */}
+              <div
+                className="profile-summary-pill"
+                onClick={() => setProfileModalOpen(true)}
+                title="Click to customize age, height, weight, and training goals"
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "1.3rem" }}>👤</span>
+                  <div>
+                    <strong style={{ fontSize: "0.95rem", color: "var(--text)" }}>
+                      {dash?.user.display_name || "Athlete Biometrics"}
+                    </strong>
+                    <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: 2 }}>
+                      {dash?.user.age ? `${dash.user.age} yrs` : "Age unset"} ·{" "}
+                      {dash?.user.height_cm ? `${dash.user.height_cm} cm` : "Height unset"} ·{" "}
+                      {dash?.user.weight_kg ? `${dash.user.weight_kg} kg` : "Weight unset"} ·{" "}
+                      <span style={{ color: "var(--accent)" }}>{dash?.user.training_level ?? "Recreational"}</span>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {dash?.user.height_cm && dash?.user.weight_kg ? (
+                    <span className="bmi-badge">
+                      BMI {(dash.user.weight_kg / Math.pow(dash.user.height_cm / 100, 2)).toFixed(1)}
+                    </span>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="ghost"
+                    style={{ fontSize: "0.78rem", padding: "4px 10px", borderColor: "var(--border)" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setProfileModalOpen(true);
+                    }}
+                  >
+                    Edit Biometrics ✎
+                  </button>
+                </div>
+              </div>
+
               {/* Clue Circular Cycle Wheel */}
               <CycleWheel
                 phase={phase}
@@ -1524,6 +1631,150 @@ export default function App() {
             </section>
           ) : null}
         </>
+      )}
+
+      {/* Profile & Biometrics Customization Modal */}
+      {profileModalOpen && (
+        <div className="modal-backdrop" onClick={() => setProfileModalOpen(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h2>Personalize Biometrics & Goals</h2>
+                <p className="muted" style={{ margin: "4px 0 0", fontSize: "0.85rem" }}>
+                  Tailor hormone calculations, training load recommendations, and nutrition targets.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="ghost"
+                style={{ padding: "4px 10px", fontSize: "1.1rem" }}
+                onClick={() => setProfileModalOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <label>
+                Display Name / Athlete Name
+                <input
+                  type="text"
+                  placeholder="e.g. Maya Chen"
+                  value={profName}
+                  onChange={(e) => setProfName(e.target.value)}
+                />
+              </label>
+
+              <div className="row" style={{ gap: 12 }}>
+                <label style={{ flex: 1 }}>
+                  Age (years)
+                  <input
+                    type="number"
+                    min="10"
+                    max="100"
+                    placeholder="e.g. 23"
+                    value={profAge}
+                    onChange={(e) => setProfAge(e.target.value)}
+                  />
+                </label>
+
+                <label style={{ flex: 1 }}>
+                  Height (cm)
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="50"
+                    max="250"
+                    placeholder="e.g. 168.0"
+                    value={profHeight}
+                    onChange={(e) => setProfHeight(e.target.value)}
+                  />
+                </label>
+
+                <label style={{ flex: 1 }}>
+                  Weight (kg)
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="20"
+                    max="300"
+                    placeholder="e.g. 61.5"
+                    value={profWeight}
+                    onChange={(e) => setProfWeight(e.target.value)}
+                  />
+                </label>
+              </div>
+
+              {liveBmi && (
+                <div
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 12,
+                    background: "rgba(131, 153, 88, 0.14)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <span style={{ fontSize: "0.85rem", color: "var(--text)" }}>
+                    Calculated BMI: <strong>{liveBmi.val}</strong> ({liveBmi.category})
+                  </span>
+                  <span className="bmi-badge">Active Biometric</span>
+                </div>
+              )}
+
+              <label>
+                Athletic Activity / Training Level
+                <select
+                  value={profTraining}
+                  onChange={(e) => setProfTraining(e.target.value)}
+                >
+                  <option value="Collegiate Distance Runner">Collegiate Distance Runner</option>
+                  <option value="Endurance Runner / Marathoner">Endurance Runner / Marathoner</option>
+                  <option value="Strength / Powerlifting Athlete">Strength / Powerlifting Athlete</option>
+                  <option value="High-Intensity HIIT / CrossFit">High-Intensity HIIT / CrossFit</option>
+                  <option value="Competitive Team Sports (Soccer, Basketball)">Competitive Team Sports (Soccer, Basketball)</option>
+                  <option value="Moderate Active & Fitness Enthusiast">Moderate Active & Fitness Enthusiast</option>
+                  <option value="Low Impact & Mindful Movement">Low Impact & Mindful Movement</option>
+                  <option value="General Wellness & Recovery">General Wellness & Recovery</option>
+                </select>
+              </label>
+
+              <label>
+                Cycle & Health Priority Goal
+                <select
+                  value={profGoal}
+                  onChange={(e) => setProfGoal(e.target.value)}
+                >
+                  <option value="Endurance Performance & Energy Optimization">Endurance Performance & Energy Optimization</option>
+                  <option value="Symptom Relief & PMS Mitigation">Symptom Relief & PMS Mitigation</option>
+                  <option value="Cycle Regularity & Rhythm Alignment">Cycle Regularity & Rhythm Alignment</option>
+                  <option value="Fertility Tracking & Ovulation Insight">Fertility Tracking & Ovulation Insight</option>
+                  <option value="Injury Prevention & Connective Tissue Health">Injury Prevention & Connective Tissue Health</option>
+                  <option value="Metabolic Health & Phase-Targeted Nutrition">Metabolic Health & Phase-Targeted Nutrition</option>
+                </select>
+              </label>
+
+              <div className="row" style={{ justifyContent: "flex-end", gap: 10, marginTop: 10 }}>
+                <button
+                  type="button"
+                  className="ghost"
+                  onClick={() => setProfileModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="primary"
+                  disabled={savingProfile}
+                  onClick={() => void handleSaveProfile()}
+                >
+                  {savingProfile ? "Saving Profile…" : "Save Biometrics"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Floating Toast Feedback */}

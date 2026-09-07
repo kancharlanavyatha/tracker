@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import User
-from app.schemas import UserCreate, UserOut
+from app.schemas import UserCreate, UserOut, UserProfileUpdate
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -32,4 +32,34 @@ def get_user(user_id: str, db: Session = Depends(get_db)) -> User:
     user = db.get(User, uid)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@router.patch("/{user_id}/profile", response_model=UserOut)
+def update_user_profile(user_id: str, body: UserProfileUpdate, db: Session = Depends(get_db)) -> User:
+    from uuid import UUID
+
+    try:
+        uid = UUID(user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid user id") from e
+    user = db.get(User, uid)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if body.display_name is not None:
+        user.display_name = body.display_name
+    if body.age is not None:
+        user.age = body.age
+    if body.height_cm is not None:
+        user.height_cm = body.height_cm
+    if body.weight_kg is not None:
+        user.weight_kg = body.weight_kg
+    if body.training_level is not None:
+        user.training_level = body.training_level
+    if body.cycle_goal is not None:
+        user.cycle_goal = body.cycle_goal
+
+    db.commit()
+    db.refresh(user)
     return user

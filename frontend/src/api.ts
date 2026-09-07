@@ -69,6 +69,11 @@ export type User = {
   role?: string;
   is_active?: boolean;
   created_at: string;
+  age?: number | null;
+  height_cm?: number | null;
+  weight_kg?: number | null;
+  training_level?: string | null;
+  cycle_goal?: string | null;
 };
 
 export type StoredFile = {

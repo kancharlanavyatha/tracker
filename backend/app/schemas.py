@@ -29,10 +29,24 @@ class UserOut(BaseModel):
     email: str
     role: str = "athlete"
     is_active: bool = True
-    display_name: str | None
+    display_name: str | None = None
     created_at: datetime
+    age: int | None = None
+    height_cm: float | None = None
+    weight_kg: float | None = None
+    training_level: str | None = "Recreational Athlete"
+    cycle_goal: str | None = "Athletic Performance & Health"
 
     model_config = {"from_attributes": True}
+
+
+class UserProfileUpdate(BaseModel):
+    display_name: str | None = None
+    age: int | None = None
+    height_cm: float | None = None
+    weight_kg: float | None = None
+    training_level: str | None = None
+    cycle_goal: str | None = None
 
 
 class TokenResponse(BaseModel):
