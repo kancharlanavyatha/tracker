@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  apiDelete,
   apiGet,
   apiPatch,
   apiPost,
   apiUpload,
   TOKEN_KEY,
+  type CalendarReminder,
   type AnalyticsCycles,
   type AnalyticsSymptoms,
   type AnalyticsWearable,
@@ -19,6 +21,15 @@ import { CycleLengthBars, SymptomSparkline, WearableDailyChart } from "./compone
 import { PhaseCard } from "./components/PhaseCard";
 import { CycleWheel } from "./components/CycleWheel";
 import { CycleCalendar } from "./components/CycleCalendar";
+import { TarotWidget } from "./components/TarotWidget";
+import { TaskChecklist } from "./components/TaskChecklist";
+import {
+  ALLERGY_FILTERS,
+  CUISINES,
+  DIETARY_PREFERENCES,
+  RECIPES_DATASET,
+  type Recipe,
+} from "./data/cuisineRecipes";
 
 const USER_KEY = "mh_user_id";
 
@@ -71,6 +82,23 @@ export default function App() {
 
   const [rec, setRec] = useState<RecommendOut | null>(null);
 
+  // Tarot, Reminders, and Health Streak State
+  const [tarotOpen, setTarotOpen] = useState(false);
+  const [userReminders, setUserReminders] = useState<CalendarReminder[]>([]);
+  const [userStreak, setUserStreak] = useState<number>(5);
+  const [checkedInToday, setCheckedInToday] = useState<boolean>(false);
+
+  // Cuisine & Recipe Filtering State
+  const [selectedCuisine, setSelectedCuisine] = useState<string>("All Cuisines");
+  const [selectedDietary, setSelectedDietary] = useState<string>("all");
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
+  const [recipeSearch, setRecipeSearch] = useState<string>("");
+
+  // Profile Customization for Diet & Cuisines
+  const [profDiet, setProfDiet] = useState<string>("all");
+  const [profAllergies, setProfAllergies] = useState<string>("");
+  const [profCuisines, setProfCuisines] = useState<string>("indian,mediterranean");
+
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
   const showToast = useCallback((msg: string, type: "success" | "error" | "info" = "success") => {
@@ -109,6 +137,20 @@ export default function App() {
       setProfWeight(dash.user.weight_kg != null ? String(dash.user.weight_kg) : "");
       if (dash.user.training_level) setProfTraining(dash.user.training_level);
       if (dash.user.cycle_goal) setProfGoal(dash.user.cycle_goal);
+      if (dash.user.streak_days != null) setUserStreak(dash.user.streak_days);
+      if (dash.user.dietary_pref) {
+        setProfDiet(dash.user.dietary_pref);
+        setSelectedDietary(dash.user.dietary_pref);
+      }
+      if (dash.user.allergies) {
+        setProfAllergies(dash.user.allergies);
+        setSelectedAllergies(dash.user.allergies.split(",").map((s) => s.trim()).filter(Boolean));
+      }
+      if (dash.user.favorite_cuisines) setProfCuisines(dash.user.favorite_cuisines);
+      const today = new Date().toISOString().slice(0, 10);
+      if (dash.user.last_active_date === today) {
+        setCheckedInToday(true);
+      }
     }
   }, [dash?.user]);
 
@@ -135,6 +177,11 @@ export default function App() {
         weight_kg: profWeight ? parseFloat(profWeight) : null,
         training_level: profTraining.trim() || null,
         cycle_goal: profGoal.trim() || null,
+      });
+      await apiPatch<User>(`/users/${userId}/preferences`, {
+        dietary_pref: profDiet,
+        allergies: profAllergies,
+        favorite_cuisines: profCuisines,
       });
       if (dash) {
         setDash({ ...dash, user: updated });
@@ -164,6 +211,100 @@ export default function App() {
   useEffect(() => {
     if (userId) void loadDashboard().catch((e: unknown) => setErr(String(e)));
   }, [userId, loadDashboard]);
+
+  // Calendar Reminders Handlers
+  const loadReminders = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const items = await apiGet<CalendarReminder[]>(`/users/${userId}/reminders`);
+      setUserReminders(items);
+    } catch {
+      // Ignore
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      void loadReminders();
+    }
+  }, [userId, loadReminders]);
+
+  const handleAddReminder = async (dateStr: string, title: string, category: string) => {
+    if (!userId) return;
+    try {
+      const created = await apiPost<CalendarReminder>(`/users/${userId}/reminders`, {
+        reminder_date: dateStr,
+        title,
+        category,
+        is_completed: false,
+      });
+      setUserReminders((prev) => [...prev, created]);
+      showToast("✓ Reminder scheduled on calendar!", "success");
+    } catch (e: unknown) {
+      showToast(`Failed to add reminder: ${String(e)}`, "error");
+    }
+  };
+
+  const handleToggleReminder = async (reminderId: string) => {
+    if (!userId) return;
+    try {
+      const updated = await apiPatch<CalendarReminder>(`/users/${userId}/reminders/${reminderId}/toggle`, {});
+      setUserReminders((prev) => prev.map((r) => (r.id === reminderId ? updated : r)));
+    } catch (e: unknown) {
+      showToast(`Failed to toggle reminder: ${String(e)}`, "error");
+    }
+  };
+
+  const handleDeleteReminder = async (reminderId: string) => {
+    if (!userId) return;
+    try {
+      await apiDelete(`/users/${userId}/reminders/${reminderId}`);
+      setUserReminders((prev) => prev.filter((r) => r.id !== reminderId));
+      showToast("✓ Reminder deleted", "info");
+    } catch (e: unknown) {
+      showToast(`Failed to delete reminder: ${String(e)}`, "error");
+    }
+  };
+
+  const handleStreakCheckIn = async () => {
+    if (!userId) return;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (checkedInToday) {
+      showToast("🔥 You already checked in today! Streak is active.", "info");
+      return;
+    }
+    try {
+      const nextStreak = userStreak + 1;
+      await apiPatch(`/users/${userId}/preferences`, {
+        streak_days: nextStreak,
+        last_active_date: todayStr,
+      });
+      setUserStreak(nextStreak);
+      setCheckedInToday(true);
+      showToast(`🔥 Health Streak boosted to ${nextStreak} days! Great dedication!`, "success");
+    } catch (e: unknown) {
+      showToast(`Failed to update streak: ${String(e)}`, "error");
+    }
+  };
+
+  // Filtered Recipes for Plans Tab
+  const filteredRecipes = useMemo(() => {
+    return RECIPES_DATASET.filter((r) => {
+      if (selectedCuisine !== "All Cuisines" && r.cuisine !== selectedCuisine) return false;
+      if (selectedDietary !== "all" && r.dietary !== selectedDietary) return false;
+      for (const allergen of selectedAllergies) {
+        if (r.allergens.includes(allergen)) return false;
+      }
+      if (recipeSearch.trim()) {
+        const q = recipeSearch.toLowerCase();
+        const matchesName = r.name.toLowerCase().includes(q);
+        const matchesDesc = r.description.toLowerCase().includes(q);
+        const matchesIng = r.ingredients.some((i) => i.toLowerCase().includes(q));
+        if (!matchesName && !matchesDesc && !matchesIng) return false;
+      }
+      return true;
+    });
+  }, [selectedCuisine, selectedDietary, selectedAllergies, recipeSearch]);
 
   const loadAnalytics = useCallback(async () => {
     if (!userId) return;
@@ -559,11 +700,51 @@ export default function App() {
         </section>
       ) : (
         <>
-          <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <p className="muted" style={{ margin: 0 }}>
-              Signed in as <strong>{dash?.user.display_name || dash?.user.email || "…"}</strong> ({dash?.user.role ?? "athlete"})
-            </p>
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              <p className="muted" style={{ margin: 0 }}>
+                Signed in as <strong>{dash?.user.display_name || dash?.user.email || "…"}</strong> ({dash?.user.role ?? "athlete"})
+              </p>
+              <button
+                type="button"
+                onClick={() => void handleStreakCheckIn()}
+                title="Click to check in today and maintain your health streak!"
+                style={{
+                  background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%)",
+                  border: "1px solid rgba(245, 158, 11, 0.4)",
+                  color: "#f59e0b",
+                  fontWeight: 700,
+                  fontSize: "0.82rem",
+                  padding: "4px 12px",
+                  borderRadius: "999px",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <span>🔥</span> {userStreak}-Day Streak {checkedInToday ? "✓" : "· Check In"}
+              </button>
+            </div>
             <div className="row" style={{ gap: 8, alignItems: "center" }}>
+              <button
+                type="button"
+                className="secondary"
+                style={{
+                  fontSize: "0.82rem",
+                  padding: "6px 12px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "linear-gradient(135deg, rgba(236, 72, 153, 0.12) 0%, rgba(139, 92, 246, 0.12) 100%)",
+                  borderColor: "rgba(236, 72, 153, 0.35)",
+                  color: "#f472b6",
+                  fontWeight: 600,
+                }}
+                onClick={() => setTarotOpen(true)}
+              >
+                🔮 Daily Tarot
+              </button>
               <button
                 type="button"
                 className="secondary"
@@ -620,6 +801,53 @@ export default function App() {
                     Edit Biometrics ✎
                   </button>
                 </div>
+              </div>
+
+              {/* Daily Tarot Wisdom Banner */}
+              <div
+                style={{
+                  background: "linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)",
+                  border: "1px solid rgba(244, 114, 182, 0.3)",
+                  borderRadius: "18px",
+                  padding: "16px 20px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: "12px",
+                  cursor: "pointer",
+                  boxShadow: "0 8px 24px -4px rgba(236, 72, 153, 0.15)",
+                }}
+                onClick={() => setTarotOpen(true)}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                  <div style={{ fontSize: "2rem" }}>🔮</div>
+                  <div>
+                    <strong style={{ fontSize: "1rem", color: "#fbcfe8", display: "block" }}>
+                      Daily Cycle Archetype & Tarot Reading
+                    </strong>
+                    <span style={{ fontSize: "0.82rem", color: "#cbd5e1" }}>
+                      Tap to shuffle the deck and draw your personalized daily archetype & affirmation.
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="primary"
+                  style={{
+                    background: "linear-gradient(135deg, #ec4899 0%, #be185d 100%)",
+                    border: "none",
+                    fontSize: "0.85rem",
+                    padding: "8px 18px",
+                    borderRadius: "999px",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTarotOpen(true);
+                  }}
+                >
+                  Draw Today's Card ✨
+                </button>
               </div>
 
               {/* Clue Circular Cycle Wheel */}
@@ -694,6 +922,13 @@ export default function App() {
                   </p>
                 </div>
               </div>
+
+              {/* Daily Wellness Habits Checklist */}
+              <TaskChecklist
+                onTaskToggle={() => {
+                  showToast("✨ Great job prioritizing your body health today!", "success");
+                }}
+              />
 
               {/* Training Plan & Macro Focus Snapshot */}
               <div className="grid grid-2">
@@ -814,12 +1049,19 @@ export default function App() {
                     ? [dash.last_cycle.period_start]
                     : []
                 }
+                reminders={userReminders}
+                onSelectDate={(d) => {
+                  setLogDate(d);
+                }}
                 onLogForDate={(d) => {
                   setLogDate(d);
                   setPeriodStart(d);
                   setTab("data");
                   showToast(`📝 Logging for ${d}. Choose symptoms & flow below.`, "info");
                 }}
+                onAddReminder={handleAddReminder}
+                onToggleReminder={handleToggleReminder}
+                onDeleteReminder={handleDeleteReminder}
               />
               <div className="panel">
                 <h2>Historical Periods Logged</h2>
@@ -901,6 +1143,193 @@ export default function App() {
                     <strong style={{ fontSize: "0.95rem" }}>
                       {phase?.phase === "menstrual" ? "Anti-inflammatory" : phase?.phase === "luteal" ? "PMS Calming" : "Glycogen Fueling"}
                     </strong>
+                  </div>
+                </div>
+
+                {/* Global Multi-Cuisine Nutrition & Macro Kitchen */}
+                <div style={{ marginTop: 24, borderTop: "1px solid var(--border)", paddingTop: 20 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 14 }}>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 700, color: "var(--text)" }}>
+                        🌍 Global Multi-Cuisine Nutrition & Macro Tracker
+                      </h3>
+                      <p className="muted" style={{ margin: "3px 0 0", fontSize: "0.82rem" }}>
+                        Explore nutrient-dense dishes across 6 world cuisines with exact protein, carb, fat, iron & magnesium splits.
+                      </p>
+                    </div>
+                    <span style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 600 }}>
+                      Showing {filteredRecipes.length} recipes
+                    </span>
+                  </div>
+
+                  {/* Cuisine Selector Chips */}
+                  <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8, marginBottom: 12 }}>
+                    {CUISINES.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        className={selectedCuisine === c ? "primary" : "ghost"}
+                        style={{ fontSize: "0.8rem", padding: "5px 14px", borderRadius: "999px", whiteSpace: "nowrap" }}
+                        onClick={() => setSelectedCuisine(c)}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Dietary & Allergy Filters */}
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
+                    <span style={{ fontSize: "0.8rem", color: "var(--muted)", fontWeight: 600 }}>Diet:</span>
+                    {DIETARY_PREFERENCES.map((d) => (
+                      <button
+                        key={d.id}
+                        type="button"
+                        className={selectedDietary === d.id ? "primary" : "ghost"}
+                        style={{ fontSize: "0.78rem", padding: "4px 10px", borderRadius: "999px" }}
+                        onClick={() => setSelectedDietary(d.id)}
+                      >
+                        {d.label}
+                      </button>
+                    ))}
+
+                    <span style={{ fontSize: "0.8rem", color: "var(--muted)", fontWeight: 600, marginLeft: 8 }}>Free of:</span>
+                    {ALLERGY_FILTERS.map((a) => {
+                      const active = selectedAllergies.includes(a.id);
+                      return (
+                        <button
+                          key={a.id}
+                          type="button"
+                          className={active ? "primary" : "ghost"}
+                          style={{ fontSize: "0.78rem", padding: "4px 10px", borderRadius: "999px" }}
+                          onClick={() => {
+                            setSelectedAllergies((prev) =>
+                              prev.includes(a.id) ? prev.filter((x) => x !== a.id) : [...prev, a.id]
+                            );
+                          }}
+                        >
+                          {a.label} {active ? "✓" : ""}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Search input */}
+                  <input
+                    type="text"
+                    placeholder="Search dishes or ingredients (e.g. salmon, quinoa, tofu, spinach, avocado)..."
+                    value={recipeSearch}
+                    onChange={(e) => setRecipeSearch(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "8px 14px",
+                      borderRadius: "12px",
+                      border: "1px solid var(--border)",
+                      background: "var(--bg)",
+                      color: "var(--text)",
+                      fontSize: "0.86rem",
+                      marginBottom: 16,
+                      outline: "none",
+                    }}
+                  />
+
+                  {/* Recipe Cards with full Nutrition Breakdown */}
+                  <div className="recipes-grid">
+                    {filteredRecipes.map((recipe) => (
+                      <div
+                        key={recipe.id}
+                        className="recipe-card"
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                          padding: "16px",
+                          borderRadius: "16px",
+                          border: "1px solid var(--border)",
+                          background: "var(--panel)",
+                        }}
+                      >
+                        <div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                            <span className="recipe-card__tag" style={{ background: "rgba(16, 185, 129, 0.15)", color: "#10b981" }}>
+                              {recipe.cuisine} · {recipe.dietary.toUpperCase()}
+                            </span>
+                            <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text)" }}>
+                              {recipe.calories} kcal
+                            </span>
+                          </div>
+
+                          <h4 style={{ margin: "4px 0 6px", fontSize: "1.05rem", color: "var(--text)" }}>{recipe.name}</h4>
+                          <p style={{ margin: "0 0 10px", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.4 }}>
+                            {recipe.description}
+                          </p>
+
+                          {/* Phase Benefit Badge */}
+                          <div
+                            style={{
+                              background: "rgba(244, 114, 182, 0.1)",
+                              border: "1px solid rgba(244, 114, 182, 0.2)",
+                              borderRadius: "10px",
+                              padding: "6px 10px",
+                              fontSize: "0.78rem",
+                              color: "#f472b6",
+                              marginBottom: 10,
+                              fontWeight: 500,
+                            }}
+                          >
+                            ✨ {recipe.phase_benefit}
+                          </div>
+
+                          {/* Macronutrients Grid */}
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "repeat(4, 1fr)",
+                              gap: 6,
+                              background: "rgba(255, 255, 255, 0.03)",
+                              padding: "8px",
+                              borderRadius: "10px",
+                              textAlign: "center",
+                              marginBottom: 10,
+                            }}
+                          >
+                            <div>
+                              <span style={{ fontSize: "0.68rem", color: "var(--muted)", display: "block" }}>PROTEIN</span>
+                              <strong style={{ fontSize: "0.85rem", color: "#3dd6c7" }}>{recipe.protein_g}g</strong>
+                            </div>
+                            <div>
+                              <span style={{ fontSize: "0.68rem", color: "var(--muted)", display: "block" }}>CARBS</span>
+                              <strong style={{ fontSize: "0.85rem", color: "#f59e0b" }}>{recipe.carbs_g}g</strong>
+                            </div>
+                            <div>
+                              <span style={{ fontSize: "0.68rem", color: "var(--muted)", display: "block" }}>FATS</span>
+                              <strong style={{ fontSize: "0.85rem", color: "#ec4899" }}>{recipe.fats_g}g</strong>
+                            </div>
+                            <div>
+                              <span style={{ fontSize: "0.68rem", color: "var(--muted)", display: "block" }}>IRON / MG</span>
+                              <strong style={{ fontSize: "0.85rem", color: "#10b981" }}>{recipe.iron_mg}mg</strong>
+                            </div>
+                          </div>
+
+                          {/* Ingredients Pill Tags */}
+                          <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                            {recipe.ingredients.map((ing, i) => (
+                              <span
+                                key={i}
+                                style={{
+                                  fontSize: "0.7rem",
+                                  padding: "2px 8px",
+                                  borderRadius: "999px",
+                                  background: "rgba(255, 255, 255, 0.05)",
+                                  color: "var(--muted)",
+                                }}
+                              >
+                                {ing}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -1769,6 +2198,31 @@ export default function App() {
               </label>
 
               <label>
+                Dietary Preference
+                <select
+                  value={profDiet}
+                  onChange={(e) => setProfDiet(e.target.value)}
+                >
+                  <option value="all">All Diets</option>
+                  <option value="veg">Vegetarian 🥦</option>
+                  <option value="non-veg">Non-Vegetarian 🍗</option>
+                  <option value="vegan">Vegan 🌱</option>
+                  <option value="eggetarian">Eggetarian 🍳</option>
+                  <option value="pescatarian">Pescatarian 🐟</option>
+                </select>
+              </label>
+
+              <label>
+                Food Allergies & Sensitivities (comma separated)
+                <input
+                  type="text"
+                  placeholder="e.g. gluten, dairy, nuts, soy"
+                  value={profAllergies}
+                  onChange={(e) => setProfAllergies(e.target.value)}
+                />
+              </label>
+
+              <label>
                 Cycle & Health Priority Goal
                 <select
                   value={profGoal}
@@ -1804,6 +2258,9 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Daily Tarot Archetype Reading Modal */}
+      <TarotWidget isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
 
       {/* Floating Toast Feedback */}
       {toast ? (

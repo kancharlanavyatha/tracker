@@ -56,6 +56,13 @@ class User(Base):
     training_level: Mapped[str | None] = mapped_column(String(64), nullable=True, default="Recreational Athlete")
     cycle_goal: Mapped[str | None] = mapped_column(String(128), nullable=True, default="Athletic Performance & Health")
 
+    # Dietary & Habit Preferences
+    dietary_pref: Mapped[str | None] = mapped_column(String(64), nullable=True, default="all")
+    allergies: Mapped[str | None] = mapped_column(String(255), nullable=True, default="")
+    favorite_cuisines: Mapped[str | None] = mapped_column(String(255), nullable=True, default="indian,mediterranean")
+    streak_days: Mapped[int] = mapped_column(Integer, default=5)
+    last_active_date: Mapped[str | None] = mapped_column(String(32), nullable=True)
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
@@ -71,6 +78,7 @@ class User(Base):
     notifications: Mapped[list["Notification"]] = relationship(back_populates="user")
 
     stored_files: Mapped[list["StoredFile"]] = relationship(back_populates="user")
+    reminders: Mapped[list["CalendarReminder"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     app_state: Mapped["UserAppState | None"] = relationship(
 
@@ -255,4 +263,18 @@ class StoredFile(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     user: Mapped["User"] = relationship(back_populates="stored_files")
+ 
+ 
+class CalendarReminder(Base):
+    __tablename__ = "calendar_reminders"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    reminder_date: Mapped[str] = mapped_column(String(16), index=True)  # YYYY-MM-DD
+    title: Mapped[str] = mapped_column(String(255))
+    category: Mapped[str] = mapped_column(String(64), default="general")
+    is_completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    user: Mapped["User"] = relationship(back_populates="reminders")
 

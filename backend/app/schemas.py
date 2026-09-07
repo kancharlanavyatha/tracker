@@ -36,6 +36,11 @@ class UserOut(BaseModel):
     weight_kg: float | None = None
     training_level: str | None = "Recreational Athlete"
     cycle_goal: str | None = "Athletic Performance & Health"
+    dietary_pref: str | None = "all"
+    allergies: str | None = ""
+    favorite_cuisines: str | None = "indian,mediterranean"
+    streak_days: int = 5
+    last_active_date: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -47,6 +52,33 @@ class UserProfileUpdate(BaseModel):
     weight_kg: float | None = None
     training_level: str | None = None
     cycle_goal: str | None = None
+
+
+class UserPreferencesUpdate(BaseModel):
+    dietary_pref: str | None = None
+    allergies: str | None = None
+    favorite_cuisines: str | None = None
+    streak_days: int | None = None
+    last_active_date: str | None = None
+
+
+class CalendarReminderCreate(BaseModel):
+    reminder_date: str
+    title: str
+    category: str = "general"
+    is_completed: bool = False
+
+
+class CalendarReminderOut(BaseModel):
+    id: UUID
+    user_id: UUID
+    reminder_date: str
+    title: str
+    category: str
+    is_completed: bool
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
 
 
 class TokenResponse(BaseModel):

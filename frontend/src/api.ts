@@ -47,6 +47,15 @@ export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+export async function apiDelete<T>(path: string): Promise<T> {
+  const res = await fetch(`${API}${path}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error(await parseError(res));
+  return res.json() as Promise<T>;
+}
+
 export async function apiUpload<T>(path: string, formData: FormData): Promise<T> {
   const token = localStorage.getItem(TOKEN_KEY);
   const headers: Record<string, string> = {};
@@ -74,7 +83,23 @@ export type User = {
   weight_kg?: number | null;
   training_level?: string | null;
   cycle_goal?: string | null;
+  dietary_pref?: string | null;
+  allergies?: string | null;
+  favorite_cuisines?: string | null;
+  streak_days?: number;
+  last_active_date?: string | null;
 };
+
+export type CalendarReminder = {
+  id: string;
+  user_id: string;
+  reminder_date: string;
+  title: string;
+  category: string;
+  is_completed: boolean;
+  created_at: string;
+};
+
 
 export type StoredFile = {
   id: string;
