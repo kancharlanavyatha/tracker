@@ -187,3 +187,20 @@ export type NotificationRow = {
   is_read: boolean;
   created_at: string;
 };
+
+export type CustomRecipeOut = {
+  name: string;
+  prep_time_mins: number;
+  cook_time_mins: number;
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fats_g: number;
+  fiber_g: number;
+  iron_mg: number;
+  phase_benefit: string;
+  ingredients: string[];
+  instructions: string[];
+  nutritional_focus: string;
+};
+

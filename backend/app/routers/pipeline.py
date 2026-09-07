@@ -3,22 +3,24 @@ from datetime import datetime, timezone
 
 
 from fastapi import APIRouter, Depends, HTTPException
-
 from sqlalchemy.orm import Session
 
-
-
 from app.database import get_db
-
 from app.models import User
-
-from app.schemas import ChatIn, ChatOut, PredictPhaseIn, PredictPhaseOut, RecommendIn, RecommendOut
-
+from app.schemas import (
+    ChatIn,
+    ChatOut,
+    CustomRecipeIn,
+    CustomRecipeOut,
+    PredictPhaseIn,
+    PredictPhaseOut,
+    RecommendIn,
+    RecommendOut,
+)
 from app.services import llm_client, ml_stub, phase_service, recommendation
 
-
-
 router = APIRouter(tags=["ml"])
+
 
 
 
@@ -61,14 +63,130 @@ def recommend(body: RecommendIn, db: Session = Depends(get_db)) -> RecommendOut:
     }
 
     ml_stub.persist_recommendation(db, body.user_id, bundle)
-
     return out
 
 
+@router.post("/recommend/custom-recipe", response_model=CustomRecipeOut)
+def create_custom_recipe(body: CustomRecipeIn, db: Session = Depends(get_db)) -> CustomRecipeOut:
+    user = db.get(User, body.user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
 
+    last = ml_stub.last_period_start(db, body.user_id)
+    ref = datetime.now(timezone.utc).date()
+    phase_out = phase_service.infer_phase(db, body.user_id, last, ref)
+    phase = phase_out.phase
+
+    # 1. Try local LLM if configured and online
+    prompt = (
+        f"You are a master sports nutritionist and chef for women. "
+        f"User's current menstrual phase: {phase} (day {phase_out.day_in_cycle}). "
+        f"Nutritional focus requested: {body.nutritional_focus}. "
+        f"Meal type requested: {body.meal_type}. "
+        f"Available ingredients user has: {body.available_ingredients}. "
+        f"User profile: weight={user.weight_kg}kg, height={user.height_cm}cm, training={user.training_level}. "
+        "Respond strictly in valid JSON with keys: "
+        '"name" (string), "prep_time_mins" (int), "cook_time_mins" (int), "calories" (int 350-650), '
+        '"protein_g" (float), "carbs_g" (float), "fats_g" (float), "fiber_g" (float), "iron_mg" (float), '
+        f'"phase_benefit" (string explaining benefit for {phase} phase), '
+        '"ingredients" (list of strings with measurements), "instructions" (list of 3-5 cooking steps).'
+    )
+    llm_reply = llm_client.generate_ollama_reply(prompt)
+    if llm_reply:
+        try:
+            import json
+            start = llm_reply.find("{")
+            end = llm_reply.rfind("}")
+            if start != -1 and end != -1:
+                data = json.loads(llm_reply[start:end + 1])
+                return CustomRecipeOut(
+                    name=data.get("name", "Phase-Targeted Kitchen Creation"),
+                    prep_time_mins=int(data.get("prep_time_mins", 12)),
+                    cook_time_mins=int(data.get("cook_time_mins", 15)),
+                    calories=int(data.get("calories", 460)),
+                    protein_g=float(data.get("protein_g", 34.0)),
+                    carbs_g=float(data.get("carbs_g", 42.0)),
+                    fats_g=float(data.get("fats_g", 16.0)),
+                    fiber_g=float(data.get("fiber_g", 7.0)),
+                    iron_mg=float(data.get("iron_mg", 4.2)),
+                    phase_benefit=data.get("phase_benefit", f"Nutrient-dense synergy balancing {phase} hormones."),
+                    ingredients=list(data.get("ingredients", [])),
+                    instructions=list(data.get("instructions", [])),
+                    nutritional_focus=body.nutritional_focus,
+                )
+        except Exception:
+            pass
+
+    # 2. Heuristic Phase-Calibrated Culinary Synthesis
+    ing_lower = body.available_ingredients.lower()
+    has_salmon = any(w in ing_lower for w in ["salmon", "fish", "tuna", "shrimp", "seafood"])
+    has_chicken = any(w in ing_lower for w in ["chicken", "turkey", "poultry", "meat"])
+    has_tofu = any(w in ing_lower for w in ["tofu", "tempeh", "edamame", "soy"])
+    has_eggs = any(w in ing_lower for w in ["egg", "eggs", "omelet"])
+    has_oats = any(w in ing_lower for w in ["oat", "oats", "porridge", "granola"])
+    has_yogurt = any(w in ing_lower for w in ["yogurt", "curd", "greek yogurt"])
+
+    if has_salmon:
+        name = "Pan-Seared Herb Salmon & Veggie Power Skillet"
+        protein, carbs, fats, cal = 38.0, 34.0, 18.0, 480
+        benefit = f"High marine omega-3 fatty acids and zinc directly lowering uterine prostaglandins during {phase} phase."
+    elif has_chicken:
+        name = "Rosemary Grilled Chicken & Roasted Harvest Bowl"
+        protein, carbs, fats, cal = 44.0, 36.0, 14.0, 460
+        benefit = f"Dense complete bioavailable amino acids and zinc accelerating muscle repair in {phase} phase."
+    elif has_tofu:
+        name = "Ginger Garlic Glazed Tofu & Green Veggie Sauté"
+        protein, carbs, fats, cal = 26.0, 48.0, 14.0, 430
+        benefit = f"Plant isoflavones and magnesium calming smooth muscle contractions for {phase} phase."
+    elif has_eggs:
+        name = "Garden Vegetable & Pasture Egg Scramble Bowl"
+        protein, carbs, fats, cal = 28.0, 26.0, 18.0, 410
+        benefit = f"Bioavailable choline and lutein nurturing hormone receptor sensitivity during {phase} phase."
+    elif has_oats or has_yogurt:
+        name = "High-Protein Superfood Porridge Bowl"
+        protein, carbs, fats, cal = 25.0, 58.0, 12.0, 440
+        benefit = f"Complex beta-glucan fibers and magnesium stabilizing serotonin and glucose during {phase} phase."
+    else:
+        name = "Custom Phase-Balancing Nourish Bowl"
+        protein, carbs, fats, cal = 28.0, 45.0, 15.0, 430
+        benefit = f"Phyto-nutrient rich whole food synergy tailored to support your {phase} hormone metabolism."
+
+    ing_items = [f"Base: {body.available_ingredients.split(',')[0].strip().capitalize()}"]
+    for item in body.available_ingredients.split(",")[1:4]:
+        if item.strip():
+            ing_items.append(f"Fresh: {item.strip().capitalize()}")
+    ing_items.extend([
+        "1 tbsp Cold-pressed olive oil or ghee",
+        "Pinch of sea salt, cracked black pepper & fresh herbs",
+    ])
+
+    instructions = [
+        "Rinse and prepare all available ingredients, slicing vegetables into bite-sized pieces.",
+        "Warm 1 tablespoon of olive oil in a wide skillet over medium heat with cracked black pepper and garlic.",
+        "Cook your primary protein or grains first until hot, golden, and tender.",
+        "Add any greens, tomatoes, or quick-cooking vegetables during the last 3 minutes to preserve micronutrients.",
+        "Finish with fresh herbs, a pinch of sea salt, and a fresh squeeze of lemon; serve immediately.",
+    ]
+
+    return CustomRecipeOut(
+        name=name,
+        prep_time_mins=10,
+        cook_time_mins=15,
+        calories=cal,
+        protein_g=protein,
+        carbs_g=carbs,
+        fats_g=fats,
+        fiber_g=8.0,
+        iron_mg=4.6,
+        phase_benefit=benefit,
+        ingredients=ing_items,
+        instructions=instructions,
+        nutritional_focus=body.nutritional_focus,
+    )
 
 
 @router.post("/chat", response_model=ChatOut)
+
 
 def chat(body: ChatIn, db: Session = Depends(get_db)) -> ChatOut:
 

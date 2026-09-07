@@ -237,3 +237,27 @@ class AnalyticsSymptomsOut(BaseModel):
 
 class AnalyticsWearableOut(BaseModel):
     daily: list[dict[str, Any]]
+
+
+class CustomRecipeIn(BaseModel):
+    user_id: UUID
+    available_ingredients: str
+    meal_type: str = "any"
+    nutritional_focus: str = "high_protein"
+
+
+class CustomRecipeOut(BaseModel):
+    name: str
+    prep_time_mins: int
+    cook_time_mins: int
+    calories: int
+    protein_g: float
+    carbs_g: float
+    fats_g: float
+    fiber_g: float
+    iron_mg: float
+    phase_benefit: str
+    ingredients: list[str]
+    instructions: list[str]
+    nutritional_focus: str
+
