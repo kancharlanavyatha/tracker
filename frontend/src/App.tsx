@@ -422,7 +422,7 @@ export default function App() {
         setUserId(res.user.id);
         setDash(null);
         await loadDashboard(res.user.id);
-        showToast("Account created! Welcome to Clue.", "success");
+        showToast("Account created! Welcome to your cycle dashboard.", "success");
       }
     } catch (e: unknown) {
       setErr(String(e));
@@ -445,7 +445,7 @@ export default function App() {
       setUserId(res.user.id);
       setDash(null);
       await loadDashboard(res.user.id);
-      showToast("Welcome to Clue! Loaded Demo Athlete with 4 cycle logs.", "success");
+      showToast("Welcome! Loaded Demo Athlete with 4 cycle logs.", "success");
     } catch (e: unknown) {
       setErr(String(e));
       showToast("Failed to load demo: " + String(e), "error");
@@ -637,7 +637,7 @@ export default function App() {
         { id: "analytics" as const, label: "Body Analysis" },
         { id: "alerts" as const, label: "Reminders" },
         { id: "data" as const, label: "Daily Log" },
-        { id: "chat" as const, label: "Ask Clue" },
+        { id: "chat" as const, label: "Health Chat" },
       ] satisfies { id: Tab; label: string }[],
     [],
   );
@@ -648,7 +648,7 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <h1>Clue · Cycle & Athletic Health</h1>
+          <h1>Cycle & Athletic Health</h1>
           <p>Hormone Pattern Intelligence · Athletic Readiness · Phase Nutrition</p>
         </div>
         <nav className="tabs" aria-label="Primary">
@@ -662,7 +662,7 @@ export default function App() {
 
       {!userId ? (
         <section className="panel welcome-hero-panel">
-          <div className="welcome-hero-badge">Welcome to Clue</div>
+          <div className="welcome-hero-badge">Cycle & Athletic Health Platform</div>
           <h2 style={{ fontSize: "1.6rem", margin: "0 0 8px" }}>Your Cycle & Athletic Wellness Companion</h2>
           <p className="muted" style={{ maxWidth: 640, margin: "0 0 18px", lineHeight: 1.5 }}>
             Track your cycle rhythm, synchronize your biometric wearables, balance hormones through phase-targeted nutrition, and receive evidence-based athletic recovery guidance.
@@ -1807,7 +1807,7 @@ export default function App() {
               {/* Clue Smart Reminders Settings */}
               <div className="panel">
                 <h2>Smart Reminders & Notifications</h2>
-                <p className="muted">Customize when and how Clue notifies you about your body changes.</p>
+                <p className="muted">Customize automated notification reminders for your body changes.</p>
 
                 <div style={{ marginTop: 16 }}>
                   <div className="reminder-item">
@@ -2251,7 +2251,7 @@ export default function App() {
             <section className="panel chat">
               <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
-                  <h2>Ask Clue · Your Cycle & Health Companion</h2>
+                  <h2>Cycle & Athletic Health Companion</h2>
                   <p className="muted">
                     Private, evidence-based guidance tailored to your current cycle phase, hormonal patterns, and training readiness.
                   </p>
@@ -2291,7 +2291,7 @@ export default function App() {
                 {chatLog.length === 0 ? (
                   <div style={{ textAlign: "center", padding: "32px 16px", color: "var(--muted)" }}>
                     
-                    <strong style={{ color: "var(--text)" }}>Welcome to your Clue Companion</strong>
+                    <strong style={{ color: "var(--text)" }}>Welcome to your Health Companion</strong>
                     <p style={{ fontSize: "0.85rem", marginTop: 4 }}>
                       Ask questions about your phase-specific nutrition, recovery advice, workout timing, or symptom relief.
                     </p>
@@ -2301,7 +2301,7 @@ export default function App() {
                   <div key={i} className={`bubble ${m.role}`}>
                     {m.role === "assistant" ? (
                       <span className="tag" style={{ background: "rgba(131, 153, 88, 0.2)", color: "#839958" }}>
-                        Clue Companion
+                        Health Companion
                       </span>
                     ) : null}
                     {m.text}
@@ -2309,7 +2309,7 @@ export default function App() {
                 ))}
                 {busy && (
                   <div className="bubble assistant" style={{ fontStyle: "italic", color: "var(--muted)" }}>
-                    <span>Clue is reflecting on your question…</span>
+                    <span>Assistant is reflecting on your question…</span>
                   </div>
                 )}
                 <div ref={chatBottomRef} />
@@ -2319,7 +2319,7 @@ export default function App() {
                 <textarea
                   value={chatIn}
                   onChange={(e) => setChatIn(e.target.value)}
-                  placeholder="Ask Clue about your body, symptoms, or workouts…"
+                  placeholder="Ask about your cycle, symptoms, nutrition, or workouts…"
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();

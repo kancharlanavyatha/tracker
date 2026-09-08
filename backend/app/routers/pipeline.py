@@ -216,13 +216,13 @@ def chat(body: ChatIn, db: Session = Depends(get_db)) -> ChatOut:
 
     reply = llm_client.generate_ollama_reply(prompt)
     if reply:
-        return ChatOut(reply=reply, source="Clue AI")
+        return ChatOut(reply=reply, source="Cycle Health AI")
 
-    guidance = _generate_clue_guidance(phase_out.phase, phase_out.day_in_cycle, body.message)
-    return ChatOut(reply=guidance, source="Clue Health Companion")
+    guidance = _generate_health_guidance(phase_out.phase, phase_out.day_in_cycle, body.message)
+    return ChatOut(reply=guidance, source="Health Assistant")
 
 
-def _generate_clue_guidance(phase: str, day: int, message: str) -> str:
+def _generate_health_guidance(phase: str, day: int, message: str) -> str:
     msg = message.lower()
     phase_clean = phase.capitalize() if phase != "unknown" else "Current"
 

@@ -22,8 +22,8 @@ interface JournalTabProps {
   onShowToast: (msg: string, type?: "success" | "error" | "info") => void;
 }
 
-const VAULT_SESSION_KEY = "clue_journal_vault_key";
-const DEFAULT_DEMO_KEY = "clue-vault-demo-2026";
+const VAULT_SESSION_KEY = "journal_vault_key";
+const DEFAULT_DEMO_KEY = "vault-demo-2026";
 
 const JOURNAL_TAG_OPTIONS = [
   "General Reflection",
@@ -439,7 +439,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
               title="Use the pre-configured default demo key for testing"
               style={{ fontSize: "0.85rem", padding: "10px 14px" }}
             >
-              Use Default Demo Key ({DEFAULT_DEMO_KEY})
+              Use Default Key ({DEFAULT_DEMO_KEY})
             </button>
           </div>
         </div>
