@@ -9,7 +9,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from app.schemas import PredictPhaseOut, RecommendOut
-from app.services import diet_engine, intensity_model, ml_stub, phase_service, workout_planner
+from app.services import diet_engine, intensity_model, ml_stub, phase_service, recovery_model, workout_planner
 
 
 def _macro_rules(phase: str) -> dict[str, Any]:
@@ -84,16 +84,25 @@ def build_recommendation(db: Session, user_id: UUID) -> tuple[RecommendOut, Pred
     }
 
     intensity, int_note = intensity_model.predict_intensity(feats, phase_out.phase)
-    recovery = _recovery_hours(phase_out.phase, fatigue)
+    recovery, metabolic_targets, rec_note = recovery_model.predict_recovery_and_metabolics(
+        phase=phase_out.phase,
+        intensity_score=intensity,
+        biometrics=feats,
+        fatigue=fatigue,
+        mood=mood,
+    )
     focus = _focus_key(phase_out.phase, intensity)
     macros = _macro_rules(phase_out.phase)
     dietary = diet_engine.build_dietary_bundle(phase_out.phase, macros)
+    if metabolic_targets:
+        dietary["dynamic_metabolics"] = metabolic_targets
     sessions = workout_planner.build_sessions(phase_out.phase, intensity, recovery)
 
     note = (
         "Phase-synchronized athletic and recovery recommendations tailored to your daily biometrics and cycle rhythm."
     )
 
+    combined_source = f"{int_note} | {rec_note}"
     out = RecommendOut(
         training_intensity_score=intensity,
         recovery_hours_suggested=recovery,
@@ -102,7 +111,7 @@ def build_recommendation(db: Session, user_id: UUID) -> tuple[RecommendOut, Pred
         workout_sessions=sessions,
         hydration_liters=float(dietary.get("hydration_liters") or 2.5),
         micronutrients=list(dietary.get("micronutrients") or []),
-        intensity_source=int_note,
+        intensity_source=combined_source,
         model_note=note,
     )
     return out, phase_out
