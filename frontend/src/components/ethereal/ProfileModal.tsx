@@ -52,7 +52,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         favorite_cuisines: favoriteCuisines,
       });
       onUserUpdated(updated);
-      showToast("✨ Athlete biometric profile and macro targets updated!", "success");
+      showToast("✨ Profile & personal targets updated!", "success");
       onClose();
     } catch {
       showToast("Profile saved in active session state", "info");
@@ -72,10 +72,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </span>
             <div>
               <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
-                Athlete Physiological Profile
+                My Profile & Body Goals
               </h3>
               <p className="font-label-caps text-on-surface-variant text-xs">
-                Calibrates BMR, Luteal Thermogenic Shift & Training Load
+                Personalizes your daily energy targets and workouts
               </p>
             </div>
           </div>
@@ -91,13 +91,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="font-label-caps text-on-surface-variant uppercase text-xs block mb-1">
-              Athlete Name / Pseudonym
+              Your Name
             </label>
             <input
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="e.g. Elena R."
+              placeholder="e.g. Elena"
               className="w-full bg-surface-container-low text-on-surface rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary border border-surface-container-high"
             />
           </div>
@@ -232,7 +232,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               disabled={saving}
               className="flex-1 py-3 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all cursor-pointer shadow-sm"
             >
-              {saving ? "Saving Biometrics..." : "Save Athlete Profile 🌸"}
+              {saving ? "Saving Profile..." : "Save Profile 🌸"}
             </button>
             <button
               type="button"

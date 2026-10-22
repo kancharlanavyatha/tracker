@@ -63,7 +63,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
 
   const handleSwapRecipes = () => {
     setRecipeSetIndex((prev) => prev + 1);
-    showToast("✦ Curated gastronomy swapped for alternate phase recipes!", "info");
+    showToast("✦ Swapped for fresh delicious recipes! ✨", "info");
   };
 
   const handleDiningOracle = (query: string) => {
@@ -71,23 +71,23 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
     const q = query.toLowerCase();
     if (q.includes("sushi")) {
       setDiningReply(
-        "Nymph Guidance: Order Hamachi sashimi + brown rice chirashi bowl with wakame salad. Your follicular estrogen peak handles rice carbohydrates impeccably while seaweed delivers vital iodine for metabolic output."
+        "Wellness Guide: Order salmon or tuna sashimi with a warm brown rice bowl and seaweed salad! Your body handles carbs easily right now, and the seaweed provides mineral-rich iodine for healthy energy."
       );
     } else if (q.includes("salty") || q.includes("crunchy")) {
       setDiningReply(
-        "Nymph Guidance: Opt for roasted nori seaweed sheets with toasted sesame, or roasted spiced chickpeas with Celtic sea salt. This replenishes sodium without triggering aldosterone-mediated water retention."
+        "Wellness Guide: Try roasted nori seaweed snacks, lightly salted edamame, or spiced roasted chickpeas with sea salt. Satisfies crunch without extra bloating."
       );
     } else if (q.includes("sweet")) {
       setDiningReply(
-        "Nymph Guidance: Enjoy 2 Medjool dates stuffed with raw walnut halves and 85% dark cacao nibs, dusted with Ceylon cinnamon. Cinnamon stabilizes glucose disposal while dates replenish muscle glycogen."
+        "Wellness Guide: Enjoy 2 Medjool dates filled with crunchy almond butter and dark chocolate chips, with a pinch of cinnamon. Stabilizes your blood sugar while satisfying your sweet tooth!"
       );
     } else if (q.includes("italian") || q.includes("pasta")) {
       setDiningReply(
-        "Nymph Guidance: Choose al dente durum wheat or lentil penne paired with grilled shrimp and garlic-infused extra virgin olive oil. Request pomodoro sauce rather than heavy cream to optimize lipid digestion."
+        "Wellness Guide: Choose al dente pasta or lentil penne with grilled chicken or shrimp, garlic, and extra virgin olive oil. Fresh tomato pomodoro sauce is great for easy digestion!"
       );
     } else {
       setDiningReply(
-        `Nymph Guidance: For ${query}, aim for 30-35g clean protein paired with complex carbohydrates (rice, quinoa, or roasted root vegetables). In the ${currentPhaseName} phase, prioritize antioxidant-rich herbs to protect mitochondria.`
+        `Wellness Guide: For ${query}, aim for 25-35g clean protein paired with colorful veggies and healthy carbs (sweet potato, rice, or quinoa). Keeps your energy high and steady!`
       );
     }
   };
@@ -108,7 +108,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
         phase: currentPhaseName.toLowerCase(),
       });
       setCustomRecipe(res);
-      showToast("✨ AI Chef synthesized a customized high-performance recipe!", "success");
+      showToast("✨ AI Chef crafted a delicious recipe for you!", "success");
     } catch {
       // Local fallback formulation
       const fallback: CustomRecipeOut = {
@@ -121,11 +121,11 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
         fats_g: 16,
         fiber_g: 8,
         iron_mg: 4.8,
-        phase_benefit: `Formulated with your pantry items (${pantryIngredients}) to support ${currentPhaseName} estrogen clearance.`,
+        phase_benefit: `Formulated with your ingredients (${pantryIngredients}) to support high energy and muscle recovery today!`,
         ingredients: [
           ...pantryIngredients.split(",").map((s) => s.trim()),
           "1 tbsp Extra virgin olive oil",
-          "Pinch of Himalayan pink salt & black pepper",
+          "Pinch of sea salt & black pepper",
         ],
         instructions: [
           "Heat olive oil in a wide skillet over medium-high heat.",
@@ -153,14 +153,13 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-fixed/50 text-on-secondary-fixed font-label-caps text-label-caps backdrop-blur-md shadow-sm">
               <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-              <span>PHASE NUTRITION ENGINE ACTIVE</span>
+              <span>DAILY FUEL GUIDE ACTIVE</span>
             </div>
             <h1 className="font-display-hero text-3xl sm:text-5xl text-on-surface tracking-tight font-semibold">
-              Nourish & Kitchen
+              Fuel & Kitchen
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Nutritional bio-energetics calibrated for estrogen-dominant {currentPhaseName.toLowerCase()}{" "}
-              glycogen synthesis, micro-nutrient repletion, and muscle tissue repair.
+              Delicious, balanced meals tailored to keep your energy high, muscles recovered, and skin glowing today.
             </p>
           </div>
           <div className="bg-surface-container-low px-5 py-3 rounded-full flex items-center gap-3 border border-surface-container-high/60">
@@ -177,14 +176,14 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
           </div>
         </section>
 
-        {/* Section 2: Daily Macro Architecture */}
+        {/* Section 2: Daily Fuel & Macros */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-headline-md text-headline-md text-on-surface font-semibold">
-              Daily Macro Architecture
+              Your Daily Fuel & Macros
             </h2>
             <span className="font-label-caps text-label-caps text-on-surface-variant uppercase">
-              Calibrated to {user?.weight_kg || 62}kg Bodyweight
+              Personalized for your body ({user?.weight_kg || 62}kg)
             </span>
           </div>
 
@@ -194,10 +193,10 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <span className="px-2.5 py-0.5 rounded-full bg-secondary-container/50 text-secondary font-label-caps text-label-caps font-semibold">
-                    Complex Low-GI
+                    Clean Energy
                   </span>
                   <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold mt-1">
-                    Carbohydrates
+                    Healthy Carbs
                   </h3>
                 </div>
                 <span className="font-headline-lg text-2xl font-bold text-secondary">
@@ -206,8 +205,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </span>
               </div>
               <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 leading-relaxed">
-                Primary neuromuscular fuel substrate. High insulin sensitivity ensures rapid glycogen
-                replenishment without fat storage.
+                Your main source of clean energy! Right now, your body turns healthy carbs straight into workout power.
               </p>
               <div className="space-y-1.5">
                 <div className="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
@@ -219,7 +217,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </div>
               </div>
               <div className="mt-4 pt-3 flex items-center justify-between font-label-caps text-label-caps text-on-surface-variant border-t border-surface-container/60">
-                <span>Primary Sources:</span>
+                <span>Great Picks:</span>
                 <span className="text-on-surface font-medium truncate max-w-[160px]">
                   Sweet Potato · Oats · Quinoa
                 </span>
@@ -231,10 +229,10 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <span className="px-2.5 py-0.5 rounded-full bg-primary-fixed/60 text-primary font-label-caps text-label-caps font-semibold">
-                    Leucine-Rich
+                    Muscle Tone
                   </span>
                   <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold mt-1">
-                    Lean Protein
+                    Clean Protein
                   </h3>
                 </div>
                 <span className="font-headline-lg text-2xl font-bold text-primary">
@@ -243,8 +241,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </span>
               </div>
               <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 leading-relaxed">
-                Stimulates myofibrillar protein synthesis (MPS) post-training. Target 35-40g boluses
-                spaced every 3-4 hours.
+                Rebuilds and tones your muscles. Aim for protein-rich meals throughout the day to stay satisfied and strong.
               </p>
               <div className="space-y-1.5">
                 <div className="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
@@ -256,7 +253,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </div>
               </div>
               <div className="mt-4 pt-3 flex items-center justify-between font-label-caps text-label-caps text-on-surface-variant border-t border-surface-container/60">
-                <span>Primary Sources:</span>
+                <span>Great Picks:</span>
                 <span className="text-on-surface font-medium truncate max-w-[160px]">
                   Wild Salmon · Eggs · Tempeh
                 </span>
@@ -268,10 +265,10 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <span className="px-2.5 py-0.5 rounded-full bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-caps text-label-caps font-semibold">
-                    Omega-3 Focus
+                    Skin & Hormone Glow
                   </span>
                   <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold mt-1">
-                    Healthy Lipids
+                    Healthy Fats
                   </h3>
                 </div>
                 <span className="font-headline-lg text-2xl font-bold text-tertiary">
@@ -280,8 +277,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </span>
               </div>
               <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 leading-relaxed">
-                Essential hormone precursor supporting follicular maturation and cell membrane
-                fluidity while muting inflammation.
+                Nourishes your hormones, supports healthy joints, and gives your skin and hair a natural glow.
               </p>
               <div className="space-y-1.5">
                 <div className="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
@@ -293,9 +289,9 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </div>
               </div>
               <div className="mt-4 pt-3 flex items-center justify-between font-label-caps text-label-caps text-on-surface-variant border-t border-surface-container/60">
-                <span>Primary Sources:</span>
+                <span>Great Picks:</span>
                 <span className="text-on-surface font-medium truncate max-w-[160px]">
-                  Flax Oil · Avocado · Seeds
+                  Avocado · Olive Oil · Seeds
                 </span>
               </div>
             </div>
@@ -305,7 +301,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <span className="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-label-caps font-semibold">
-                    Electrolytes
+                    Water & Minerals
                   </span>
                   <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold mt-1">
                     Hydration
@@ -317,8 +313,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </span>
               </div>
               <p className="font-body-sm text-body-sm text-on-surface-variant mb-4 leading-relaxed">
-                Expanded blood volume demands structured electrolyte replenishment (sodium, potassium,
-                magnesium) to prevent plasma drops.
+                Keeps your cells hydrated, energy steady, digestion smooth, and cramps far away.
               </p>
               <div className="space-y-1.5">
                 <div className="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
@@ -330,30 +325,30 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </div>
               </div>
               <div className="mt-4 pt-3 flex items-center justify-between font-label-caps text-label-caps text-on-surface-variant border-t border-surface-container/60">
-                <span>Sources:</span>
+                <span>Great Picks:</span>
                 <span className="text-on-surface font-medium truncate max-w-[160px]">
-                  Coconut Water · Celtic Salt
+                  Water · Coconut Water · Herbal Tea
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Section 3: Endocrine Timing Architecture (Pre & Post Workout Clock) */}
+        {/* Section 3: Best Times to Eat Around Workouts */}
         <section className="bg-surface-container-low/70 rounded-2xl p-6 sm:p-8 shadow-sm border border-surface-container-high/60 relative overflow-hidden">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <div className="inline-flex items-center gap-1 font-label-caps text-label-caps text-primary mb-1">
                 <span className="material-symbols-outlined text-xs">schedule</span>
-                <span>Rhythmic Fueling Protocol</span>
+                <span>Workout Fuel Timing</span>
               </div>
               <h2 className="font-headline-md text-headline-md text-on-surface font-semibold">
-                Endocrine Timing Architecture
+                Best Times to Eat Around Workouts
               </h2>
             </div>
             <div className="flex items-center gap-2 text-on-surface-variant font-label-md text-label-md bg-surface-container-lowest px-4 py-1.5 rounded-full shadow-sm">
               <span className="w-2 h-2 rounded-full bg-secondary animate-ping" />
-              <span>Recommended Window: 2h Pre & 45m Post-Lift</span>
+              <span>Recommended: Snack before & meal after</span>
             </div>
           </div>
 
@@ -366,18 +361,17 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="space-y-1 text-center sm:text-left flex-1">
                 <div className="flex items-center justify-center sm:justify-start gap-2">
                   <span className="font-label-caps text-label-caps px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-semibold">
-                    T-Minus 75 MIN
+                    75 Mins Before
                   </span>
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
-                    Pre-Straining Priming
+                    Energy Boost
                   </span>
                 </div>
                 <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                  Fast-Digesting Cyclic Oats & Berries
+                  Oatmeal with Blueberries & Honey
                 </h4>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  Light glycemic elevation paired with Himalayan pink salt to prime muscular pump
-                  without gastrointestinal burden.
+                  Light, easily digestible energy with natural minerals to power your workout without feeling full.
                 </p>
               </div>
             </div>
@@ -390,38 +384,36 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="space-y-1 text-center sm:text-left flex-1">
                 <div className="flex items-center justify-center sm:justify-start gap-2">
                   <span className="font-label-caps text-label-caps px-2.5 py-0.5 rounded-full bg-primary-fixed-dim text-on-primary-fixed font-semibold">
-                    T-Plus 30 MIN
+                    30 Mins After
                   </span>
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
-                    Anabolic Window
+                    Recovery Plate
                   </span>
                 </div>
                 <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                  Anabolic Leucine & Tart Cherry Elixir
+                  Protein Smoothie or Salmon Glow Bowl
                 </h4>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  3.5g pure plant leucine with montmorency tart cherry concentrate to suppress
-                  cortisol and maximize protein accretion.
+                  High quality protein with tart berries to stop muscle soreness and rebuild energy reserves fast.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Section 4: The Herbal & Micronutrient Apothecary */}
+        {/* Section 4: Daily Vitamins & Herbal Boosts */}
         <section className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
             <div>
               <span className="font-label-caps text-label-caps text-primary tracking-wider uppercase">
-                Somatic Plant Medicine
+                Daily Boosters & Teas
               </span>
               <h2 className="font-headline-md text-headline-md text-on-surface font-semibold">
-                The Herbal & Micronutrient Apothecary
+                Herbs & Daily Boosts
               </h2>
             </div>
             <p className="font-body-sm text-body-sm text-on-surface-variant max-w-md">
-              Formulated specifically for {currentPhaseName} days to facilitate mineral restoration and
-              optimal endocrine transitions.
+              Selected specifically for your {currentPhaseName} phase to keep your energy steady and reduce fatigue.
             </p>
           </div>
 
@@ -434,27 +426,26 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                     <span className="material-symbols-outlined text-xl">vital_signs</span>
                   </span>
                   <span className="font-label-caps text-label-caps px-2.5 py-1 rounded-full bg-primary-fixed-dim/40 text-on-primary-fixed-variant">
-                    Post-Menses Shield
+                    Energy & Iron
                   </span>
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold pt-1">
-                  Iron & Hibiscus Elixir
+                  Iron & Hibiscus Tea
                 </h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  Cold-steeped Sudanese hibiscus calyces loaded with natural Vitamin C, amplifying
-                  non-heme plant iron assimilation up to 300%.
+                  Steeped red hibiscus loaded with Vitamin C, helping your body easily absorb iron and keep tiredness away.
                 </p>
               </div>
               <div className="mt-5 pt-3 bg-surface-container-low/50 p-3 rounded-lg flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant">
-                  Dose: 18mg Heme-Bio
+                  Natural Vitamin C + Iron
                 </span>
                 <button
                   type="button"
-                  onClick={() => showToast("✦ Added Iron & Hibiscus Elixir to today's tea ritual!", "success")}
+                  onClick={() => showToast("✦ Added Iron & Hibiscus Tea to today's drink list!", "success")}
                   className="text-primary hover:text-on-primary-fixed font-label-md text-label-md font-semibold flex items-center gap-1 cursor-pointer"
                 >
-                  Add to Ritual <span className="material-symbols-outlined text-sm">add</span>
+                  Add to Routine <span className="material-symbols-outlined text-sm">add</span>
                 </button>
               </div>
             </div>
@@ -467,27 +458,26 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                     <span className="material-symbols-outlined text-xl">grain</span>
                   </span>
                   <span className="font-label-caps text-label-caps px-2.5 py-1 rounded-full bg-secondary-fixed-dim/40 text-on-secondary-fixed-variant">
-                    Estrogen Cofactors
+                    Hormone Balance
                   </span>
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold pt-1">
-                  Zinc & Pumpkin Seed Crunch
+                  Pumpkin Seeds & Zinc
                 </h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  Sprouted raw Austrian styrian pumpkin seeds rich in elemental zinc, supporting
-                  healthy follicle maturation and receptor sensitivity.
+                  Crunchy raw pumpkin seeds rich in zinc, supporting clear skin and healthy natural hormone balance.
                 </p>
               </div>
               <div className="mt-5 pt-3 bg-surface-container-low/50 p-3 rounded-lg flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant">
-                  Dose: 11mg Zinc Picolinate
+                  1 Handful Daily
                 </span>
                 <button
                   type="button"
-                  onClick={() => showToast("✦ Added Zinc & Pumpkin Seeds to your snack plan!", "success")}
+                  onClick={() => showToast("✦ Added Pumpkin Seeds to your snack plan!", "success")}
                   className="text-secondary hover:text-on-secondary-fixed font-label-md text-label-md font-semibold flex items-center gap-1 cursor-pointer"
                 >
-                  Add to Snack <span className="material-symbols-outlined text-sm">add</span>
+                  Add to Snacks <span className="material-symbols-outlined text-sm">add</span>
                 </button>
               </div>
             </div>
@@ -500,42 +490,41 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                     <span className="material-symbols-outlined text-xl">water</span>
                   </span>
                   <span className="font-label-caps text-label-caps px-2.5 py-1 rounded-full bg-tertiary-fixed-dim/40 text-on-tertiary-fixed-variant">
-                    Plasma Volume Support
+                    Electrolyte Hydration
                   </span>
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold pt-1">
-                  Electrolyte Watermelon Spritz
+                  Watermelon Electrolyte Refresher
                 </h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  Cold-pressed organic watermelon, potassium bicarbonate, and Celtic sea salt to
-                  expand vascular micro-circulation before lifting.
+                  Fresh crushed watermelon with potassium and a pinch of pink salt for crisp hydration before or after working out.
                 </p>
               </div>
               <div className="mt-5 pt-3 bg-surface-container-low/50 p-3 rounded-lg flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant">
-                  Dose: 650mg K+ / 350mg Na+
+                  Hydrating Electrolytes
                 </span>
                 <button
                   type="button"
-                  onClick={() => showToast("✦ Hydration flask ratio updated!", "success")}
+                  onClick={() => showToast("✦ Added Watermelon Refresher to your bottle!", "success")}
                   className="text-tertiary hover:text-on-tertiary-fixed font-label-md text-label-md font-semibold flex items-center gap-1 cursor-pointer"
                 >
-                  Mix Flask <span className="material-symbols-outlined text-sm">add</span>
+                  Add Drink <span className="material-symbols-outlined text-sm">add</span>
                 </button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Section 5: Curated Follicular Gastronomy */}
+        {/* Section 5: Curated Recipes for Your Phase */}
         <section className="space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <span className="font-label-caps text-label-caps text-secondary uppercase tracking-wider">
-                Repository Knowledge Synthesizer
+                Chef's Specials
               </span>
               <h2 className="font-headline-md text-headline-md text-on-surface font-semibold">
-                Curated {currentPhaseName} Gastronomy
+                Curated Meals for Your {currentPhaseName} Phase
               </h2>
             </div>
             <button
@@ -546,7 +535,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <span className="material-symbols-outlined text-lg group-hover:rotate-180 transition-transform duration-500">
                 sync_saved_locally
               </span>
-              <span>Swap Recipe with AI Engine</span>
+              <span>Swap Recipes ✨</span>
             </button>
           </div>
 
@@ -630,14 +619,14 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-fixed/50 text-primary font-label-caps text-label-caps mb-1">
                 <span className="material-symbols-outlined text-xs">soup_kitchen</span>
-                <span>AI Pantry & Fridge Synthesizer</span>
+                <span>AI Chef: Cook With What You Have</span>
               </div>
               <h3 className="font-headline-md text-headline-md text-on-surface font-semibold">
-                Tell me what ingredients you have in your kitchen
+                What's in your fridge or pantry right now?
               </h3>
             </div>
             <span className="font-label-caps text-on-surface-variant text-xs">
-              FastAPI Neural Culinary Engine
+              AI Chef Ready ✨
             </span>
           </div>
 
@@ -645,7 +634,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="md:col-span-2 space-y-1">
                 <label className="font-label-caps text-on-surface-variant uppercase text-xs">
-                  Available Ingredients in your Kitchen
+                  Ingredients in your kitchen
                 </label>
                 <input
                   type="text"
@@ -658,24 +647,24 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
 
               <div className="space-y-1">
                 <label className="font-label-caps text-on-surface-variant uppercase text-xs">
-                  Nutritional Focus
+                  Meal Goal
                 </label>
                 <select
                   value={aiFocus}
                   onChange={(e) => setAiFocus(e.target.value)}
                   className="w-full bg-surface-container-low text-on-surface rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary border border-surface-container-high"
                 >
-                  <option value="high_protein">High Protein (Athletic MPS)</option>
-                  <option value="iron_replenishment">Iron Replenishment</option>
-                  <option value="anti_inflammatory">Anti-Inflammatory</option>
-                  <option value="glycogen_replenish">Glycogen Replenishment</option>
+                  <option value="high_protein">High Protein (Strength & Tone)</option>
+                  <option value="iron_replenishment">Iron Rich (Energy & Glow)</option>
+                  <option value="anti_inflammatory">Anti-Inflammatory (Joint Comfort)</option>
+                  <option value="glycogen_replenish">Fast Energy (Pre/Post Workout)</option>
                 </select>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-1">
               <span className="font-body-sm text-on-surface-variant italic">
-                "AI crafts high-protein phase-matched recipes from any ingredients"
+                "AI invents a healthy, balanced recipe matching your ingredients"
               </span>
               <button
                 type="submit"
@@ -685,7 +674,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 <span className="material-symbols-outlined text-base">
                   {generatingAi ? "hourglass_top" : "magic_button"}
                 </span>
-                <span>{generatingAi ? "Synthesizing Recipe..." : "Create Recipe with AI"}</span>
+                <span>{generatingAi ? "Cooking Up Recipe..." : "Create My Recipe ✨"}</span>
               </button>
             </div>
           </form>
@@ -696,7 +685,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="flex items-start justify-between">
                 <div>
                   <span className="px-2.5 py-0.5 rounded-full bg-primary-fixed text-primary font-label-caps text-label-caps">
-                    AI Custom Synthesis
+                    Your Custom Recipe
                   </span>
                   <h4 className="font-headline-md text-headline-md text-on-surface font-bold mt-1">
                     {customRecipe.name}
@@ -742,21 +731,20 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
           )}
         </section>
 
-        {/* Section 7: Dining Out & Craving Assistant (Inline Oracle Drawer) */}
+        {/* Section 7: Dining Out & Craving Assistant */}
         <section className="bg-gradient-to-r from-surface-container-low via-surface-container to-surface-container-low rounded-2xl p-6 sm:p-8 shadow-sm border border-surface-container-high/60 relative overflow-hidden">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="space-y-2 max-w-xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-fixed text-primary font-label-caps text-label-caps">
                 <span className="material-symbols-outlined text-xs">restaurant</span>
-                <span>Real-World Culinary Oracle</span>
+                <span>Dining Out & Cravings Guide</span>
               </div>
               <h3 className="font-headline-lg text-2xl sm:text-3xl text-on-surface font-semibold">
-                Dining out tonight or feeling a specific craving?
+                Eating out tonight or feeling a specific craving?
               </h3>
               <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                Tell me your restaurant cuisine (e.g. Japanese, Mexican, French Bistro) or what texture
-                you crave. Aura Nymph translates any commercial menu to match your follicular macros
-                effortlessly.
+                Tell me the restaurant cuisine (e.g. Japanese, Mexican, Italian) or what you're craving.
+                We'll recommend the best order to keep you feeling light, strong, and satisfied!
               </p>
             </div>
 
@@ -764,7 +752,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary text-lg">psychology</span>
                 <span className="font-label-md text-label-md text-on-surface font-semibold">
-                  Instant Menu Translator
+                  Ask Your Dining Guide
                 </span>
               </div>
               <div className="relative">
@@ -783,7 +771,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                   onClick={() => handleDiningOracle(diningInput)}
                   className="absolute right-1.5 top-1.5 bottom-1.5 px-4 rounded-full bg-primary text-on-primary font-label-caps text-label-caps hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-1 cursor-pointer"
                 >
-                  <span>Adapt</span>
+                  <span>Ask ✨</span>
                   <span className="material-symbols-outlined text-xs">arrow_forward</span>
                 </button>
               </div>
@@ -795,21 +783,21 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                   onClick={() => handleDiningOracle("Sushi Bar Order")}
                   className="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-caps text-label-caps hover:bg-primary-fixed hover:text-primary transition-colors cursor-pointer"
                 >
-                  Sushi Bar Order
+                  Sushi Bar Order 🍣
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDiningOracle("Salty / Crunchy Craving")}
                   className="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-caps text-label-caps hover:bg-primary-fixed hover:text-primary transition-colors cursor-pointer"
                 >
-                  Salty / Crunchy Craving
+                  Salty / Crunchy Snack 🥨
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDiningOracle("Sweet Tooth Remedy")}
                   className="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-caps text-label-caps hover:bg-primary-fixed hover:text-primary transition-colors cursor-pointer"
                 >
-                  Sweet Tooth Remedy
+                  Sweet Tooth Remedy 🍫
                 </button>
               </div>
 

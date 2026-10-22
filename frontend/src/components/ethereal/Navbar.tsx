@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               AURA // NYMPH
             </span>
             <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider hidden sm:inline">
-              Phase-Intelligent Athlete Sanctuary
+              Your Daily Body & Cycle Guide
             </span>
           </div>
         </div>
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Dashboard & Tarot
+            Home & Tarot ✨
           </button>
           <button
             type="button"
@@ -77,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Cycle Training
+            Move & Train ⚡
           </button>
           <button
             type="button"
@@ -88,7 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Nourish & Kitchen
+            Fuel & Eats 🥗
           </button>
           <button
             type="button"
@@ -99,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Biometrics & Trends
+            Body Stats 📈
           </button>
           <button
             type="button"
@@ -110,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            <span>Private Vault</span>
+            <span>My Journal</span>
             <span className="text-xs">🔒</span>
           </button>
           <button
@@ -191,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-full text-left px-3 py-1.5 rounded-lg text-sm hover:bg-surface-container flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined text-sm text-primary">tune</span>
-                    <span>Athletic & Bio Profile</span>
+                    <span>My Profile & Goals</span>
                   </button>
                   <button
                     type="button"
@@ -202,7 +202,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-full text-left px-3 py-1.5 rounded-lg text-sm hover:bg-surface-container flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined text-sm text-secondary">lock</span>
-                    <span>Zero-Knowledge Vault</span>
+                    <span>Private Journal 🔒</span>
                   </button>
                   <button
                     type="button"
@@ -213,7 +213,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-full text-left px-3 py-1.5 rounded-lg text-sm hover:bg-surface-container flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined text-sm text-tertiary">event</span>
-                    <span>Cycle & Reminders</span>
+                    <span>Cycle Calendar 📅</span>
                   </button>
                 </div>
 
@@ -245,7 +245,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "dashboard" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Dashboard
+          Tarot ✨
         </button>
         <button
           type="button"
@@ -254,7 +254,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "training" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Training
+          Train ⚡
         </button>
         <button
           type="button"
@@ -263,7 +263,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "kitchen" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Nourish
+          Fuel 🥗
         </button>
         <button
           type="button"
@@ -272,7 +272,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "biometrics" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Biometrics
+          Stats 📈
         </button>
         <button
           type="button"
@@ -281,7 +281,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "journal" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Vault 🔒
+          Journal 🔒
         </button>
         <button
           type="button"
@@ -290,7 +290,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "calendar" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Calendar
+          Calendar 📅
         </button>
       </div>
     </header>

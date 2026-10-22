@@ -57,20 +57,19 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
           <div className="absolute top-48 right-12 w-80 h-80 bg-secondary-container/40 rounded-full blur-3xl pointer-events-none -z-10" />
           <div className="absolute top-96 left-10 w-72 h-72 bg-tertiary-fixed/35 rounded-full blur-3xl pointer-events-none -z-10" />
 
-          {/* 1. Analytics Editorial Header */}
+          {/* 1. Analytics Header */}
           <section className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div className="space-y-2 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-fixed/50 text-on-secondary-fixed font-label-caps text-label-caps backdrop-blur-md shadow-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-ping" />
-                <span>ESP32 Biosensor #AURA-09 · Live Telemetry Stream</span>
+                <span>Smart Sensor Synced · Live Vitals</span>
               </div>
               <h1 className="font-headline-lg text-3xl sm:text-4xl text-on-surface tracking-tight font-semibold">
-                Biometric Symphony{" "}
-                <span className="font-light italic text-primary">& Cycle Intelligence</span>
+                Your Body Vitals{" "}
+                <span className="font-light italic text-primary">& Daily Rhythm</span>
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant max-w-xl leading-relaxed">
-                Longitudinal endocrine wave synthesis powered by neural LSTM phase classification
-                and continuous non-invasive epidermal sensors.
+                Track your resting heart rate, recovery, temperature, and natural hormone waves across your whole cycle.
               </p>
             </div>
 
@@ -79,7 +78,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
               <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-xl shadow-sm border border-surface-container-high/60">
                 <span className="w-2.5 h-2.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(58,103,89,0.7)]" />
                 <span className="font-label-md text-label-md text-on-surface font-medium">
-                  ESP32 Wearable Connected
+                  Smart Sensor Connected
                 </span>
                 <span className="text-on-surface-variant/40">|</span>
                 <span className="flex items-center gap-1 font-label-caps text-label-caps text-secondary font-semibold">
@@ -87,12 +86,12 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                 </span>
                 <span className="text-on-surface-variant/40">|</span>
                 <span className="font-label-caps text-label-caps text-on-surface-variant">
-                  42ms latency
+                  Real-Time
                 </span>
               </div>
               <div className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps">
                 <span className="material-symbols-outlined text-xs text-primary">sync</span>
-                <span>Calibrated continuous Bluetooth LE telemetry</span>
+                <span>Bluetooth sync active</span>
               </div>
             </div>
           </section>
@@ -105,14 +104,14 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-label-caps text-label-caps text-primary tracking-widest uppercase">
-                    Endocrine Trajectory
+                    Hormone Waves & Energy
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-primary-fixed/40 text-primary font-label-caps text-label-caps">
-                    Multi-Cycle Synthesis
+                    Full Cycle
                   </span>
                 </div>
                 <h2 className="font-headline-md text-headline-md text-on-surface mt-1 font-semibold">
-                  28-Day Hormonal Resonance Projection
+                  Your 28-Day Natural Rhythm Curve
                 </h2>
               </div>
 
@@ -291,7 +290,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
             <div className="rounded-xl bg-surface-container-lowest/80 backdrop-blur-xl p-5 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all border border-surface-container-high/60">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-                  Heart Rate Variability
+                  Heart Rate Recovery (HRV)
                 </span>
                 <div className="w-8 h-8 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary">
                   <span className="material-symbols-outlined text-base">vital_signs</span>
@@ -302,15 +301,15 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                   <span className="font-display-hero text-3xl sm:text-4xl text-on-surface font-semibold tracking-tight">
                     68
                   </span>
-                  <span className="font-label-md text-label-md text-on-surface-variant">ms (rMSSD)</span>
+                  <span className="font-label-md text-label-md text-on-surface-variant">ms</span>
                 </div>
                 <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-label-caps">
                   <span className="material-symbols-outlined text-xs">trending_up</span>
-                  <span>+12% above 30d baseline</span>
+                  <span>+12% above your average</span>
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span className="text-secondary font-medium">Optimal parasympathetic tone</span>
+                <span className="text-secondary font-medium">Well-rested & relaxed</span>
                 <span className="material-symbols-outlined text-sm text-secondary">check_circle</span>
               </div>
             </div>
@@ -338,7 +337,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span className="text-primary font-medium">Vagal dominant & primed</span>
+                <span className="text-primary font-medium">Calm & steady heart rhythm</span>
                 <span className="material-symbols-outlined text-sm text-primary">spa</span>
               </div>
             </div>
@@ -347,7 +346,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
             <div className="rounded-xl bg-surface-container-lowest/80 backdrop-blur-xl p-5 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all border border-surface-container-high/60">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-                  Epidermal Basal Temp
+                  Body Temperature
                 </span>
                 <div className="w-8 h-8 rounded-full bg-tertiary-fixed/60 flex items-center justify-center text-tertiary">
                   <span className="material-symbols-outlined text-base">device_thermostat</span>
@@ -362,12 +361,12 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                 </div>
                 <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-label-caps">
                   <span className="material-symbols-outlined text-xs">horizontal_rule</span>
-                  <span>Pre-surge plateau</span>
+                  <span>Normal healthy baseline</span>
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span>Thermogenic shift Day 15</span>
-                <span className="font-label-caps text-label-caps text-tertiary font-medium">Stable</span>
+                <span>Natural rise around Day 15</span>
+                <span className="font-label-caps text-label-caps text-tertiary font-medium">Steady</span>
               </div>
             </div>
 
@@ -375,7 +374,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
             <div className="rounded-xl bg-surface-container-lowest/80 backdrop-blur-xl p-5 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all border border-surface-container-high/60">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-                  Perfusion & SpO²
+                  Blood Oxygen
                 </span>
                 <div className="w-8 h-8 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary">
                   <span className="material-symbols-outlined text-base">air</span>
@@ -390,11 +389,11 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                 </div>
                 <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-label-caps">
                   <span className="material-symbols-outlined text-xs">done_all</span>
-                  <span>Continuous ESP32 pulse</span>
+                  <span>Sensor synced</span>
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span className="text-secondary font-medium">Optimal cellular oxygenation</span>
+                <span className="text-secondary font-medium">Great oxygen levels</span>
                 <span className="material-symbols-outlined text-sm text-secondary">verified</span>
               </div>
             </div>
@@ -411,7 +410,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                       sentiment_satisfied
                     </span>
                     <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                      Psychosomatic Energy & Valence Matrix
+                      Daily Mood & Energy Across Cycles
                     </h3>
                   </div>
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
@@ -419,8 +418,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                   </span>
                 </div>
                 <p className="font-body-sm text-body-sm text-on-surface-variant mb-6">
-                  Correlating daily subjective athletic readiness with nocturnal neuro-recovery
-                  markers across cycle phases.
+                  See how your energy, mood, and recovery naturally shift and peak throughout each phase of your cycle.
                 </p>
 
                 {/* Heatmap Matrix Grid */}
@@ -484,29 +482,28 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
 
               {/* Gradient Scale Indicator */}
               <div className="pt-4 mt-4 flex items-center justify-between text-on-surface-variant font-label-caps text-label-caps border-t border-surface-container/60">
-                <span>Lower Somatic Surge (50)</span>
+                <span>Gentle Days (50)</span>
                 <div className="h-2 w-48 rounded-full bg-gradient-to-r from-primary-fixed via-secondary-fixed to-secondary" />
-                <span>Peak Resonance (100)</span>
+                <span>Peak Energy (100)</span>
               </div>
             </div>
 
-            {/* Sleep Architecture (5 Cols) */}
+            {/* Sleep Quality (5 Cols) */}
             <div className="lg:col-span-5 rounded-2xl bg-surface-container-lowest/80 backdrop-blur-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between border border-surface-container-high/60">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-tertiary text-base">bedtime</span>
                     <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                      Sleep Architecture
+                      Sleep Quality
                     </h3>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-label-caps font-semibold">
-                    92 Somatic Score
+                  <span className="px-2.5 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-label-caps font-semibold">
+                    92 Sleep Score
                   </span>
                 </div>
                 <p className="font-body-sm text-body-sm text-on-surface-variant mb-6">
-                  Continuous accelerometry + optical PPG staging during last night's regenerative
-                  session.
+                  Detailed breakdown of your deep, light, and REM sleep from last night.
                 </p>
 
                 <div className="flex items-baseline justify-between mb-4">
@@ -560,14 +557,13 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                 </div>
               </div>
 
-              {/* Somatic insight */}
+              {/* Sleep insight */}
               <div className="mt-5 p-3.5 rounded-xl bg-tertiary-fixed/20 flex items-start gap-3 border border-tertiary-fixed/40">
                 <span className="material-symbols-outlined text-tertiary text-base mt-0.5">
                   auto_awesome
                 </span>
                 <p className="font-body-sm text-body-sm text-on-tertiary-fixed-variant leading-snug">
-                  Your REM-to-Deep ratio is indexed 18% higher than typical follicular entry,
-                  signaling nervous system alignment for tomorrow's neuromuscular mechanics.
+                  You had wonderful deep and dream sleep last night! Your body and nervous system are fully recharged and ready for today.
                 </p>
               </div>
             </div>
@@ -578,11 +574,10 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                  Wearable Telemetry Upload & Sensor Bridge
+                  Upload Health & Wearable Data
                 </h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant">
-                  Upload daily CSV files from smart rings (Oura), bands (Whoop, Apple Watch), or raw
-                  ESP32 optical pulse logs to enrich your longitudinal trends.
+                  Upload daily CSV export files from smart rings (Oura), bands (Whoop, Apple Watch), or fitness trackers to see all your trends together.
                 </p>
               </div>
 
@@ -601,7 +596,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
                   className="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all flex items-center gap-2 cursor-pointer shadow-sm"
                 >
                   <span className="material-symbols-outlined text-base">upload_file</span>
-                  <span>{uploading ? "Ingesting Telemetry..." : "Upload Wearable CSV"}</span>
+                  <span>{uploading ? "Ingesting Telemetry..." : "Upload Health CSV"}</span>
                 </button>
               </div>
             </div>

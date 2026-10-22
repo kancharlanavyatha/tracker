@@ -108,7 +108,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 >
                   eco
                 </span>
-                <span>PHASE INTELLIGENCE ACTIVE</span>
+                <span>SMART WORKOUT ENGINE</span>
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 text-primary font-label-caps text-label-caps shadow-sm backdrop-blur-md border border-surface-container-high/60">
                 <span
@@ -118,16 +118,15 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   magic_button
                 </span>
                 <span>
-                  ✨ Intensity Score: {intensityScore} / 100 · Guided by Gradient Boosting
+                  ⚡ Daily Workout Effort: {intensityScore} / 100 · High Energy!
                 </span>
               </span>
             </div>
             <h1 className="font-display-hero text-3xl sm:text-5xl text-on-surface tracking-tight font-semibold mt-1">
-              Hormone-Synchronized Training
+              Workouts in Sync With Your Cycle
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
-              Align your athletic sessions with your biological energy curves for peak neuromuscular
-              output without adrenal burnout.
+              Move with your natural body rhythm so you build strength and feel energized all day without burnout.
             </p>
           </div>
           <div className="flex items-center gap-2 bg-surface-container-low/80 p-1.5 rounded-full backdrop-blur-md shadow-sm border border-surface-container-high/60">
@@ -135,14 +134,14 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
               type="button"
               className="px-4 py-1.5 rounded-full bg-surface-container-lowest text-primary font-label-md text-label-md shadow-sm font-semibold transition-all cursor-pointer"
             >
-              Cycle Roadmap
+              Workout Plan
             </button>
             <button
               type="button"
               onClick={() => setTab("biometrics")}
               className="px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all cursor-pointer"
             >
-              Bio-Telemetry
+              Body Stats
             </button>
           </div>
         </section>
@@ -153,11 +152,11 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-xl">calendar_month</span>
               <h2 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                Phase Training Blueprint
+                Your 4-Phase Workout Guide
               </h2>
             </div>
             <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-              Day {currentDay} of {cycleLength} · {currentPhaseName} Arc
+              Day {currentDay} of {cycleLength} · {currentPhaseName} Phase
             </span>
           </div>
 
@@ -180,15 +179,14 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   </span>
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-medium mt-1">
-                  Menstrual Arc
+                  Phase 1: Rest & Flow
                 </h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  Gentle Yin yoga, restorative joint flushes, and parasympathetic walks. Softening
-                  cellular stress.
+                  Gentle yoga, easy walks, stretching, and mindful breathwork. Listen to your body and rest.
                 </p>
               </div>
               <div className="mt-4 pt-2 flex items-center justify-between text-on-surface-variant border-t border-surface-container/60">
-                <span className="font-label-caps text-label-caps">Cap: 40% 1RM</span>
+                <span className="font-label-caps text-label-caps">Light Effort (40%)</span>
                 <span className="material-symbols-outlined text-base text-outline">spa</span>
               </div>
             </div>
@@ -202,7 +200,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-on-secondary font-label-caps text-label-caps shadow-sm">
                     <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed animate-ping" />
-                    ACTIVE CURRENT
+                    ACTIVE TODAY
                   </span>
                   <span className="font-label-caps text-label-caps font-semibold text-secondary">
                     Days 6 - 13
@@ -210,7 +208,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
                   <h3 className="font-headline-sm text-headline-sm text-primary font-semibold">
-                    Follicular Surge
+                    Phase 2: Power Up
                   </h3>
                   <span
                     className="material-symbols-outlined text-base text-primary"
@@ -220,13 +218,12 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   </span>
                 </div>
                 <p className="font-body-sm text-body-sm text-on-surface font-medium leading-relaxed">
-                  Heavy resistance & explosive power. Anabolic estrogen spike favors high neural
-                  recruitment and low muscle soreness.
+                  Strength training & explosive moves! Rising energy and estrogen make you feel powerful and bounce back fast.
                 </p>
               </div>
               <div className="mt-4 pt-2 flex items-center justify-between text-secondary relative z-10 border-t border-surface-container/60">
                 <span className="font-label-caps text-label-caps font-semibold">
-                  Strain Window: 85-95%
+                  Energy Zone: 85-95%
                 </span>
                 <span className="material-symbols-outlined text-base">bolt</span>
               </div>
@@ -250,15 +247,14 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   </span>
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-medium mt-1">
-                  Ovulatory Crest
+                  Phase 3: Peak Performance
                 </h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  Peak anaerobic strength and sprint personal records. Maximum motor unit
-                  synchronization.
+                  Peak physical strength and fastest sprints. Ideal time to set a new personal record!
                 </p>
               </div>
               <div className="mt-4 pt-2 flex items-center justify-between text-on-surface-variant border-t border-surface-container/60">
-                <span className="font-label-caps text-label-caps">Target: 1RM Tests</span>
+                <span className="font-label-caps text-label-caps">Aim for Personal Best</span>
                 <span className="material-symbols-outlined text-base text-secondary">
                   local_fire_department
                 </span>
@@ -279,19 +275,18 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                     ✧ Phase 04
                   </span>
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
-                    Days 18 - 29
+                    Days 18 - 28
                   </span>
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-surface font-medium mt-1">
-                  Luteal Synthesis
+                  Phase 4: Sculpt & Balance
                 </h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                  Metabolic conditioning, hypertrophy volume, and steady-state zone 2 pacing
-                  transitioning to calm deload.
+                  Steady cardio, pilates, and moderate weights, gradually cooling down toward your next cycle.
                 </p>
               </div>
               <div className="mt-4 pt-2 flex items-center justify-between text-on-surface-variant border-t border-surface-container/60">
-                <span className="font-label-caps text-label-caps">Shift: Aerobic Base</span>
+                <span className="font-label-caps text-label-caps">Steady Cardio & Tone</span>
                 <span className="material-symbols-outlined text-base text-tertiary">water_drop</span>
               </div>
             </div>
@@ -306,27 +301,27 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-fixed/40 text-primary font-label-caps text-label-caps font-semibold">
-                      TODAY'S MAIN PROTOCOL
+                      TODAY'S WORKOUT
                     </span>
                     <span className="text-on-surface-variant font-label-caps text-label-caps">
-                      Estrogen Window 92%
+                      High Energy Day ✨
                     </span>
                   </div>
                   <h2 className="font-headline-lg text-2xl sm:text-3xl text-on-surface font-bold">
-                    Goddess of Strength: Back Squat & Jump Potentiation
+                    Strength Day: Squats & Power Jumps
                   </h2>
                   <div className="flex items-center gap-4 mt-2 text-on-surface-variant font-label-md text-label-md flex-wrap">
                     <span className="flex items-center gap-1 text-primary font-semibold">
                       <span className="material-symbols-outlined text-base">speed</span>
-                      Target RPE: 8.5
+                      Target Effort: 8.5 / 10
                     </span>
                     <span className="flex items-center gap-1">
                       <span className="material-symbols-outlined text-base">timer</span>
                       48 mins
                     </span>
                     <span className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-base">neurology</span>
-                      Neural Potentiation
+                      <span className="material-symbols-outlined text-base">bolt</span>
+                      Full Body Strength
                     </span>
                   </div>
                 </div>
@@ -337,7 +332,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                     type="button"
                     onClick={() => {
                       setSparkMode(true);
-                      showToast("✦ Spark +5kg activated! Neuromuscular recruitment boosted.", "success");
+                      showToast("✦ Boost +5kg active! Feeling strong.", "success");
                     }}
                     className={`px-4 py-1.5 rounded-full font-label-caps text-label-caps font-semibold flex items-center gap-1 transition-all cursor-pointer ${
                       sparkMode
@@ -346,7 +341,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                     }`}
                   >
                     <span className="material-symbols-outlined text-sm">bolt</span>
-                    <span>Spark +5kg</span>
+                    <span>Boost +5kg</span>
                   </button>
                   <button
                     type="button"
@@ -380,11 +375,11 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                           Barbell Back Squat
                         </h4>
                         <span className="px-2 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-[10px]">
-                          Prime Lift
+                          Main Lift
                         </span>
                       </div>
                       <p className="font-body-sm text-body-sm text-on-surface-variant">
-                        Full depth squat, explosive ascending drive · 3s eccentric cadence
+                        Full depth squat, push through your heels · Smooth 3s lowering
                       </p>
                     </div>
                   </div>
@@ -394,7 +389,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                         4 × 5 @ {squatLoad} kg
                       </div>
                       <div className="font-label-caps text-label-caps text-on-surface-variant">
-                        Rest: 180s · CNS Recharge
+                        Rest: 180s · Full Recovery
                       </div>
                     </div>
                     <button
@@ -426,11 +421,11 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                           Banded Broad Jumps
                         </h4>
                         <span className="px-2 py-0.5 rounded-full bg-primary-fixed/30 text-primary font-label-caps text-[10px]">
-                          PAP Superset
+                          Power Combo
                         </span>
                       </div>
                       <p className="font-body-sm text-body-sm text-on-surface-variant">
-                        Sticking landing softly into athletic hinge · Elastic recoil emphasis
+                        Land softly in a comfortable squat · Focus on bounce and spring
                       </p>
                     </div>
                   </div>
@@ -440,7 +435,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                         4 × 3 reps
                       </div>
                       <div className="font-label-caps text-label-caps text-on-surface-variant">
-                        Rest: 90s · Elasticity
+                        Rest: 90s · Catch Your Breath
                       </div>
                     </div>
                     <button
@@ -472,11 +467,11 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                           Romanian Deadlift (RDL)
                         </h4>
                         <span className="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-caps text-[10px]">
-                          Posterior Chain
+                          Legs & Glutes
                         </span>
                       </div>
                       <p className="font-body-sm text-body-sm text-on-surface-variant">
-                        Hamstring elongation at peak hinge · Neutral cervical alignment
+                        Hinge at hips, feeling stretch in hamstrings · Keep back straight
                       </p>
                     </div>
                   </div>
@@ -486,7 +481,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                         3 × 8 @ {rdlLoad} kg
                       </div>
                       <div className="font-label-caps text-label-caps text-on-surface-variant">
-                        Rest: 120s · High Tension
+                        Rest: 120s · Deep Recovery
                       </div>
                     </div>
                     <button
@@ -518,11 +513,11 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                           Pallof Press & Breath Flushes
                         </h4>
                         <span className="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-caps text-[10px]">
-                          Core Stability
+                          Core & Abs
                         </span>
                       </div>
                       <p className="font-body-sm text-body-sm text-on-surface-variant">
-                        Anti-rotation tension combined with deep diaphragm expansion
+                        Hold band steady at chest with deep belly breaths
                       </p>
                     </div>
                   </div>
@@ -532,7 +527,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                         3 × 12 / side
                       </div>
                       <div className="font-label-caps text-label-caps text-on-surface-variant">
-                        Rest: 60s · Core Grounding
+                        Rest: 60s · Breathe
                       </div>
                     </div>
                     <button
@@ -569,7 +564,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   className="w-full sm:w-auto px-6 py-3 rounded-full bg-surface-container-lowest text-on-surface hover:text-primary font-label-lg text-label-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer border border-surface-container-high"
                 >
                   <span className="material-symbols-outlined text-lg">edit_note</span>
-                  <span>Log RPE & Post-Workout Vitals</span>
+                  <span>Log How It Felt ✨</span>
                 </button>
               </div>
             </div>
@@ -584,14 +579,13 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 />
                 <div className="flex flex-col gap-1 min-w-0">
                   <span className="font-label-caps text-label-caps text-secondary font-semibold">
-                    Dynamic Preparation
+                    Warm-Up Routine
                   </span>
                   <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">
-                    Glute & Adductor Activation
+                    Hip & Leg Warm-Up
                   </h4>
                   <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
-                    7 mins of lateral banded steps, 90/90 hip flushes, and ankle dorsiflexion
-                    openers.
+                    7 mins of light lateral steps, gentle hip circles, and ankle stretches to get warm.
                   </p>
                 </div>
               </div>
@@ -602,13 +596,13 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 </div>
                 <div className="flex flex-col gap-1 min-w-0">
                   <span className="font-label-caps text-label-caps text-tertiary font-semibold">
-                    Recovery Cadence
+                    Cool Down
                   </span>
                   <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">
-                    Neuromuscular Priming
+                    Deep Belly Breaths
                   </h4>
                   <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
-                    Vagal tone breathing (4s in, 8s out) to modulate sympathetic activation.
+                    Inhale for 4 seconds, exhale for 8 seconds to relax your body and lower stress.
                   </p>
                 </div>
               </div>
@@ -620,17 +614,17 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
             <div className="bg-surface-container-lowest rounded-xl p-6 shadow-md border border-surface-container-high/60 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-primary uppercase font-semibold">
-                  Continuous Telemetry
+                  Live Body Vitals
                 </span>
                 <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
               </div>
-              <h3 className="font-headline-md text-headline-md text-on-surface">
-                Neuromuscular Readiness
+              <h3 className="font-headline-md text-headline-md text-on-surface font-bold">
+                Daily Readiness
               </h3>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/70">
-                  <span className="font-body-md text-on-surface">Nocturnal HRV</span>
+                  <span className="font-body-md text-on-surface">Heart Rate Recovery (HRV)</span>
                   <span className="font-headline-sm text-secondary font-semibold">68 ms</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/70">
@@ -650,29 +644,27 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
               <div className="p-4 rounded-xl bg-secondary-container/20 border border-secondary/20">
                 <div className="flex items-center gap-1.5 text-secondary font-label-caps text-label-caps font-semibold">
                   <span className="material-symbols-outlined text-sm">verified</span>
-                  <span>Neural Clearance High</span>
+                  <span>Feeling Strong & Energized</span>
                 </div>
                 <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-snug">
-                  Estrogen supports tendon laxity mitigation while dampening inflammatory markers.
-                  Ideal day for maximum voluntary contractions.
+                  Your natural estrogen makes you feel energized and helps you bounce back fast. Perfect day for a strong workout!
                 </p>
               </div>
             </div>
 
             <div className="bg-gradient-to-br from-primary-fixed/30 to-tertiary-fixed/30 p-6 rounded-xl shadow-sm border border-surface-container-high/60 space-y-3">
               <span className="font-label-caps text-label-caps text-primary uppercase font-semibold">
-                Post-Session Guidance
+                Post-Workout Fuel
               </span>
               <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                Consume 35-40g fast-acting protein with 50g cyclic carbohydrates within 45 minutes
-                to capitalize on insulin sensitivity.
+                Enjoy 30-40g protein with healthy carbs within 45 minutes to recharge your energy and rebuild muscle.
               </p>
               <button
                 type="button"
                 onClick={() => setTab("kitchen")}
                 className="w-full py-2 rounded-full bg-surface-container-lowest text-primary font-label-md text-label-md hover:bg-primary-fixed transition-colors font-semibold cursor-pointer shadow-sm"
               >
-                Go to Nourish & Kitchen 🍲
+                Go to Fuel & Eats 🥗
               </button>
             </div>
           </div>
@@ -695,8 +687,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 </button>
               </div>
               <p className="font-body-md text-on-surface-variant">
-                Set 1 of 4: 5 reps @ {squatLoad} kg. Focus on 3-second descent, aggressive rebound out
-                of the hole, and explosive glute lockout.
+                Set 1 of 4: 5 reps @ {squatLoad} kg. Focus on smooth descent, pushing through your heels, and standing tall.
               </p>
               <div className="p-4 rounded-xl bg-surface-container-low text-center space-y-2">
                 <span className="font-label-caps text-xs text-secondary font-semibold uppercase">
@@ -712,14 +703,14 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                     handleStartTimer(1, 180);
                     setGuidedModalOpen(false);
                   }}
-                  className="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all"
+                  className="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all cursor-pointer"
                 >
                   Complete Set & Start Rest (180s)
                 </button>
                 <button
                   type="button"
                   onClick={() => setGuidedModalOpen(false)}
-                  className="px-4 py-2.5 rounded-full bg-surface-container text-on-surface font-label-lg"
+                  className="px-4 py-2.5 rounded-full bg-surface-container text-on-surface font-label-lg cursor-pointer"
                 >
                   Close
                 </button>
@@ -734,20 +725,20 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
             <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-container-high space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-headline-md text-headline-md text-primary font-bold">
-                  Log Session RPE
+                  How Did Today's Workout Feel?
                 </h3>
                 <button
                   type="button"
                   onClick={() => setRpeModalOpen(false)}
-                  className="text-on-surface-variant hover:text-on-surface"
+                  className="text-on-surface-variant hover:text-on-surface cursor-pointer"
                 >
                   ✕
                 </button>
               </div>
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="font-label-caps text-on-surface-variant uppercase">
-                    Rate of Perceived Exertion (RPE)
+                  <label className="font-label-caps text-on-surface-variant uppercase font-semibold text-xs">
+                    Effort Level (1 - 10)
                   </label>
                   <span className="font-headline-sm text-primary font-bold">{sessionRpe} / 10</span>
                 </div>
@@ -762,8 +753,8 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="font-label-caps text-on-surface-variant uppercase">
-                  Subjective Workout Notes
+                <label className="font-label-caps text-on-surface-variant uppercase font-semibold text-xs">
+                  Workout Notes
                 </label>
                 <textarea
                   value={sessionNotes}
@@ -776,14 +767,14 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 <button
                   type="button"
                   onClick={handleLogRpe}
-                  className="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all"
+                  className="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all cursor-pointer"
                 >
-                  Confirm & Sync to FastAPI
+                  Save Workout Log ✨
                 </button>
                 <button
                   type="button"
                   onClick={() => setRpeModalOpen(false)}
-                  className="px-4 py-2.5 rounded-full bg-surface-container text-on-surface font-label-lg"
+                  className="px-4 py-2.5 rounded-full bg-surface-container text-on-surface font-label-lg cursor-pointer"
                 >
                   Cancel
                 </button>
