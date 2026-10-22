@@ -17,7 +17,7 @@ from app.schemas import (
     RecommendIn,
     RecommendOut,
 )
-from app.services import llm_client, ml_stub, phase_service, recommendation
+from app.services import llm_client, ml_stub, oracle_service, phase_service, recommendation
 
 router = APIRouter(tags=["ml"])
 
@@ -189,37 +189,22 @@ def create_custom_recipe(body: CustomRecipeIn, db: Session = Depends(get_db)) ->
 
 
 def chat(body: ChatIn, db: Session = Depends(get_db)) -> ChatOut:
-
     if db.get(User, body.user_id) is None:
-
         raise HTTPException(status_code=404, detail="User not found")
 
     last = ml_stub.last_period_start(db, body.user_id)
-
     ref = datetime.now(timezone.utc).date()
-
     phase_out = phase_service.infer_phase(db, body.user_id, last, ref)
+    rec_out, _ = recommendation.build_recommendation(db, body.user_id)
 
-    ctx = ml_stub.recent_context(db, body.user_id)
-
-    prompt = (
-
-        "You are a concise athletic coach and health educator for women. "
-
-        "Use the structured context; do not invent medical diagnoses. "
-
-        f"Cycle phase (estimate): {phase_out.phase}, day {phase_out.day_in_cycle}. "
-
-        f"Recent context JSON: {ctx}. User message: {body.message}"
-
+    reply, intent, source = oracle_service.generate_somatic_guidance(
+        message=body.message,
+        phase=phase_out.phase,
+        day_in_cycle=phase_out.day_in_cycle,
+        intensity_score=rec_out.training_intensity_score,
+        recovery_hours=rec_out.recovery_hours_suggested,
     )
-
-    reply = llm_client.generate_ollama_reply(prompt)
-    if reply:
-        return ChatOut(reply=reply, source="Cycle Health AI")
-
-    guidance = _generate_health_guidance(phase_out.phase, phase_out.day_in_cycle, body.message)
-    return ChatOut(reply=guidance, source="Health Assistant")
+    return ChatOut(reply=reply, source=source)
 
 
 def _generate_health_guidance(phase: str, day: int, message: str) -> str:

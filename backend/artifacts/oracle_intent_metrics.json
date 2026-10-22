@@ -1,0 +1,166 @@
+{
+  "model_name": "Model 4: Somatic Athletic Dialogue & Intent Engine",
+  "architecture": "TF-IDF (1,2 n-grams) + Calibrated Multi-Class Logistic Classifier",
+  "test_accuracy": 1.0,
+  "test_weighted_f1": 1.0,
+  "test_macro_f1": 1.0,
+  "cv_mean_accuracy": 1.0,
+  "cv_std_accuracy": 0.0,
+  "classification_report": {
+    "nutrition_fuel": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "training_load": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "recovery_soreness": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "symptom_cramps": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "sleep_insomnia": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "hormone_phase_inquiry": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "ovulation_fertility": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "injury_laxity_prevention": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "accuracy": 1.0,
+    "macro avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 800.0
+    },
+    "weighted avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 800.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      100,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      100,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      100
+    ]
+  ],
+  "intents": [
+    "nutrition_fuel",
+    "training_load",
+    "recovery_soreness",
+    "symptom_cramps",
+    "sleep_insomnia",
+    "hormone_phase_inquiry",
+    "ovulation_fertility",
+    "injury_laxity_prevention"
+  ],
+  "test_sample_size": 800,
+  "total_training_samples": 4000
+}
