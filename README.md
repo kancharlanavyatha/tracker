@@ -253,4 +253,4 @@ Ensure `OLLAMA_BASE_URL` and `OLLAMA_MODEL` in `backend/.env` match your setup. 
 
 ## License
 
-Academic / FYP project — adjust license as needed for your institution.
+Academic / FYP project
