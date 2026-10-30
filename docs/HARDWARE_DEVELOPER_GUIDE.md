@@ -20,26 +20,6 @@ This wearable device is a low-power, non-invasive wristband/clip prototype desig
 
 ---
 
-## 2. Complete Bill of Materials (BOM) & Sourcing
-
-All components can be purchased from online Indian electronics retailers (**Robu.in**, **ElectronicsComp.com**, or **Amazon.in**):
-
-| # | Component Name | Exact Model / Spec | Qty | Approx. Price (INR ₹) | Purpose in Circuit |
-|---|---|---|:---:|:---:|---|
-| **1** | **Microcontroller** | ESP32 DevKit V1 (30-pin) OR Seeed Studio XIAO ESP32-C3 | 1 | ₹279 – ₹350 | Main MCU running FreeRTOS/C++, I2C master, and BLE 5.0 server |
-| **2** | **PPG Biosensor** | MAX30102 Module (Heart Rate + $SpO_2$) | 1 | ₹179 – ₹240 | Optical dual-wavelength (660nm Red / 880nm IR) pulse & HRV sensor |
-| **3** | **Body Temp Sensor** | MAX30205 Human Body Temp Sensor Module | 1 | ₹250 – ₹420 | Clinical grade skin temperature transducer ($\pm 0.1^\circ\text{C}$ accuracy) |
-| **4** | **6-Axis Motion IMU** | MPU-6050 (GY-521 Breakout) | 1 | ₹155 – ₹160 | 3-axis accelerometer + 3-axis gyro for step and sleep tracking |
-| **5** | **Micro Display** | 0.96" I2C OLED Display (SSD1306, 128x64, Blue/White) | 1 | ₹110 – ₹180 | On-wrist real-time telemetry and phase status screen |
-| **6** | **Battery Charger** | TP4056 Type-C Charger Module (with DW01A protection) | 1 | ₹25 – ₹45 | 5V USB-C lithium charging controller with overcharge/short-circuit cutoff |
-| **7** | **Rechargeable Battery** | 3.7V 500mAh (or 300mAh) LiPo Pouch Cell with PCM | 1 | ₹220 – ₹260 | Portable DC power supply (provides 18–24 hours untethered operation) |
-| **8** | **Haptic Motor** | Coin Vibration Motor (1027/1034 3V DC) | 1 | ₹35 – ₹50 | Silent tactile vibration for rest intervals and phase alerts |
-| **9** | **Motor Driver** | 2N2222 NPN Transistor + 1kΩ resistor + 1N4148 diode | 1 | ₹15 – ₹25 | Safe switching circuit for the vibration motor from GPIO |
-| **10**| **Prototyping Gear** | Half-size Breadboard (400 tie-point) + Dupont Jumper Wires | 1 | ₹100 – ₹150 | For circuit assembly, breadboard testing, and viva table demonstration |
-| **--**| **TOTAL ESTIMATED COST** | | | **₹1,368 – ₹1,880** | Complete working hardware prototype kit |
-
----
-
 ## 3. Circuit Schematic & Pin-by-Pin Wiring Table
 
 All four primary sensor peripherals communicate over the **shared I2C bus**. On the standard ESP32, the default hardware I2C pins are:
@@ -447,7 +427,7 @@ Open `Tools -> Serial Monitor` at **115200 baud**. Put a finger gently on the MA
 
 ---
 
-## 7. Deliverables Acceptance Criteria (What to Ask From the Person Building It)
+## 7. Deliverables Acceptance Criteria 
 
 When your hardware developer finishes the work, they must deliver:
 1. **Fully Assembled Breadboard / Wearable Module:** All 9 components wired cleanly with no loose pins.
