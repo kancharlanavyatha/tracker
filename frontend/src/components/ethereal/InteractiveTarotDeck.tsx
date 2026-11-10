@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FULL_TAROT_DECK, type FullTarotCard } from "../../data/tarotDeck";
+import { EtherealTarotCard } from "./EtherealTarotCard";
 
 interface InteractiveTarotDeckProps {
   currentPhaseName: string;
@@ -41,7 +42,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
   const [inspectCard, setInspectCard] = useState<FullTarotCard | null>(null);
 
   // Selected card in fan mode
-  const [selectedFanCard, setSelectedFanCard] = useState<FullTarotCard | null>(FULL_TAROT_DECK[19]); // The Sun default
+  const [selectedFanCard, setSelectedFanCard] = useState<FullTarotCard | null>(FULL_TAROT_DECK[3]); // The Empress default
 
   // Hovered card index in fan mode
   const [hoveredFanIdx, setHoveredFanIdx] = useState<number | null>(null);
@@ -87,24 +88,24 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
   });
 
   return (
-    <section className="bg-surface-container-lowest/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_20px_50px_rgba(148,69,91,0.06)] border border-surface-container-high/60 relative overflow-hidden space-y-8">
-      {/* Soft ambient background glows */}
-      <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-primary-fixed/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -left-20 -top-20 w-80 h-80 bg-secondary-container/30 rounded-full blur-3xl pointer-events-none" />
+    <section className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-8 lg:p-10 shadow-[0_20px_60px_rgba(215,205,190,0.35)] border border-[#E8DFD0] relative overflow-hidden space-y-8">
+      {/* Soft ambient champagne glows */}
+      <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#FAF3E0]/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -left-20 -top-20 w-80 h-80 bg-[#F5EFE6]/50 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between pb-3 gap-4 relative z-10 border-b border-surface-container/60">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between pb-4 gap-4 relative z-10 border-b border-[#F0EAE1]">
         <div>
           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="px-3 py-1 rounded-full bg-primary-fixed text-primary font-label-caps text-xs font-semibold uppercase tracking-wider">
-              Full 22-Card Major Arcana
+            <span className="px-3 py-1 rounded-full bg-[#FAF7F2] border border-[#E8DFD0] text-[#8C734B] font-label-caps text-xs font-semibold uppercase tracking-wider">
+              SELENE Major Arcana · Ethereal Bloom
             </span>
-            <span className="font-label-caps text-on-surface-variant text-xs">
-              Today's Vibe & Energy
+            <span className="font-label-caps text-[#7A6E65] text-xs">
+              Daily Somatic Archetypes
             </span>
           </div>
-          <h2 className="font-headline-lg text-2xl sm:text-3xl text-on-surface tracking-tight font-bold">
-            Daily Tarot & Mindset Draw
+          <h2 className="font-serif text-2xl sm:text-3xl text-[#2C2825] tracking-tight font-bold">
+            Daily Tarot & Mindset Sanctuary
           </h2>
         </div>
 
@@ -114,21 +115,22 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-xs flex items-center gap-1 transition-colors cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE1] border border-[#E8DFD0] text-[#4A423A] font-label-caps text-xs flex items-center gap-1 transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              <span className="material-symbols-outlined text-sm text-[#8C734B]">arrow_back</span>
               <span>Back to Dashboard</span>
             </button>
           )}
+
           {/* Mode Switcher */}
-          <div className="bg-surface-container-low p-1 rounded-full flex items-center border border-surface-container-high/60">
+          <div className="bg-[#FAF7F2] p-1 rounded-full flex items-center border border-[#E8DFD0]">
             <button
               type="button"
               onClick={() => setMode("three_spread")}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 mode === "three_spread"
-                  ? "bg-surface-container-lowest text-primary shadow-sm"
-                  : "text-on-surface-variant hover:text-on-surface"
+                  ? "bg-white text-[#8C734B] shadow-sm border border-[#E8DFD0]"
+                  : "text-[#7A6E65] hover:text-[#2C2825]"
               }`}
             >
               3-Card Reading
@@ -138,8 +140,8 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               onClick={() => setMode("fan_pick")}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 mode === "fan_pick"
-                  ? "bg-surface-container-lowest text-primary shadow-sm"
-                  : "text-on-surface-variant hover:text-on-surface"
+                  ? "bg-white text-[#8C734B] shadow-sm border border-[#E8DFD0]"
+                  : "text-[#7A6E65] hover:text-[#2C2825]"
               }`}
             >
               Interactive Fan (22)
@@ -149,26 +151,26 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               onClick={() => setMode("all_cards")}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 mode === "all_cards"
-                  ? "bg-surface-container-lowest text-primary shadow-sm"
-                  : "text-on-surface-variant hover:text-on-surface"
+                  ? "bg-white text-[#8C734B] shadow-sm border border-[#E8DFD0]"
+                  : "text-[#7A6E65] hover:text-[#2C2825]"
               }`}
             >
               All 22 Cards Grid
             </button>
           </div>
 
-          {/* Shuffle button with spin */}
+          {/* Shuffle button */}
           <button
             type="button"
             onClick={handleShuffle}
             disabled={isShuffling}
-            className={`flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-lg text-sm font-semibold shadow-md hover:shadow-lg hover:scale-102 active:scale-98 transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#9A7B38] to-[#8C734B] text-white font-label-lg text-sm font-semibold shadow-md hover:shadow-lg hover:scale-102 active:scale-98 transition-all cursor-pointer ${
               isShuffling ? "opacity-75" : ""
             }`}
           >
             <span
               className={`material-symbols-outlined text-base ${
-                isShuffling ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500"
+                isShuffling ? "animate-spin" : ""
               }`}
             >
               auto_awesome
@@ -183,7 +185,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
       {/* ========================================================================= */}
       {mode === "three_spread" && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs text-on-surface-variant">
+          <div className="flex items-center justify-between text-xs text-[#7A6E65]">
             <span>Tap any card to flip between its celestial back and full wisdom face</span>
             <span className="hidden sm:inline">3-Card Cycle Spread: Mind · Fuel · Rest</span>
           </div>
@@ -199,157 +201,17 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                   : "Card 3 // Rest & Recovery";
 
               return (
-                <div
+                <EtherealTarotCard
                   key={card.id + idx}
-                  className={`relative group transition-all duration-300 ${
-                    isShuffling ? "animate-pulse scale-95 opacity-60" : "hover:-translate-y-1.5"
-                  }`}
-                  style={{ perspective: "1200px" }}
-                >
-                  {/* Slot label header */}
-                  <div className="flex items-center justify-between pb-2 px-1">
-                    <span className="font-label-caps text-xs text-primary font-semibold uppercase tracking-wider">
-                      {slotLabel}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => toggleFlip(idx)}
-                      className="text-xs text-on-surface-variant hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
-                    >
-                      <span>{isFlipped ? "Flip to hide" : "Tap to flip"}</span>
-                      <span className="material-symbols-outlined text-sm">sync</span>
-                    </button>
-                  </div>
-
-                  {/* 3D Flip Container */}
-                  <div
-                    onClick={() => toggleFlip(idx)}
-                    className="w-full relative transition-transform duration-700 rounded-3xl shadow-[0_12px_36px_rgba(0,0,0,0.06)] group-hover:shadow-[0_20px_45px_rgba(148,69,91,0.14)] cursor-pointer"
-                    style={{
-                      transformStyle: "preserve-3d",
-                      transform: isFlipped ? "rotateY(0deg)" : "rotateY(180deg)",
-                      minHeight: "520px",
-                    }}
-                  >
-                    {/* CARD FRONT FACE (Full Details) */}
-                    <div
-                      className="w-full h-full rounded-3xl bg-surface-container-lowest p-6 flex flex-col justify-between border-2 border-primary-container/50 relative overflow-hidden"
-                      style={{
-                        backfaceVisibility: "hidden",
-                        WebkitBackfaceVisibility: "hidden",
-                      }}
-                    >
-                      {/* Corner Accents */}
-                      <span className="absolute top-2.5 left-3 text-xs text-primary/40 font-serif">+</span>
-                      <span className="absolute top-2.5 right-3 text-xs text-primary/40 font-serif">+</span>
-                      <span className="absolute bottom-2.5 left-3 text-xs text-primary/40 font-serif">+</span>
-                      <span className="absolute bottom-2.5 right-3 text-xs text-primary/40 font-serif">+</span>
-
-                      <div className="space-y-3">
-                        {/* Header: Numeral & Phase */}
-                        <div className="flex items-center justify-between border-b border-surface-container pb-2 pt-1">
-                          <span className="font-serif font-bold text-lg text-primary">
-                            Arcana {card.numeral}
-                          </span>
-                          <span className="px-2.5 py-0.5 rounded-full bg-primary-fixed/50 text-primary font-label-caps text-xs font-semibold">
-                            {card.phase}
-                          </span>
-                        </div>
-
-                        {/* Nymph Classical Painting Art Frame */}
-                        <div className="w-full h-44 rounded-2xl overflow-hidden relative shadow-sm border border-primary-container/40 group/art">
-                          <img
-                            src={card.artUrl}
-                            alt={card.name}
-                            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/art:scale-105"
-                            loading="lazy"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                          <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-white">
-                            <span className="font-serif italic text-[11px] tracking-wide text-white/95 drop-shadow-sm truncate max-w-[65%]">
-                              {card.artArtist}
-                            </span>
-                            <span className="px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-[9px] font-semibold uppercase tracking-wider text-white">
-                              {card.theme}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Title & Tagline */}
-                        <div>
-                          <h3 className="font-headline-sm text-xl text-on-surface font-bold">
-                            {card.name}
-                          </h3>
-                          <p className="font-label-caps text-xs text-primary font-medium mt-0.5">
-                            {card.subtitle}
-                          </p>
-                          <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed mt-2">
-                            "{card.meaning}"
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Bottom Practical Wisdom */}
-                      <div className="pt-3 border-t border-surface-container space-y-2 mt-2">
-                        <div className="flex items-start gap-1.5 text-xs text-on-surface">
-                          <span className="text-secondary font-semibold min-w-max">Movement:</span>
-                          <span className="text-on-surface-variant">{card.bodyAdvice}</span>
-                        </div>
-                        <div className="flex items-start gap-1.5 text-xs text-on-surface">
-                          <span className="text-primary font-semibold min-w-max">Fuel & Food:</span>
-                          <span className="text-on-surface-variant">{card.foodAdvice}</span>
-                        </div>
-                        <div className="p-2.5 rounded-xl bg-surface-container-low text-xs text-primary font-medium italic text-center border border-primary-container/30">
-                          "{card.affirmation}"
-                        </div>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setInspectCard(card);
-                          }}
-                          className="w-full py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-[11px] text-center transition-colors font-medium flex items-center justify-center gap-1 cursor-pointer"
-                        >
-                          <span className="material-symbols-outlined text-xs">visibility</span>
-                          <span>Inspect Full Wisdom</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* CARD BACK FACE (Celestial Gold Foil Look) */}
-                    <div
-                      className="absolute inset-0 w-full h-full rounded-3xl bg-gradient-to-br from-surface-container via-surface-container-high to-primary-fixed/40 p-6 flex flex-col justify-between items-center text-center border-2 border-primary/30"
-                      style={{
-                        backfaceVisibility: "hidden",
-                        WebkitBackfaceVisibility: "hidden",
-                        transform: "rotateY(180deg)",
-                      }}
-                    >
-                      <div className="flex items-center justify-between w-full text-xs text-primary font-serif font-bold tracking-widest uppercase">
-                        <span>SELENE</span>
-                        <span>ARCANA</span>
-                      </div>
-
-                      {/* Celestial Pattern */}
-                      <div className="w-full flex-1 my-3 rounded-2xl bg-surface-container-lowest/80 backdrop-blur-md flex flex-col items-center justify-center p-5 border border-primary/20 space-y-3">
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-container text-on-primary flex items-center justify-center shadow-lg animate-pulse">
-                          <span className="material-symbols-outlined text-3xl">auto_awesome</span>
-                        </div>
-                        <h4 className="font-serif font-bold text-lg text-primary tracking-wide">
-                          Tap to Reveal
-                        </h4>
-                        <p className="font-body-sm text-xs text-on-surface-variant max-w-[200px] leading-relaxed">
-                          Unveil today's body & energy reading
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 text-xs font-label-caps text-secondary font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-ping" />
-                        <span>Ready to Unveil</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  card={card}
+                  isFlipped={isFlipped}
+                  onFlip={() => toggleFlip(idx)}
+                  onInspect={() => setInspectCard(card)}
+                  slotLabel={slotLabel}
+                  showAdvice={true}
+                  size="md"
+                  className={isShuffling ? "animate-pulse scale-95 opacity-60" : "hover:-translate-y-1.5"}
+                />
               );
             })}
           </div>
@@ -362,16 +224,16 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
       {mode === "fan_pick" && (
         <div className="space-y-6">
           <div className="text-center space-y-1">
-            <h3 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface">
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#2C2825]">
               Interactive 22-Card Fanned Deck
             </h3>
-            <p className="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-lg mx-auto">
-              Hover over cards to see them lift and tilt. Click any card to draw and inspect its guidance!
+            <p className="font-body-sm text-xs sm:text-sm text-[#7A6E65] max-w-lg mx-auto">
+              Hover over cards to see them lift in an Art Nouveau fan. Click any card to draw and inspect its guidance.
             </p>
           </div>
 
           {/* Fanned Cards Scrollable Stage */}
-          <div className="relative h-80 flex items-center justify-center overflow-x-auto overflow-y-visible py-8 px-4 no-scrollbar">
+          <div className="relative h-84 flex items-center justify-center overflow-x-auto overflow-y-visible py-8 px-4 no-scrollbar">
             <div className="flex items-center justify-center -space-x-8 sm:-space-x-7 px-8 min-w-max py-4">
               {FULL_TAROT_DECK.map((card, idx) => {
                 const total = FULL_TAROT_DECK.length;
@@ -388,12 +250,12 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                     onMouseEnter={() => setHoveredFanIdx(idx)}
                     onMouseLeave={() => setHoveredFanIdx(null)}
                     onClick={() => handleFanSelect(card)}
-                    className={`w-32 sm:w-36 h-56 sm:h-60 rounded-2xl p-3 shadow-lg border-2 flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 flex-shrink-0 relative ${
+                    className={`w-32 sm:w-36 h-56 sm:h-60 rounded-t-[2.5rem] rounded-b-xl p-3 border-[1.5px] flex flex-col justify-between items-center text-center cursor-pointer transition-all duration-300 flex-shrink-0 relative ${
                       isSelected
-                        ? "border-primary ring-4 ring-primary/30 z-30 -translate-y-8 scale-110 bg-surface-container-lowest"
+                        ? "border-[#9A7B38] ring-4 ring-[#9A7B38]/25 z-30 -translate-y-8 scale-110 bg-white shadow-2xl"
                         : isHovered
-                        ? "border-primary-container z-20 -translate-y-6 scale-110 bg-surface-container-lowest shadow-2xl"
-                        : "border-primary/30 bg-gradient-to-br from-surface-container via-surface-container-high to-primary-fixed/40 hover:z-20"
+                        ? "border-[#D4AF37] z-20 -translate-y-6 scale-110 bg-white shadow-xl"
+                        : "border-[#E8DFD0] bg-gradient-to-b from-white to-[#FAF7F2] shadow-md hover:z-20"
                     }`}
                     style={{
                       transform: isSelected || isHovered
@@ -401,13 +263,13 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                         : `rotate(${rotateDeg}deg) translateY(${translatePx}px)`,
                     }}
                   >
-                    {/* Top numeral */}
-                    <span className="font-serif text-[11px] text-primary font-bold">
+                    {/* Top Roman Numeral */}
+                    <span className="font-serif text-[11px] text-[#8C734B] font-bold tracking-widest">
                       {card.numeral}
                     </span>
 
-                    {/* Icon */}
-                    <div className="w-12 h-12 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm border border-primary/20">
+                    {/* Celestial Arch Centerpiece */}
+                    <div className="w-12 h-14 rounded-t-full rounded-b-md border border-[#D4AF37]/40 bg-[#FAF7F2] flex items-center justify-center text-[#8C734B] shadow-sm">
                       <span className="material-symbols-outlined text-2xl">
                         {card.cardIcon || "spa"}
                       </span>
@@ -415,15 +277,15 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
 
                     {/* Card Title */}
                     <div>
-                      <h4 className="font-headline-sm text-xs font-bold text-on-surface truncate max-w-[110px]">
+                      <h4 className="font-serif text-xs font-bold text-[#2C2825] truncate max-w-[110px] tracking-wide">
                         {card.name}
                       </h4>
-                      <span className="font-label-caps text-[9px] text-secondary font-semibold uppercase block truncate max-w-[110px]">
+                      <span className="font-label-caps text-[9px] text-[#8C734B] font-semibold uppercase block truncate max-w-[110px] mt-0.5">
                         {card.theme}
                       </span>
                     </div>
 
-                    <span className="font-label-caps text-[9px] text-primary font-medium">
+                    <span className="font-label-caps text-[9px] text-[#8C734B] font-medium">
                       {isSelected ? "Active Draw" : "Tap to Draw"}
                     </span>
                   </div>
@@ -432,46 +294,51 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
             </div>
           </div>
 
-          {/* Center Stage Card Feature when a card is selected */}
+          {/* Selected Card Showcase Preview */}
           {selectedFanCard && (
-            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-primary-fixed/30 via-surface-container to-secondary-container/30 border border-primary-container flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#E8DFD0] flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_12px_36px_rgba(215,205,190,0.3)]">
               <div className="flex items-center gap-5">
-                {/* Visual miniature card */}
-                <div className="w-20 h-28 rounded-2xl bg-surface-container-lowest p-2 shadow-lg flex flex-col justify-between items-center text-center border-2 border-primary/40 flex-shrink-0">
-                  <span className="font-serif text-xs text-primary font-bold">
+                {/* Mini Arched Card Preview */}
+                <div className="w-24 h-36 rounded-t-[2.5rem] rounded-b-xl bg-white p-1.5 shadow-md flex flex-col justify-between items-center text-center border-[1.5px] border-[#D4AF37]/50 flex-shrink-0">
+                  <span className="font-serif text-[11px] text-[#8C734B] font-bold">
                     {selectedFanCard.numeral}
                   </span>
-                  <div className="w-10 h-10 rounded-full bg-primary-fixed/30 flex items-center justify-center text-primary">
-                    <span className="material-symbols-outlined text-xl">
-                      {selectedFanCard.cardIcon || "spa"}
-                    </span>
+                  <div className="w-full h-16 rounded-t-[2.2rem] rounded-b-sm overflow-hidden border border-[#E8DFD0]">
+                    <img
+                      src={selectedFanCard.artUrl}
+                      alt={selectedFanCard.name}
+                      className="w-full h-full object-cover object-top"
+                      style={{
+                        filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
+                      }}
+                    />
                   </div>
-                  <span className="font-label-caps text-[9px] text-secondary font-semibold">
-                    {selectedFanCard.phase}
+                  <span className="font-serif text-[10px] text-[#2C2825] font-bold truncate max-w-[80px]">
+                    {selectedFanCard.name}
                   </span>
                 </div>
 
-                {/* Card text */}
-                <div className="space-y-1">
+                {/* Card Details */}
+                <div className="space-y-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h4 className="font-headline-sm text-xl font-bold text-on-surface">
+                    <h4 className="font-serif text-xl font-bold text-[#2C2825]">
                       {selectedFanCard.name}
                     </h4>
-                    <span className="px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-caps text-xs">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#FAF7F2] border border-[#E8DFD0] text-[#8C734B] font-label-caps text-xs">
                       {selectedFanCard.subtitle}
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-surface-container font-label-caps text-xs text-on-surface-variant">
+                    <span className="px-2 py-0.5 rounded-full bg-[#FAF7F2] border border-[#E8DFD0] font-label-caps text-xs text-[#7A6E65]">
                       Phase: {selectedFanCard.phase}
                     </span>
                   </div>
-                  <p className="font-body-sm text-sm text-on-surface-variant max-w-xl leading-relaxed">
+                  <p className="font-body-sm text-sm text-[#6B6158] max-w-xl leading-relaxed italic">
                     "{selectedFanCard.meaning}"
                   </p>
                   <div className="flex items-center gap-4 text-xs pt-1 flex-wrap">
-                    <span className="text-secondary font-semibold">
+                    <span className="text-[#8C734B] font-semibold">
                       Movement: {selectedFanCard.bodyAdvice}
                     </span>
-                    <span className="text-primary font-semibold">
+                    <span className="text-[#6B6158]">
                       Fuel: {selectedFanCard.foodAdvice}
                     </span>
                   </div>
@@ -482,7 +349,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                 <button
                   type="button"
                   onClick={() => setInspectCard(selectedFanCard)}
-                  className="px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-lg text-sm font-semibold hover:bg-on-primary-container transition-all cursor-pointer whitespace-nowrap shadow-md flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#9A7B38] to-[#8C734B] text-white font-label-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer whitespace-nowrap shadow-md flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-base">fullscreen</span>
                   <span>Inspect Card</span>
@@ -500,16 +367,16 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h3 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface">
+              <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#2C2825]">
                 Complete 22-Card Major Arcana Gallery
               </h3>
-              <p className="font-body-sm text-xs sm:text-sm text-on-surface-variant">
-                Browse every archetype from The Fool (0) to The World (XXI). Tap any card to view its complete guidance!
+              <p className="font-body-sm text-xs sm:text-sm text-[#7A6E65]">
+                Browse every archetype from The Fool (0) to The World (XXI). Tap any card to view its complete guidance.
               </p>
             </div>
 
             {/* Phase Filters */}
-            <div className="flex items-center gap-1.5 bg-surface-container-low p-1 rounded-full border border-surface-container-high/60 flex-wrap">
+            <div className="flex items-center gap-1.5 bg-[#FAF7F2] p-1 rounded-full border border-[#E8DFD0] flex-wrap">
               {["all", "Menstrual", "Follicular", "Ovulatory", "Luteal"].map((phaseKey) => (
                 <button
                   key={phaseKey}
@@ -517,8 +384,8 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                   onClick={() => setPhaseFilter(phaseKey)}
                   className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     phaseFilter === phaseKey
-                      ? "bg-surface-container-lowest text-primary shadow-sm"
-                      : "text-on-surface-variant hover:text-on-surface"
+                      ? "bg-white text-[#8C734B] shadow-sm border border-[#E8DFD0]"
+                      : "text-[#7A6E65] hover:text-[#2C2825]"
                   }`}
                 >
                   {phaseKey === "all" ? "All (22)" : phaseKey}
@@ -533,38 +400,45 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               <div
                 key={card.id}
                 onClick={() => setInspectCard(card)}
-                className="bg-surface-container-lowest rounded-2xl p-4 border border-surface-container-high hover:border-primary shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all cursor-pointer flex flex-col justify-between items-center text-center group"
+                className="bg-white rounded-2xl p-3 border-[1.5px] border-[#E8DFD0] hover:border-[#D4AF37] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all cursor-pointer flex flex-col justify-between items-center text-center group"
               >
-                <div className="flex items-center justify-between w-full pb-2 text-[11px] font-serif font-bold text-primary">
+                {/* Header: Roman Numeral & Phase */}
+                <div className="flex items-center justify-between w-full pb-1.5 text-[11px] font-serif font-bold text-[#8C734B]">
                   <span>{card.numeral}</span>
-                  <span className="font-label-caps text-[9px] text-on-surface-variant px-1.5 py-0.5 rounded bg-surface-container">
+                  <span className="font-label-caps text-[9px] text-[#7A6E65] px-1.5 py-0.5 rounded bg-[#FAF7F2] border border-[#E8DFD0]">
                     {card.phase}
                   </span>
                 </div>
 
-                <div className="w-full h-28 rounded-xl overflow-hidden relative mb-2 shadow-sm border border-surface-container">
-                  <img
-                    src={card.artUrl}
-                    alt={card.name}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <span className="absolute bottom-1 left-2 text-[9px] text-white/95 font-serif italic truncate max-w-[90%]">
-                    {card.artArtist.split(',')[0]}
-                  </span>
+                {/* Art Nouveau Arched Window */}
+                <div className="w-full rounded-t-[2.2rem] rounded-b-lg border border-[#D4AF37]/45 p-0.5 bg-[#FAF7F2] shadow-inner mb-2">
+                  <div className="w-full h-28 rounded-t-[2rem] rounded-b-md overflow-hidden relative">
+                    <img
+                      src={card.artUrl}
+                      alt={card.name}
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                      style={{
+                        filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
+                      }}
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-transparent to-transparent pointer-events-none" />
+                    <span className="absolute bottom-1 left-2 text-[9px] text-[#4A423A] font-serif italic truncate max-w-[90%]">
+                      {card.artArtist.split(',')[0]}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="w-full">
-                  <h4 className="font-headline-sm text-sm font-bold text-on-surface truncate">
+                  <h4 className="font-serif text-xs font-bold text-[#2C2825] truncate tracking-wide">
                     {card.name}
                   </h4>
-                  <p className="font-label-caps text-[10px] text-secondary font-medium truncate mt-0.5">
+                  <p className="font-label-caps text-[10px] text-[#8C734B] font-medium truncate mt-0.5">
                     {card.subtitle}
                   </p>
                 </div>
 
-                <div className="w-full mt-3 pt-2 border-t border-surface-container flex items-center justify-center gap-1 text-[11px] text-primary font-medium opacity-80 group-hover:opacity-100">
+                <div className="w-full mt-2.5 pt-1.5 border-t border-[#F0EAE1] flex items-center justify-center gap-1 text-[11px] text-[#8C734B] font-medium opacity-80 group-hover:opacity-100">
                   <span>Read Card</span>
                   <span className="material-symbols-outlined text-xs">arrow_forward</span>
                 </div>
@@ -578,93 +452,104 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
       {/* FULL CARD INSPECTION MODAL (Complete Visibility, No Overflow/Truncation)   */}
       {/* ========================================================================= */}
       {inspectCard && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-4">
-          <div className="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-2 border-primary-container relative max-h-[90vh] overflow-y-auto space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-[1.5px] border-[#E8DFD0] relative max-h-[90vh] overflow-y-auto space-y-5">
             {/* Close Button */}
             <button
               type="button"
               onClick={() => setInspectCard(null)}
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors cursor-pointer"
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE1] border border-[#E8DFD0] flex items-center justify-center text-[#4A423A] transition-colors cursor-pointer"
             >
-              X
+              <span className="material-symbols-outlined text-sm">close</span>
             </button>
 
             {/* Modal Card Header */}
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full bg-primary-fixed text-primary font-serif font-bold text-sm">
+              <span className="px-3 py-1 rounded-full bg-[#FAF7F2] border border-[#E8DFD0] text-[#8C734B] font-serif font-bold text-sm">
                 Arcana {inspectCard.numeral}
               </span>
-              <span className="px-3 py-1 rounded-full bg-secondary-container/50 text-secondary font-label-caps text-xs font-semibold">
-                {inspectCard.phase}
+              <span className="px-3 py-1 rounded-full bg-[#FAF7F2] border border-[#E8DFD0] text-[#7A6E65] font-label-caps text-xs font-semibold">
+                {inspectCard.phase} Phase
               </span>
             </div>
 
-            {/* Big Nymph Painting Artwork */}
-            <div className="w-full h-64 rounded-2xl overflow-hidden relative shadow-md border border-primary-container/40">
-              <img
-                src={inspectCard.artUrl}
-                alt={inspectCard.name}
-                className="w-full h-full object-cover object-top"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                <span className="font-serif italic text-xs tracking-wide text-white/95 drop-shadow-sm">
-                  {inspectCard.artArtist}
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-md text-[10px] font-semibold uppercase tracking-wider text-white">
-                  {inspectCard.theme}
-                </span>
+            {/* Large Art Nouveau Arched Window Frame */}
+            <div className="w-full rounded-t-[3.5rem] rounded-b-xl border-[1.5px] border-[#D4AF37]/50 p-1 bg-gradient-to-b from-[#FDFBF7] to-[#F8F5EE] shadow-inner">
+              <div className="w-full h-64 rounded-t-[3.2rem] rounded-b-lg border border-[#C5A059]/30 overflow-hidden relative">
+                <img
+                  src={inspectCard.artUrl}
+                  alt={inspectCard.name}
+                  className="w-full h-full object-cover object-top"
+                  style={{
+                    filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/20 to-transparent pointer-events-none" />
+
+                {/* Starlight spark at apex */}
+                <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm border border-[#D4AF37]/40 flex items-center justify-center text-[#8C734B] shadow-sm">
+                  <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                </div>
+
+                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[#2C2825]">
+                  <span className="font-serif italic text-xs tracking-wide text-[#4A423A] bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-[#E8DFD0]">
+                    {inspectCard.artArtist}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-[10px] font-semibold uppercase tracking-wider text-[#8C734B] border border-[#D4AF37]/30">
+                    {inspectCard.theme}
+                  </span>
+                </div>
               </div>
             </div>
 
             <div>
-              <h3 className="font-headline-lg text-2xl font-bold text-on-surface">
+              <h3 className="font-serif text-2xl font-bold text-[#2C2825] tracking-wide">
                 {inspectCard.name}
               </h3>
-              <p className="font-label-caps text-sm text-primary font-medium mt-0.5">
+              <p className="font-label-caps text-sm text-[#8C734B] font-medium mt-0.5">
                 {inspectCard.subtitle}
               </p>
             </div>
 
             {/* Meaning Paragraph */}
-            <div className="p-4 rounded-2xl bg-surface-container-low/70 border border-surface-container-high/60 space-y-1.5">
-              <span className="font-label-caps text-xs text-primary font-semibold uppercase">
+            <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD0] space-y-1.5">
+              <span className="font-label-caps text-xs text-[#8C734B] font-semibold uppercase">
                 Daily Archetype & Wisdom
               </span>
-              <p className="font-body-md text-sm text-on-surface leading-relaxed">
+              <p className="font-serif italic text-sm text-[#4A423A] leading-relaxed">
                 "{inspectCard.meaning}"
               </p>
             </div>
 
             {/* Movement & Food Guidance */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="p-4 rounded-2xl bg-secondary-container/20 border border-secondary/20 space-y-1">
-                <div className="flex items-center gap-1.5 text-secondary font-label-caps text-xs font-semibold uppercase">
+              <div className="p-4 rounded-2xl bg-white border border-[#E8DFD0] space-y-1 shadow-sm">
+                <div className="flex items-center gap-1.5 text-[#8C734B] font-label-caps text-xs font-semibold uppercase">
                   <span className="material-symbols-outlined text-sm">fitness_center</span>
                   <span>Movement Advice</span>
                 </div>
-                <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+                <p className="font-body-sm text-xs text-[#6B6158] leading-relaxed">
                   {inspectCard.bodyAdvice}
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-primary-fixed/20 border border-primary/20 space-y-1">
-                <div className="flex items-center gap-1.5 text-primary font-label-caps text-xs font-semibold uppercase">
+              <div className="p-4 rounded-2xl bg-white border border-[#E8DFD0] space-y-1 shadow-sm">
+                <div className="flex items-center gap-1.5 text-[#8C734B] font-label-caps text-xs font-semibold uppercase">
                   <span className="material-symbols-outlined text-sm">restaurant</span>
                   <span>Fuel & Food</span>
                 </div>
-                <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+                <p className="font-body-sm text-xs text-[#6B6158] leading-relaxed">
                   {inspectCard.foodAdvice}
                 </p>
               </div>
             </div>
 
             {/* Daily Affirmation */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-primary-fixed/30 to-secondary-container/30 text-center border border-primary/20 space-y-1">
-              <span className="font-label-caps text-[11px] text-primary uppercase font-bold tracking-wider">
+            <div className="p-4 rounded-2xl bg-[#FAF7F2] text-center border border-[#E8DFD0] space-y-1">
+              <span className="font-label-caps text-[11px] text-[#8C734B] uppercase font-bold tracking-wider">
                 Daily Affirmation
               </span>
-              <p className="font-headline-sm text-sm text-primary font-semibold italic">
+              <p className="font-serif text-sm text-[#2C2825] font-semibold italic">
                 "{inspectCard.affirmation}"
               </p>
             </div>
@@ -674,9 +559,10 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               type="button"
               onClick={() => {
                 showToast(`Chose ${inspectCard.name} for today's mindset focus!`, "success");
+                if (onCardSelected) onCardSelected(inspectCard);
                 setInspectCard(null);
               }}
-              className="w-full py-3 rounded-full bg-primary text-on-primary font-label-lg text-sm font-semibold hover:bg-on-primary-container transition-all cursor-pointer shadow-md"
+              className="w-full py-3 rounded-full bg-gradient-to-r from-[#9A7B38] to-[#8C734B] text-white font-label-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer shadow-md"
             >
               Set as Today's Focus Card
             </button>

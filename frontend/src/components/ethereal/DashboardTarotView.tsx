@@ -453,19 +453,19 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
               </button>
             </div>
 
-            {/* Right 6 cols: Today's Nymph Arcana Showcase (Visual Art Centerpiece) */}
-            <div className="lg:col-span-6 bg-surface-container-lowest/90 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-[0_12px_36px_rgba(0,0,0,0.03)] border border-surface-container-high/60 flex flex-col justify-between space-y-4">
-              <div className="flex items-center justify-between pb-1 border-b border-surface-container/60">
+            {/* Right 6 cols: Today's Arcana Showcase (Ethereal Bloom Art Nouveau Centerpiece) */}
+            <div className="lg:col-span-6 bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-[0_12px_36px_rgba(215,205,190,0.3)] border border-[#E8DFD0] flex flex-col justify-between space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[#F0EAE1]">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary text-base">auto_awesome</span>
-                  <span className="font-label-caps text-xs text-primary font-bold uppercase tracking-wider">
+                  <span className="material-symbols-outlined text-[#8C734B] text-base">auto_awesome</span>
+                  <span className="font-serif text-xs text-[#8C734B] font-bold tracking-widest uppercase">
                     Today's Arcana & Mindset Focus
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setTarotModalOpen(true)}
-                  className="text-xs text-primary font-semibold hover:underline flex items-center gap-1 cursor-pointer"
+                  className="text-xs text-[#8C734B] font-semibold hover:text-[#5B4628] flex items-center gap-1 cursor-pointer"
                 >
                   <span>Draw 3-Card Reading</span>
                   <span className="material-symbols-outlined text-xs">open_in_new</span>
@@ -473,63 +473,81 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
               </div>
 
               <div className="flex flex-col sm:flex-row gap-5 items-center">
-                {/* Classical Nymph Art Painting Frame */}
-                <div className="w-36 h-48 rounded-2xl overflow-hidden relative shadow-md border-2 border-primary-container/40 flex-shrink-0 group cursor-pointer"
+                {/* Art Nouveau Arched Window Frame (Ethereal Bloom White/Gold) */}
+                <div
+                  className="w-36 h-52 rounded-t-[3.2rem] rounded-b-xl border-[1.5px] border-[#D4AF37]/50 p-1 bg-gradient-to-b from-[#FDFBF7] to-[#F8F5EE] shadow-md flex-shrink-0 group cursor-pointer"
                   onClick={() => setTarotModalOpen(true)}
                 >
-                  <img
-                    src={focusCard.artUrl}
-                    alt={focusCard.name}
-                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2 right-2 text-center text-white">
-                    <span className="font-serif font-bold text-xs block drop-shadow-sm">
-                      {focusCard.name}
-                    </span>
-                    <span className="text-[9px] text-white/80 font-serif italic block truncate">
-                      {focusCard.artArtist.split(",")[0]}
-                    </span>
+                  <div className="w-full h-full rounded-t-[2.9rem] rounded-b-lg border border-[#C5A059]/30 overflow-hidden relative">
+                    <img
+                      src={focusCard.artUrl}
+                      alt={focusCard.name}
+                      className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                      style={{
+                        filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/20 to-transparent pointer-events-none" />
+
+                    {/* Starlight apex spark */}
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm border border-[#D4AF37]/40 flex items-center justify-center text-[#8C734B] shadow-sm">
+                      <span className="material-symbols-outlined text-xs">auto_awesome</span>
+                    </div>
+
+                    <div className="absolute bottom-2 left-2 right-2 text-center">
+                      <span className="font-serif font-bold text-xs block text-[#2C2825] tracking-wide">
+                        {focusCard.name}
+                      </span>
+                      <span className="text-[9px] text-[#4A423A] font-serif italic block truncate">
+                        {focusCard.artArtist.split(",")[0]}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Card Wisdom */}
                 <div className="space-y-2 flex-1 text-center sm:text-left">
                   <div className="flex items-center gap-2 justify-center sm:justify-start">
-                    <span className="px-2.5 py-0.5 rounded-full bg-primary-fixed/50 text-primary font-serif font-bold text-xs">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#FAF7F2] border border-[#E8DFD0] text-[#8C734B] font-serif font-bold text-xs">
                       Arcana {focusCard.numeral}
                     </span>
-                    <span className="text-secondary font-label-caps text-xs font-semibold">
+                    <span className="text-[#7A6E65] font-label-caps text-xs font-semibold uppercase tracking-wider">
                       {focusCard.phase} Phase
                     </span>
                   </div>
 
-                  <h3 className="font-headline-sm text-lg font-bold text-on-surface">
+                  <h3 className="font-serif text-lg font-bold text-[#2C2825] tracking-wide">
                     {focusCard.subtitle}
                   </h3>
-                  <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed line-clamp-3">
+                  <p className="font-body-sm text-xs text-[#6B6158] leading-relaxed line-clamp-3 italic">
                     "{focusCard.meaning}"
                   </p>
 
-                  <div className="pt-1 text-xs text-on-surface">
-                    <span className="text-primary font-semibold">Daily Somatic Focus: </span>
-                    <span className="text-on-surface-variant">{focusCard.bodyAdvice}</span>
+                  <div className="pt-1 text-xs space-y-1">
+                    <div>
+                      <span className="text-[#8C734B] font-semibold">Movement: </span>
+                      <span className="text-[#6B6158]">{focusCard.bodyAdvice}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#8C734B] font-semibold">Fuel: </span>
+                      <span className="text-[#6B6158]">{focusCard.foodAdvice}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Bottom Quick Action */}
-              <div className="pt-2 border-t border-surface-container/60 flex items-center justify-between">
-                <span className="font-body-sm text-[11px] text-on-surface-variant italic">
-                  Classical Nymph Arcana Collection
+              <div className="pt-2 border-t border-[#F0EAE1] flex items-center justify-between">
+                <span className="font-serif text-[11px] text-[#8C734B] italic">
+                  Ethereal Bloom Major Arcana
                 </span>
                 <button
                   type="button"
                   onClick={() => setTarotModalOpen(true)}
-                  className="px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-1.5 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE1] border border-[#E8DFD0] text-[#4A423A] font-label-caps text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-xs">style</span>
-                  <span>Explore All 22 Nymph Arcana</span>
+                  <span className="material-symbols-outlined text-xs text-[#8C734B]">style</span>
+                  <span>Explore All 22 Arcana</span>
                 </button>
               </div>
             </div>

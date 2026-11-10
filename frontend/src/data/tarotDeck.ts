@@ -99,7 +99,7 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I am grounded, capable, and build lasting strength through consistency.",
     accentColor: "#3a6759",
     cardIcon: "foundation",
-    artUrl: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&auto=format&fit=crop&q=80",
+    artUrl: "https://images.unsplash.com/photo-1582560475093-ba66accbc424?w=600&auto=format&fit=crop&q=80",
     artArtist: "John William Godward, 1904",
   },
   {
@@ -286,7 +286,7 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I understand my cravings and treat my body with kindness, not restriction.",
     accentColor: "#94455b",
     cardIcon: "lock_open",
-    artUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80",
+    artUrl: "https://images.unsplash.com/photo-1580136579312-94651dfd596d?w=600&auto=format&fit=crop&q=80",
     artArtist: "Alexandre Cabanel, 1887",
   },
   {
