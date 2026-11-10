@@ -4,12 +4,13 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _BACKEND_ROOT = Path(__file__).resolve().parent.parent
+_DB_PATH = (_BACKEND_ROOT / "menstrual_health.db").resolve().as_posix()
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    database_url: str = "sqlite:///./menstrual_health.db"
+    database_url: str = f"sqlite:///{_DB_PATH}"
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.2"
     artifacts_dir: Path = Field(default=_BACKEND_ROOT / "artifacts")
