@@ -2,33 +2,12 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "1. Start Full Application (Backend + UI)",
+      "label": "Start SELENE App",
       "type": "shell",
-      "command": ".\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000",
-      "options": {
-        "cwd": "${workspaceFolder}/backend"
-      },
+      "command": "cmd.exe /c \"${workspaceFolder}\\run_app.bat\"",
       "group": {
         "kind": "build",
         "isDefault": true
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "2. Start Frontend Dev Server (Hot-Reload)",
-      "type": "shell",
-      "command": "npm run dev",
-      "options": {
-        "cwd": "${workspaceFolder}/frontend"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "3. Rebuild Frontend Assets",
-      "type": "shell",
-      "command": "npm run build && Copy-Item -Recurse -Force dist\\* ..\\backend\\app\\static\\",
-      "options": {
-        "cwd": "${workspaceFolder}/frontend"
       },
       "problemMatcher": []
     }
