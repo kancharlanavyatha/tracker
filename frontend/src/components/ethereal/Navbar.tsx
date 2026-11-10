@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               SELENE
             </span>
             <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider hidden sm:inline">
-              Phase-Adaptive Athlete Intelligence
+              Daily Cycle & Body Guide
             </span>
           </div>
         </div>
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Home & Tarot
+            Today
           </button>
           <button
             type="button"
@@ -77,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Move & Train
+            Workouts
           </button>
           <button
             type="button"
@@ -88,7 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Fuel & Eats
+            Meals & Fuel
           </button>
           <button
             type="button"

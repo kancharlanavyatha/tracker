@@ -225,7 +225,7 @@ export const EtherealTarotCard: React.FC<EtherealTarotCardProps> = ({
                   Ethereal Bloom
                 </p>
                 <p className="font-body-sm text-[11px] text-[#7A6E65] max-w-[180px] leading-relaxed pt-1">
-                  Tap to unveil today's somatic wisdom and movement guidance
+                  Tap to reveal today's reflection and movement tip
                 </p>
               </div>
 

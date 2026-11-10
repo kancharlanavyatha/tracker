@@ -237,7 +237,7 @@ export default function App() {
               SELENE
             </h1>
             <p className="font-label-caps text-on-surface-variant uppercase tracking-wider text-xs">
-              Phase-Intelligent Athlete Sanctuary
+              Your Daily Cycle & Body Guide
             </p>
           </div>
 
@@ -280,10 +280,10 @@ export default function App() {
               className="w-full py-3.5 rounded-full bg-primary text-on-primary font-headline-sm text-sm font-semibold hover:bg-on-primary-container transition-all shadow-md active:scale-98 cursor-pointer mt-2"
             >
               {authBusy
-                ? "Connecting Sanctuary..."
+                ? "Signing in..."
                 : authMode === "login"
-                ? "Enter Athlete Sanctuary"
-                : "Create Sanctuary Account"}
+                ? "Sign In"
+                : "Create Account"}
             </button>
 
             <div className="pt-2 flex items-center justify-between text-xs text-on-surface-variant">
@@ -292,18 +292,18 @@ export default function App() {
                 onClick={() => setAuthMode((m) => (m === "login" ? "register" : "login"))}
                 className="hover:text-primary transition-colors cursor-pointer"
               >
-                {authMode === "login" ? "Create new account" : "Have an account? Sign in"}
+                {authMode === "login" ? "Create an account" : "Have an account? Sign in"}
               </button>
               <button
                 type="button"
                 onClick={() => {
                   localStorage.setItem(USER_KEY, "demo-athlete-elena");
                   setUserId("demo-athlete-elena");
-                  showToast("Entered Sanctuary via Fast Demo Access!", "success");
+                  showToast("Welcome to Selene Demo!", "success");
                 }}
                 className="text-primary font-semibold hover:underline cursor-pointer"
               >
-                Instant Demo Access →
+                Explore Demo Preview →
               </button>
             </div>
           </form>

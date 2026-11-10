@@ -98,10 +98,10 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className="px-3 py-1 rounded-full bg-[#FAF7F2] border border-[#E8DFD0] text-[#8C734B] font-label-caps text-xs font-semibold uppercase tracking-wider">
-              SELENE Major Arcana · Ethereal Bloom
+              SELENE Daily Tarot & Reflection
             </span>
             <span className="font-label-caps text-[#7A6E65] text-xs">
-              Daily Somatic Archetypes
+              Gentle Daily Wisdom for Body and Mind
             </span>
           </div>
           <h2 className="font-serif text-2xl sm:text-3xl text-[#2C2825] tracking-tight font-bold">
@@ -181,7 +181,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* MODE 1: Three-Card Spread (Energy & Mind, Fuel & Food, Rest & Recovery) */}
+      {/* MODE 1: Three-Card Spread (Energy & Mind, Food & Nutrition Tip, Rest & Recovery) */}
       {/* ========================================================================= */}
       {mode === "three_spread" && (
         <div className="space-y-4">
@@ -368,10 +368,10 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#2C2825]">
-                Complete 22-Card Major Arcana Gallery
+                Explore All 22 Tarot Cards
               </h3>
               <p className="font-body-sm text-xs sm:text-sm text-[#7A6E65]">
-                Browse every archetype from The Fool (0) to The World (XXI). Tap any card to view its complete guidance.
+                Browse all 22 cards from The Fool to The World. Tap any card for guidance.
               </p>
             </div>
 
@@ -514,7 +514,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
             {/* Meaning Paragraph */}
             <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8DFD0] space-y-1.5">
               <span className="font-label-caps text-xs text-[#8C734B] font-semibold uppercase">
-                Daily Archetype & Wisdom
+                Today's Meaning & Message
               </span>
               <p className="font-serif italic text-sm text-[#4A423A] leading-relaxed">
                 "{inspectCard.meaning}"
@@ -526,7 +526,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               <div className="p-4 rounded-2xl bg-white border border-[#E8DFD0] space-y-1 shadow-sm">
                 <div className="flex items-center gap-1.5 text-[#8C734B] font-label-caps text-xs font-semibold uppercase">
                   <span className="material-symbols-outlined text-sm">fitness_center</span>
-                  <span>Movement Advice</span>
+                  <span>Movement Tip</span>
                 </div>
                 <p className="font-body-sm text-xs text-[#6B6158] leading-relaxed">
                   {inspectCard.bodyAdvice}
@@ -536,7 +536,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               <div className="p-4 rounded-2xl bg-white border border-[#E8DFD0] space-y-1 shadow-sm">
                 <div className="flex items-center gap-1.5 text-[#8C734B] font-label-caps text-xs font-semibold uppercase">
                   <span className="material-symbols-outlined text-sm">restaurant</span>
-                  <span>Fuel & Food</span>
+                  <span>Food & Nutrition Tip</span>
                 </div>
                 <p className="font-body-sm text-xs text-[#6B6158] leading-relaxed">
                   {inspectCard.foodAdvice}
@@ -564,7 +564,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               }}
               className="w-full py-3 rounded-full bg-gradient-to-r from-[#9A7B38] to-[#8C734B] text-white font-label-lg text-sm font-semibold hover:shadow-lg transition-all cursor-pointer shadow-md"
             >
-              Set as Today's Focus Card
+              Choose This Card for Today
             </button>
           </div>
         </div>

@@ -25,10 +25,10 @@ interface SymptomItem {
 
 const CATEGORIZED_SYMPTOMS: Record<SymptomCategory, { label: string; icon: string; items: SymptomItem[] }> = {
   flow: {
-    label: "Bleeding & Flow",
+    label: "Flow & Flow",
     icon: "water_drop",
     items: [
-      { id: "flow_none", name: "No Bleeding", category: "flow", icon: "check_circle" },
+      { id: "flow_none", name: "No Flow", category: "flow", icon: "check_circle" },
       { id: "flow_spotting", name: "Spotting", category: "flow", icon: "water_drop" },
       { id: "flow_light", name: "Light Flow", category: "flow", icon: "water_drop" },
       { id: "flow_medium", name: "Medium Flow", category: "flow", icon: "water_drop" },
@@ -48,7 +48,7 @@ const CATEGORIZED_SYMPTOMS: Record<SymptomCategory, { label: string; icon: strin
     ],
   },
   energy: {
-    label: "Energy & Vitality",
+    label: "Energy",
     icon: "bolt",
     items: [
       { id: "energy_peak", name: "Peak Energy", category: "energy", icon: "bolt" },
@@ -58,7 +58,7 @@ const CATEGORIZED_SYMPTOMS: Record<SymptomCategory, { label: string; icon: strin
     ],
   },
   digestion: {
-    label: "Digestion & Fluid",
+    label: "Digestion",
     icon: "restaurant",
     items: [
       { id: "dig_optimal", name: "Digestion Calm", category: "digestion", icon: "sentiment_satisfied" },
@@ -68,7 +68,7 @@ const CATEGORIZED_SYMPTOMS: Record<SymptomCategory, { label: string; icon: strin
     ],
   },
   mind: {
-    label: "Mind & Mood",
+    label: "Mood",
     icon: "psychology",
     items: [
       { id: "mind_calm", name: "Calm & Centered", category: "mind", icon: "spa" },
@@ -93,54 +93,54 @@ interface EvidenceInsight {
 function getEvidenceInsight(selected: string[], phaseName: string): EvidenceInsight {
   if (selected.includes("pain_cramps") || selected.includes("pain_pelvic")) {
     return {
-      badge: "PROSTAGLANDIN HYPERTONIA",
-      title: "Prostaglandin F2-alpha & Myometrial Vasoconstriction",
-      summary: "Uterine PGF2a promotes spiral arteriolar vasoconstriction and rhythmic smooth muscle contractions.",
+      badge: "NATURAL RESET",
+      title: "Why cramps happen & how to ease them",
+      summary: "Your uterine muscles are working to start a fresh cycle. Warmth, magnesium, and relaxed breathing ease the tightness.",
       rationale:
-        "Local synthesis of Prostaglandin F2-alpha (PGF2a) binds to myometrial FP prostanoid receptors, inducing smooth muscle contractions to shed the functionalis endometrium. Concomitant spiral arteriolar vasoconstriction transiently restricts uterine blood flow, evoking localized cramping nociception.",
+        "When your period begins, your body naturally releases gentle signals that help muscles contract. Staying warm, resting your lower back, and drinking warm fluids give fast, gentle relief.",
       counterAction:
-        "Supplement 300mg bioavailable magnesium glycinate to compete with calcium at smooth muscle ion channels. Incorporate gentle diaphragmatic breathing (4s inhale, 6s exhale) to down-regulate pelvic floor somatic tone.",
-      biomarkers: ["PGF2a Cascade", "Uterine Perfusion", "FP Receptors"],
-      citation: "ACOG Practice Guideline No. 345 · Endocrine Reviews",
+        "Sip hot chamomile or ginger tea, use a warm heating pad, and try a gentle 10-minute stretch or slow walk.",
+      biomarkers: ["Warmth & Tea", "Gentle Stretching", "Magnesium"],
+      citation: "Women's Health Guide",
     };
   }
   if (selected.includes("dig_bloating") || selected.includes("dig_retention")) {
     return {
-      badge: "ALDOSTERONE & GI MOTILITY",
-      title: "Progesterone GI Transit Delay & Aldosterone Retention",
-      summary: "Progesterone relaxes smooth intestinal walls, while aldosterone activation retains mild extracellular sodium.",
+      badge: "DIGESTIVE RHYTHM",
+      title: "Why you might feel bloated or full",
+      summary: "Digestion naturally moves a little slower right now. Light meals and plenty of water help you feel lighter and comfortable.",
       rationale:
-        "Elevated luteal progesterone promotes smooth muscle relaxation throughout intestinal walls via nitric oxide pathways, decelerating gastrointestinal transit time by 20-30%. Concurrently, activation of the renin-angiotensin-aldosterone axis promotes mild sodium and interstitial fluid conservation.",
+        "During this phase, normal shifts in hormones encourage your body to hold on to a bit of extra water and digest food at a calmer pace. Drinking water and light activity help everything move smoothly.",
       counterAction:
-        "Prioritize potassium-rich whole foods (avocado, coconut water, steamed greens) to optimize sodium-potassium ATPase pumps. Light 15-minute post-meal walks accelerate colonic peristalsis.",
-      biomarkers: ["Progesterone (P4)", "Aldosterone Axis", "GI Transit Time"],
-      citation: "American Journal of Gastroenterology · Gut-Hormone Crosstalk",
+        "Drink plenty of water throughout the day. Enjoy fresh fruit like bananas or watermelon, and take a relaxed 15-minute walk after meals.",
+      biomarkers: ["Water Balance", "Fresh Greens", "Easy Digestion"],
+      citation: "Everyday Nutrition Science",
     };
   }
   if (selected.includes("energy_peak") || selected.includes("mind_focused")) {
     return {
-      badge: "ESTROGEN POTENTIATION",
-      title: "Pre-Ovulatory 17-Beta-Estradiol & Dopaminergic Drive",
-      summary: "Surging estradiol up-regulates dopamine sensitivity in the prefrontal cortex, enhancing force output and speed.",
+      badge: "NATURAL ENERGY",
+      title: "Your natural energy peak today",
+      summary: "Your hormones are giving you a fresh boost of strength, optimism, and mental clarity today.",
       rationale:
-        "Peak circulating 17-beta-estradiol up-regulates estrogen receptor-alpha (ER-alpha) transcription in the prefrontal cortex, elevating striatal dopamine sensitivity and neuromuscular firing rate. Skeletal muscle exhibits superior glycogen sparing and up to 35% faster acute recovery.",
+        "As your cycle enters this phase, rising natural estrogen boosts your mood, workout stamina, and reaction speed. It is one of the easiest times of the month to feel energized and get things done.",
       counterAction:
-        "Prime physiological window for maximal progressive overload, high-velocity lifting, or lactate threshold testing. Neuromuscular recovery time is accelerated.",
-      biomarkers: ["17B-Estradiol (E2)", "ER-Alpha Density", "Glycogen Synthetase"],
-      citation: "Sports Medicine 2023 · Nature Reviews Endocrinology",
+        "A wonderful day for a good strength workout, a run, or tackling that project on your to-do list.",
+      biomarkers: ["Natural Stamina", "Sharp Focus", "Positive Mood"],
+      citation: "Active Wellness Research",
     };
   }
   if (selected.includes("dig_cravings")) {
     return {
-      badge: "METABOLIC ACCELERATION",
-      title: "Luteal Basal Metabolic Surge & Glycolytic Flux",
-      summary: "Elevated core body temperature (+0.4°C) raises 24h caloric burn by 150-300 kcal/day with shifted carb oxidation.",
+      badge: "HEALTHY APPETITE",
+      title: "Why you might be craving carbs or snacks",
+      summary: "Your body is burning slightly more calories naturally right now, so it asks for extra fuel.",
       rationale:
-        "Progesterone-mediated elevation of basal body temperature (0.3-0.5 deg C) accelerates 24-hour basal metabolic expenditure by 150-300 kcal/day. Concomitant mild insulin resistance shifts cellular preference toward rapid carbohydrate oxidation.",
+        "Your body temperature slightly rises in the second half of your cycle, which burns an extra 150-250 calories every day. Cravings are just your body's honest way of asking for nourishment.",
       counterAction:
-        "Do not restrict complex carbohydrates; anchor sweet potatoes, quinoa, or oats alongside 30g lean protein and omega-3s to stabilize glucose excursions and satisfy cellular ATP demand.",
-      biomarkers: ["BMR Surge (+200 kcal)", "Insulin Sensitivity", "Core BBT Shift"],
-      citation: "American Journal of Clinical Nutrition · Metabolism Journal",
+        "Choose nourishing, satisfying carbs like warm oatmeal, roasted sweet potatoes, or a couple squares of dark chocolate.",
+      biomarkers: ["Metabolism Boost", "Nourishing Foods", "Steady Energy"],
+      citation: "Nutrition & Metabolism Guide",
     };
   }
   if (
@@ -149,15 +149,15 @@ function getEvidenceInsight(selected: string[], phaseName: string): EvidenceInsi
     selected.includes("energy_exhausted")
   ) {
     return {
-      badge: "NEUROVASCULAR AUTOREGULATION",
-      title: "Neurovascular Estrogen Dynamics & Serotonergic Shift",
-      summary: "Transient estrogen drops alter cerebral vasomotor autoregulation, presenting as tension and lethargy.",
+      badge: "REST & RECHARGE",
+      title: "Taking care of your energy today",
+      summary: "Hormone shifts can bring mild tiredness or tension. Treat your body with extra gentleness today.",
       rationale:
-        "Abrupt declines in circulating estradiol modulate hypothalamic-pituitary-adrenal axis sensitivity and reduce central serotonin synthesis. Transient cerebral vasodilatation frequently induces neurovascular tension and central fatigue.",
+        "Small drops in natural estrogen can leave you feeling a bit sleepy or carrying tension in your head and neck. It is simply a signal to slow down and recharge.",
       counterAction:
-        "Hydrate with sodium-potassium electrolytes (500mg sodium, 200mg potassium). Restrict training to Zone 1-2 aerobic recovery to stimulate cerebral perfusion without compounding systemic cortisol.",
-      biomarkers: ["Serotonin Turnover", "Cerebral Vasomotor Tone", "Parasympathetic Drift"],
-      citation: "The Lancet Neurology · Cephalalgia International Headache Society",
+        "Drink a big glass of water with a slice of lemon, step away from bright screens, and try to get to bed 30 minutes earlier.",
+      biomarkers: ["Hydration", "Calm Rest", "Gentle Pace"],
+      citation: "Holistic Sleep & Recovery",
     };
   }
 
@@ -168,53 +168,53 @@ function getEvidenceInsight(selected: string[], phaseName: string): EvidenceInsi
 
   if (isMenstrual) {
     return {
-      badge: "HORMONAL NADIR",
-      title: "Menstrual Phase: Hormonal Reset & Low Inflammatory Baseline",
-      summary: "Both estrogen and progesterone are at baseline nadir, initiating a systemic restorative window.",
+      badge: "REST & FLOW",
+      title: "Period: Your natural time to reset",
+      summary: "A clean slate for your body. Honor how you feel and give yourself full permission to slow down.",
       rationale:
-        "Both estrogen and progesterone reside at baseline nadir. The hypothalamic-pituitary-gonadal axis releases FSH to recruit the next follicular cohort while uterine prostaglandins conclude tissue renewal.",
+        "Your hormones are at their quietest baseline. Your body is naturally renewing itself. Slow walks, cozy layers, and deep sleep feel extra restorative right now.",
       counterAction:
-        "Support the body with warm, iron-dense nourishment, magnesium-rich foods, and gentle mobility work or restorative walks.",
-      biomarkers: ["Basal Hormone Nadir", "FSH Cohort Recruitment", "Iron Turnover"],
-      citation: "American Journal of Physiology · Sports Endocrine Reviews",
+        "Nourish yourself with warm soups, iron-rich meals, and gentle stretching. Rest is productive.",
+      biomarkers: ["Restful Pace", "Warm Comfort", "Gentle Movement"],
+      citation: "Cycle Wellness Essentials",
     };
   }
   if (isOvulatory) {
     return {
-      badge: "LH SURGE DYNAMICS",
-      title: "Ovulatory Phase: Luteinizing Surge & Motor Drive Peak",
-      summary: "Mid-cycle LH surge triggers peak central motor drive paired with heightened ligamentous elasticity.",
+      badge: "PEAK VITALITY",
+      title: "Ovulation: Highest stamina and confidence",
+      summary: "You are at your highest natural energy and strength of the entire month.",
       rationale:
-        "The mid-cycle LH surge triggers follicular rupture and oocyte release. Peak systemic estrogen induces maximal central motor drive while slightly increasing collagen compliance in tendons.",
+        "Your natural hormones peak together around ovulation, giving you natural confidence, endurance, and energy. Workouts feel easier and recovery is fast.",
       counterAction:
-        "Optimal power testing window. Ensure a thorough dynamic warm-up to stabilize joint capsules and knee tendons during multi-directional movements.",
-      biomarkers: ["LH Surge (+400%)", "Peak 17B-Estradiol", "Tendon Elasticity"],
-      citation: "British Journal of Sports Medicine · Nature Reviews",
+        "Enjoy your strongest workouts or social activities. Remember to warm up well before exercising.",
+      biomarkers: ["Peak Stamina", "Confident Glow", "Fast Recovery"],
+      citation: "Women's Sports Physiology",
     };
   }
   if (isLuteal) {
     return {
-      badge: "CORPUS LUTEUM REGULATION",
-      title: "Luteal Phase: Progesterone Grounding & Thermal Shift",
-      summary: "Progesterone elevates core body temperature by 0.3-0.5°C and shifts fuel oxidation toward steady lipid burning.",
+      badge: "STEADY & CALM",
+      title: "Luteal Phase: Calming down and staying steady",
+      summary: "Your body is shifting into a cozy, inward rhythm. Focus on consistency and comfort.",
       rationale:
-        "Active progesterone secretion by the corpus luteum elevates basal body temperature by 0.3-0.5 deg C. Shift toward greater lipid substrate oxidation favors sustained steady-state endurance pacing.",
+        "Natural progesterone brings a calming, grounding rhythm. You might feel more like staying in and eating comforting meals. Pacing yourself prevents burnout.",
       counterAction:
-        "Prioritize cooling strategies, pre-workout electrolyte hydration, and emphasize strict lifting form and controlled eccentric tempo over raw velocity.",
-      biomarkers: ["Progesterone Peak", "Core BBT (+0.4C)", "Lipid Substrate Use"],
-      citation: "Sports Medicine International · Journal of Applied Physiology",
+        "Opt for moderate strength training, pilates, yoga, and warm balanced meals with healthy fats.",
+      biomarkers: ["Calm Strength", "Cozy Routines", "Good Sleep"],
+      citation: "Everyday Cycle Health",
     };
   }
   return {
-    badge: "ANABOLIC MILIEU",
-    title: "Follicular Phase: Estrogen-Dominant Anabolic State",
-    summary: "Rising 17-beta-estradiol maximizes insulin sensitivity, rapid muscle glycogen uptake, and power output.",
+    badge: "FRESH ENERGY",
+    title: "Follicular Phase: Energy is building",
+    summary: "Your natural energy and mood are rising every day. You likely feel motivated and refreshed.",
     rationale:
-      "Rising 17-beta-estradiol establishes an anabolic endocrine profile. Elevated insulin sensitivity facilitates efficient glycogen storage, while lower core temperature supports sustained cardiovascular output.",
+      "Rising natural estrogen provides a wonderful boost to your mood and muscles. Your body absorbs nutrients efficiently and handles movement with ease.",
     counterAction:
-      "Ideal window for hypertrophy, progressive strength overload, and high-intensity interval training. Muscle damage repairs up to 30% faster.",
-    biomarkers: ["Follicular 17B-Estradiol", "Insulin Sensitivity (+18%)", "Baseline BBT 36.3C"],
-    citation: "Endocrine Society Clinical Guidelines · Banister Physiology",
+      "Great time to try new workouts, lift weights, enjoy runs, and eat fresh, colorful meals.",
+    biomarkers: ["Building Energy", "Clear Mind", "Ready to Move"],
+    citation: "Healthy Cycle Living",
   };
 }
 
@@ -229,7 +229,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
   // Streamlined Symptom Logging State
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>(["energy_steady", "dig_optimal"]);
   const [activeCategory, setActiveCategory] = useState<SymptomCategory>("energy");
-  const [fatigue, setFatigue] = useState<number>(2);
+  const [fatigue, setTiredness] = useState<number>(2);
   const [waterLiters, setWaterLiters] = useState<number>(2.5);
   const [loggingVitals, setLoggingVitals] = useState<boolean>(false);
   const [showEvidenceDrawer, setShowEvidenceDrawer] = useState<boolean>(false);
@@ -333,7 +333,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   Good morning, {displayName}
                 </h1>
                 <p className="font-body-md text-sm text-on-surface-variant max-w-xl">
-                  Estrogen is rising smoothly. Your body is primed for strength progression and deep muscular recovery.
+                  Your energy is building smoothly today. A great day to move, create, and feel your best.
                 </p>
               </div>
 
@@ -359,11 +359,11 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-base">vital_signs</span>
                   <span className="font-label-caps text-xs text-on-surface font-bold uppercase tracking-wider">
-                    Daily Biometric Readiness
+                    Today's Energy & Readiness
                   </span>
                 </div>
                 <span className="px-2.5 py-0.5 rounded-full bg-secondary-fixed/50 text-secondary font-label-caps text-[11px] font-semibold">
-                  Sensor Synced
+                  Updated Today
                 </span>
               </div>
 
@@ -414,11 +414,11 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                     </span>
                     <span className="text-on-surface-variant font-medium text-sm">/ 100</span>
                     <span className="ml-2 px-2.5 py-0.5 rounded-full bg-secondary-container/50 text-secondary font-label-caps text-xs font-semibold">
-                      Feeling Strong
+                      Feeling Great
                     </span>
                   </div>
                   <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
-                    Resting heart rate steady at 54 bpm with a +12% HRV rebound. Neuromuscular recovery is high.
+                    You got good rest last night. Your body is well-rested and has good stamina for whatever you choose to do today.
                   </p>
                 </div>
               </div>
@@ -430,11 +430,11 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   <span className="font-headline-sm text-sm font-bold text-primary">54 bpm</span>
                 </div>
                 <div className="p-2 rounded-xl bg-surface-container-low/70">
-                  <span className="font-label-caps text-[10px] text-on-surface-variant uppercase block">Skin Temp</span>
+                  <span className="font-label-caps text-[10px] text-on-surface-variant uppercase block">Body Temp</span>
                   <span className="font-headline-sm text-sm font-bold text-secondary">36.3°C</span>
                 </div>
                 <div className="p-2 rounded-xl bg-surface-container-low/70">
-                  <span className="font-label-caps text-[10px] text-on-surface-variant uppercase block">HRV Recovery</span>
+                  <span className="font-label-caps text-[10px] text-on-surface-variant uppercase block">Recovery</span>
                   <span className="font-headline-sm text-sm font-bold text-tertiary">+12%</span>
                 </div>
               </div>
@@ -447,7 +447,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
               >
                 <div className="flex items-center gap-2 text-on-surface font-medium">
                   <span className="material-symbols-outlined text-sm text-primary">insights</span>
-                  <span>Cycle Regularity: 94% · Low Variation (±1.6 days)</span>
+                  <span>Cycle Pattern: Very steady (around 28 days)</span>
                 </div>
                 <span className="material-symbols-outlined text-xs text-on-surface-variant">arrow_forward</span>
               </button>
@@ -459,7 +459,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[#8C734B] text-base">auto_awesome</span>
                   <span className="font-serif text-xs text-[#8C734B] font-bold tracking-widest uppercase">
-                    Today's Arcana & Mindset Focus
+                    Today's Card & Daily Reflection
                   </span>
                 </div>
                 <button
@@ -467,7 +467,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   onClick={() => setTarotModalOpen(true)}
                   className="text-xs text-[#8C734B] font-semibold hover:text-[#5B4628] flex items-center gap-1 cursor-pointer"
                 >
-                  <span>Draw 3-Card Reading</span>
+                  <span>Draw 3 Cards</span>
                   <span className="material-symbols-outlined text-xs">open_in_new</span>
                 </button>
               </div>
@@ -547,7 +547,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   className="px-4 py-1.5 rounded-full bg-[#FAF7F2] hover:bg-[#F2ECE1] border border-[#E8DFD0] text-[#4A423A] font-label-caps text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-xs text-[#8C734B]">style</span>
-                  <span>Explore All 22 Arcana</span>
+                  <span>Browse All 22 Cards</span>
                 </button>
               </div>
             </div>
@@ -560,14 +560,14 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-base">checklist</span>
                   <h3 className="font-headline-sm text-base sm:text-lg text-on-surface font-bold">
-                    Daily Symptom & Biomarker Tracker
+                    How Are You Feeling Today?
                   </h3>
                   <span className="px-2 py-0.5 rounded-full bg-primary-fixed/50 text-primary font-label-caps text-[10px] font-bold">
-                    Clue Aligned
+                    Daily Check-In
                   </span>
                 </div>
                 <p className="font-label-caps text-xs text-on-surface-variant mt-0.5">
-                  Select your current bodily sensations to calibrate today's training strain and macros
+                  Tap anything you notice today to personalize your daily tips:
                 </p>
               </div>
 
@@ -591,11 +591,11 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-surface-container/60">
               {(
                 [
-                  { id: "flow", label: "Bleeding", icon: "water_drop" },
-                  { id: "pain", label: "Pain & Tension", icon: "healing" },
-                  { id: "energy", label: "Energy & Vitality", icon: "bolt" },
-                  { id: "digestion", label: "Digestion & Fluid", icon: "restaurant" },
-                  { id: "mind", label: "Mind & Mood", icon: "psychology" },
+                  { id: "flow", label: "Flow", icon: "water_drop" },
+                  { id: "pain", label: "Comfort & Pain", icon: "healing" },
+                  { id: "energy", label: "Energy", icon: "bolt" },
+                  { id: "digestion", label: "Digestion", icon: "restaurant" },
+                  { id: "mind", label: "Mood", icon: "psychology" },
                 ] as const
               ).map((cat) => (
                 <button
@@ -647,7 +647,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
               {/* Active Chips Strip (6 cols) */}
               <div className="md:col-span-6 space-y-1">
                 <span className="font-label-caps text-[11px] text-on-surface-variant uppercase font-semibold">
-                  Today's Active Tags
+                  Selected Today
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {selectedSymptoms.length === 0 ? (
@@ -674,11 +674,11 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                 </div>
               </div>
 
-              {/* Fatigue & Water Sliders (4 cols) */}
+              {/* Tiredness & Water Sliders (4 cols) */}
               <div className="md:col-span-4 flex items-center gap-4">
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="font-label-caps text-on-surface-variant uppercase">Fatigue</span>
+                    <span className="font-label-caps text-on-surface-variant uppercase">Tiredness</span>
                     <span className="font-semibold text-secondary">{fatigue}/5</span>
                   </div>
                   <input
@@ -686,7 +686,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                     min="1"
                     max="5"
                     value={fatigue}
-                    onChange={(e) => setFatigue(Number(e.target.value))}
+                    onChange={(e) => setTiredness(Number(e.target.value))}
                     className="w-full h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary"
                   />
                 </div>
@@ -723,7 +723,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   className="w-full py-2.5 px-4 rounded-full bg-primary text-on-primary font-label-lg text-xs font-semibold hover:bg-on-primary-container transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">check_circle</span>
-                  <span>{loggingVitals ? "Saving..." : "Save Log"}</span>
+                  <span>{loggingVitals ? "Saving..." : "Save for Today"}</span>
                 </button>
               </div>
             </div>
@@ -735,7 +735,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   <span className="material-symbols-outlined text-primary text-base">science</span>
                   <div>
                     <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-wider block">
-                      Why Am I Feeling This? · {currentInsight.badge}
+                      Body Insight · {currentInsight.badge}
                     </span>
                     <span className="font-headline-sm text-xs sm:text-sm text-on-surface font-semibold">
                       {currentInsight.title}
@@ -747,7 +747,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   onClick={() => setShowEvidenceDrawer((prev) => !prev)}
                   className="text-xs text-secondary font-semibold hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
                 >
-                  <span>{showEvidenceDrawer ? "Hide Mechanism" : "Read Physiological Mechanism"}</span>
+                  <span>{showEvidenceDrawer ? "Show less" : "Why this happens"}</span>
                   <span className="material-symbols-outlined text-xs">
                     {showEvidenceDrawer ? "expand_less" : "expand_more"}
                   </span>
@@ -767,7 +767,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   <div className="p-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high text-xs text-on-surface flex items-start gap-2">
                     <span className="material-symbols-outlined text-secondary text-sm mt-0.5">health_and_safety</span>
                     <div>
-                      <strong className="text-secondary block">Targeted Clinical Protocol:</strong>
+                      <strong className="text-secondary block">Simple Care Tips:</strong>
                       <span>{currentInsight.counterAction}</span>
                     </div>
                   </div>
@@ -807,10 +807,10 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                 </div>
                 <div className="space-y-0.5 min-w-0">
                   <h4 className="font-headline-sm text-base text-on-surface font-bold truncate">
-                    Power Squats & Hip Mobility
+                    Strength & Movement
                   </h4>
                   <p className="font-body-sm text-xs text-on-surface-variant line-clamp-2">
-                    4 sets of heavy back squats. Rising follicular estrogen supports high velocity power today.
+                    Great day for squats, walking, or any workout you enjoy. Your stamina is naturally high today.
                   </p>
                 </div>
               </div>
@@ -879,7 +879,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
           {/* Footer Signature */}
           <div className="pt-4 pb-8 text-center">
             <span className="font-label-caps text-[11px] text-on-surface-variant/70 tracking-widest uppercase">
-              SELENE · Phase-Adaptive Body Intelligence · Sensor Synced
+              SELENE · Phase-Adaptive Body Intelligence · Updated Today
             </span>
           </div>
         </div>
