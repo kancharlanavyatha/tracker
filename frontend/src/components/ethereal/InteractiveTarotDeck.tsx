@@ -327,7 +327,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                     >
                       <div className="flex items-center justify-between w-full text-xs text-primary font-serif font-bold tracking-widest uppercase">
                         <span>SELENE</span>
-                        <span>ATHLETICA</span>
+                        <span>ARCANA</span>
                       </div>
 
                       {/* Celestial Pattern */}

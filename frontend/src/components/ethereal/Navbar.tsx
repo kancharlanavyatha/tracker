@@ -47,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
           <div className="flex flex-col">
             <span className="font-headline-sm text-headline-sm tracking-tight text-primary font-semibold">
-              SELENE // ATHLETICA
+              SELENE
             </span>
             <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider hidden sm:inline">
               Phase-Adaptive Athlete Intelligence

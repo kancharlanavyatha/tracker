@@ -323,7 +323,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-primary font-label-caps text-xs uppercase tracking-widest font-semibold">
                   <span className="material-symbols-outlined text-sm text-primary">spa</span>
-                  <span>SELENE // ATHLETICA</span>
+                  <span>SELENE</span>
                   <span className="text-outline-variant">•</span>
                   <span className="text-secondary">
                     Day {currentDay} of {cycleLength} ({currentPhaseName})
@@ -861,7 +861,7 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
           {/* Footer Signature */}
           <div className="pt-4 pb-8 text-center">
             <span className="font-label-caps text-[11px] text-on-surface-variant/70 tracking-widest uppercase">
-              SELENE ATHLETICA · Phase-Adaptive Body Intelligence · Sensor Synced
+              SELENE · Phase-Adaptive Body Intelligence · Sensor Synced
             </span>
           </div>
         </div>

@@ -1,9 +1,9 @@
 @echo off
-title SELENE // ATHLETICA - Full-Stack Development Mode
+title SELENE - Full-Stack Development Mode
 color 0A
 
 echo ======================================================================
-echo    SELENE // ATHLETICA : Dual Development Mode (FastAPI + Vite Hot Reload)
+echo    SELENE : Dual Development Mode (FastAPI + Vite Hot Reload)
 echo ======================================================================
 echo.
 
