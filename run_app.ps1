@@ -1,6 +1,6 @@
 Set-Location "$PSScriptRoot\backend"
 Write-Host "======================================================================" -ForegroundColor Cyan
-Write-Host "   AURA // NYMPH : Athlete Sanctuary & Cycle Intelligence" -ForegroundColor Cyan
+Write-Host "   SELENE // ATHLETICA : Athlete Sanctuary & Cycle Intelligence" -ForegroundColor Cyan
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Starting server on http://localhost:8000 ..." -ForegroundColor Green

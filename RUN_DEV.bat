@@ -1,9 +1,9 @@
 @echo off
-title AURA // NYMPH - Full-Stack Development Mode
+title SELENE // ATHLETICA - Full-Stack Development Mode
 color 0A
 
 echo ======================================================================
-echo    AURA // NYMPH : Dual Development Mode (FastAPI + Vite Hot Reload)
+echo    SELENE // ATHLETICA : Dual Development Mode (FastAPI + Vite Hot Reload)
 echo ======================================================================
 echo.
 

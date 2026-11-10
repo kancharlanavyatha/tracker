@@ -108,7 +108,7 @@ export default function App() {
         localStorage.setItem(TOKEN_KEY, res.access_token);
         localStorage.setItem(USER_KEY, res.user_id);
         setUserId(res.user_id);
-        showToast("Welcome back to Aura Nymph Athlete Sanctuary!", "success");
+        showToast("Welcome back to Selene Athletica Sanctuary!", "success");
       } else {
         const res = await apiPost<{ access_token: string; user_id: string }>("/auth/register", {
           email,
@@ -118,7 +118,7 @@ export default function App() {
         localStorage.setItem(TOKEN_KEY, res.access_token);
         localStorage.setItem(USER_KEY, res.user_id);
         setUserId(res.user_id);
-        showToast("Account initialized! Welcome to Aura Nymph.", "success");
+        showToast("Account initialized! Welcome to Selene Athletica.", "success");
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -128,7 +128,7 @@ export default function App() {
         const fallbackId = "demo-local-athlete-01";
         localStorage.setItem(USER_KEY, fallbackId);
         setUserId(fallbackId);
-        showToast("Demo offline mode active. Welcome to Aura Nymph!", "info");
+        showToast("Demo offline mode active. Welcome to Selene Athletica!", "info");
       }
     } finally {
       setAuthBusy(false);
@@ -234,7 +234,7 @@ export default function App() {
               <span className="material-symbols-outlined text-base">spa</span>
             </div>
             <h1 className="font-display-hero text-2xl sm:text-3xl font-bold tracking-tight text-primary">
-              AURA // NYMPH
+              SELENE // ATHLETICA
             </h1>
             <p className="font-label-caps text-on-surface-variant uppercase tracking-wider text-xs">
               Phase-Intelligent Athlete Sanctuary

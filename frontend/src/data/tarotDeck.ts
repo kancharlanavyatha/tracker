@@ -12,6 +12,8 @@ export interface FullTarotCard {
   affirmation: string;
   accentColor: string;
   cardIcon: string;
+  artUrl: string;
+  artArtist: string;
 }
 
 export const FULL_TAROT_DECK: FullTarotCard[] = [
@@ -29,6 +31,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I welcome fresh starts with an open heart and rested body.",
     accentColor: "#94455b",
     cardIcon: "psychology",
+    artUrl: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&auto=format&fit=crop&q=80",
+    artArtist: "John William Waterhouse, 1893",
   },
   {
     id: "1-the-magician",
@@ -44,6 +48,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I have the focus, power, and drive to turn my goals into reality.",
     accentColor: "#3a6759",
     cardIcon: "magic_button",
+    artUrl: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&auto=format&fit=crop&q=80",
+    artArtist: "John William Waterhouse, 1891",
   },
   {
     id: "2-the-high-priestess",
@@ -59,6 +65,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I honor my body's signals and trust my inner wisdom.",
     accentColor: "#67558c",
     cardIcon: "spa",
+    artUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Lord Frederic Leighton, 1880",
   },
   {
     id: "3-the-empress",
@@ -74,6 +82,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I radiate warmth, strength, and vibrant health from within.",
     accentColor: "#94455b",
     cardIcon: "eco",
+    artUrl: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=600&auto=format&fit=crop&q=80",
+    artArtist: "William-Adolphe Bouguereau, 1888",
   },
   {
     id: "4-the-emperor",
@@ -89,6 +99,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I am grounded, capable, and build lasting strength through consistency.",
     accentColor: "#3a6759",
     cardIcon: "foundation",
+    artUrl: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&auto=format&fit=crop&q=80",
+    artArtist: "John William Godward, 1904",
   },
   {
     id: "5-the-hierophant",
@@ -104,6 +116,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "My daily rituals nourish my nervous system and steady my spirit.",
     accentColor: "#67558c",
     cardIcon: "self_improvement",
+    artUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Classical Pre-Raphaelite Studio",
   },
   {
     id: "6-the-lovers",
@@ -119,6 +133,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I celebrate my body in full harmony and love.",
     accentColor: "#94455b",
     cardIcon: "favorite",
+    artUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Herbert Draper, 1908",
   },
   {
     id: "7-the-chariot",
@@ -134,6 +150,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I direct my power with purpose and achieve breakthrough results.",
     accentColor: "#3a6759",
     cardIcon: "bolt",
+    artUrl: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Sir Edward Poynter, 1897",
   },
   {
     id: "8-strength",
@@ -149,6 +167,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I meet any emotional or physical challenge with quiet, steady strength.",
     accentColor: "#94455b",
     cardIcon: "shield",
+    artUrl: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Briton Riviere, 1880",
   },
   {
     id: "9-the-hermit",
@@ -164,6 +184,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "Taking time for myself is productive, healing, and deeply necessary.",
     accentColor: "#67558c",
     cardIcon: "bedtime",
+    artUrl: "https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=600&auto=format&fit=crop&q=80",
+    artArtist: "John Atkinson Grimshaw, 1884",
   },
   {
     id: "10-wheel-of-fortune",
@@ -179,6 +201,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I ride the natural cycles of my body with ease and joy.",
     accentColor: "#3a6759",
     cardIcon: "cyclone",
+    artUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Arthur Hacker, 1902",
   },
   {
     id: "11-justice",
@@ -194,6 +218,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I bring balance and fair care to every dimension of my health.",
     accentColor: "#67558c",
     cardIcon: "balance",
+    artUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Lord Frederic Leighton, 1890",
   },
   {
     id: "12-the-hanged-man",
@@ -209,6 +235,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I let go of pressure and allow clarity to find me in stillness.",
     accentColor: "#94455b",
     cardIcon: "hourglass_top",
+    artUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&auto=format&fit=crop&q=80",
+    artArtist: "John William Waterhouse, 1896",
   },
   {
     id: "13-death",
@@ -224,6 +252,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I release what no longer serves me and step into renewed vitality.",
     accentColor: "#67558c",
     cardIcon: "cached",
+    artUrl: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Lord Frederic Leighton, 1891",
   },
   {
     id: "14-temperance",
@@ -239,6 +269,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I am centered, hydrated, and moving in calm harmony.",
     accentColor: "#3a6759",
     cardIcon: "water_drop",
+    artUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop&q=80",
+    artArtist: "William-Adolphe Bouguereau, 1897",
   },
   {
     id: "15-the-devil",
@@ -254,6 +286,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I understand my cravings and treat my body with kindness, not restriction.",
     accentColor: "#94455b",
     cardIcon: "lock_open",
+    artUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Alexandre Cabanel, 1887",
   },
   {
     id: "16-the-tower",
@@ -269,6 +303,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I let stress break apart and make space for clean, peaceful energy.",
     accentColor: "#3a6759",
     cardIcon: "electric_bolt",
+    artUrl: "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Herbert Draper, 1912",
   },
   {
     id: "17-the-star",
@@ -284,6 +320,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "My body is a beacon of health, healing, and joyful light.",
     accentColor: "#94455b",
     cardIcon: "star",
+    artUrl: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&auto=format&fit=crop&q=80",
+    artArtist: "William-Adolphe Bouguereau, 1882",
   },
   {
     id: "18-the-moon",
@@ -299,6 +337,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I rest deeply each night, awakening renewed and refreshed.",
     accentColor: "#67558c",
     cardIcon: "nights_stay",
+    artUrl: "https://images.unsplash.com/photo-1532767153582-b1a0e5145009?w=600&auto=format&fit=crop&q=80",
+    artArtist: "Albert Aublet, 1880",
   },
   {
     id: "19-the-sun",
@@ -314,6 +354,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I shine brightly, love fully, and celebrate my strength today.",
     accentColor: "#94455b",
     cardIcon: "wb_sunny",
+    artUrl: "https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?w=600&auto=format&fit=crop&q=80",
+    artArtist: "John William Godward, 1912",
   },
   {
     id: "20-judgement",
@@ -329,6 +371,8 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I rise with confidence and celebrate every step of my growth.",
     accentColor: "#3a6759",
     cardIcon: "campaign",
+    artUrl: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=600&auto=format&fit=crop&q=80",
+    artArtist: "John William Waterhouse, 1900",
   },
   {
     id: "21-the-world",
@@ -344,5 +388,7 @@ export const FULL_TAROT_DECK: FullTarotCard[] = [
     affirmation: "I am whole, capable, and in love with my body's natural rhythms.",
     accentColor: "#67558c",
     cardIcon: "public",
+    artUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop&q=80",
+    artArtist: "William-Adolphe Bouguereau, 1884",
   },
 ];

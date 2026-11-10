@@ -1,9 +1,9 @@
 @echo off
-title AURA // NYMPH Server
+title SELENE // ATHLETICA Server
 cd /d "%~dp0backend"
 
 echo ======================================================================
-echo    AURA // NYMPH : Athlete Sanctuary & Cycle Intelligence
+echo    SELENE // ATHLETICA : Athlete Sanctuary & Cycle Intelligence
 echo ======================================================================
 echo.
 echo Starting application server...

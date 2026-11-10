@@ -5,12 +5,14 @@ interface InteractiveTarotDeckProps {
   currentPhaseName: string;
   onCardSelected?: (card: FullTarotCard) => void;
   showToast: (msg: string, type?: "success" | "error" | "info") => void;
+  onClose?: () => void;
 }
 
 export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
   currentPhaseName,
   onCardSelected,
   showToast,
+  onClose,
 }) => {
   // Modes: 3-Card Reading, Interactive Fan (all 22), Full Deck Grid (all 22)
   const [mode, setMode] = useState<"three_spread" | "fan_pick" | "all_cards">("three_spread");
@@ -108,6 +110,16 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 flex-wrap">
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-3.5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-caps text-xs flex items-center gap-1 transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              <span>Back to Dashboard</span>
+            </button>
+          )}
           {/* Mode Switcher */}
           <div className="bg-surface-container-low p-1 rounded-full flex items-center border border-surface-container-high/60">
             <button
@@ -244,16 +256,23 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                           </span>
                         </div>
 
-                        {/* Card Emblem Illustration */}
-                        <div className="w-full h-32 rounded-2xl bg-gradient-to-tr from-primary-fixed/40 via-surface-container to-secondary-container/30 flex flex-col items-center justify-center p-3 text-center border border-primary-container/30 relative">
-                          <div className="w-13 h-13 rounded-full bg-surface-container-lowest shadow-sm flex items-center justify-center text-primary mb-1">
-                            <span className="material-symbols-outlined text-3xl">
-                              {card.cardIcon || "spa"}
+                        {/* Nymph Classical Painting Art Frame */}
+                        <div className="w-full h-44 rounded-2xl overflow-hidden relative shadow-sm border border-primary-container/40 group/art">
+                          <img
+                            src={card.artUrl}
+                            alt={card.name}
+                            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/art:scale-105"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+                          <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-white">
+                            <span className="font-serif italic text-[11px] tracking-wide text-white/95 drop-shadow-sm truncate max-w-[65%]">
+                              {card.artArtist}
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-[9px] font-semibold uppercase tracking-wider text-white">
+                              {card.theme}
                             </span>
                           </div>
-                          <span className="font-label-caps text-[11px] text-secondary font-semibold uppercase tracking-wider">
-                            {card.theme}
-                          </span>
                         </div>
 
                         {/* Title & Tagline */}
@@ -306,9 +325,9 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                         transform: "rotateY(180deg)",
                       }}
                     >
-                      <div className="flex items-center justify-between w-full text-xs text-primary font-serif">
-                        <span>AURA</span>
-                        <span>NYMPH</span>
+                      <div className="flex items-center justify-between w-full text-xs text-primary font-serif font-bold tracking-widest uppercase">
+                        <span>SELENE</span>
+                        <span>ATHLETICA</span>
                       </div>
 
                       {/* Celestial Pattern */}
@@ -523,9 +542,16 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                   </span>
                 </div>
 
-                <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-primary-fixed/40 via-surface-container to-secondary-container/30 flex items-center justify-center text-primary group-hover:scale-110 transition-transform my-2">
-                  <span className="material-symbols-outlined text-2xl">
-                    {card.cardIcon || "spa"}
+                <div className="w-full h-28 rounded-xl overflow-hidden relative mb-2 shadow-sm border border-surface-container">
+                  <img
+                    src={card.artUrl}
+                    alt={card.name}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <span className="absolute bottom-1 left-2 text-[9px] text-white/95 font-serif italic truncate max-w-[90%]">
+                    {card.artArtist.split(',')[0]}
                   </span>
                 </div>
 
@@ -573,24 +599,31 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               </span>
             </div>
 
-            {/* Big Emblem & Name */}
-            <div className="flex items-center gap-4 pt-1">
-              <div className="w-18 h-18 rounded-2xl bg-gradient-to-tr from-primary-fixed via-surface-container to-secondary-container/40 flex items-center justify-center text-primary shadow-sm flex-shrink-0">
-                <span className="material-symbols-outlined text-4xl">
-                  {inspectCard.cardIcon || "spa"}
+            {/* Big Nymph Painting Artwork */}
+            <div className="w-full h-64 rounded-2xl overflow-hidden relative shadow-md border border-primary-container/40">
+              <img
+                src={inspectCard.artUrl}
+                alt={inspectCard.name}
+                className="w-full h-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+                <span className="font-serif italic text-xs tracking-wide text-white/95 drop-shadow-sm">
+                  {inspectCard.artArtist}
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-md text-[10px] font-semibold uppercase tracking-wider text-white">
+                  {inspectCard.theme}
                 </span>
               </div>
-              <div>
-                <h3 className="font-headline-lg text-2xl font-bold text-on-surface">
-                  {inspectCard.name}
-                </h3>
-                <p className="font-label-caps text-sm text-primary font-medium mt-0.5">
-                  {inspectCard.subtitle}
-                </p>
-                <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-surface-container font-label-caps text-[11px] text-secondary font-semibold">
-                  Theme: {inspectCard.theme}
-                </span>
-              </div>
+            </div>
+
+            <div>
+              <h3 className="font-headline-lg text-2xl font-bold text-on-surface">
+                {inspectCard.name}
+              </h3>
+              <p className="font-label-caps text-sm text-primary font-medium mt-0.5">
+                {inspectCard.subtitle}
+              </p>
             </div>
 
             {/* Meaning Paragraph */}

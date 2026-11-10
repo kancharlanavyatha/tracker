@@ -47,10 +47,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
           <div className="flex flex-col">
             <span className="font-headline-sm text-headline-sm tracking-tight text-primary font-semibold">
-              AURA // NYMPH
+              SELENE // ATHLETICA
             </span>
             <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider hidden sm:inline">
-              Your Daily Body & Cycle Guide
+              Phase-Adaptive Athlete Intelligence
             </span>
           </div>
         </div>
