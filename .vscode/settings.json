@@ -4,6 +4,7 @@
     "${workspaceFolder}/backend"
   ],
   "python.terminal.activateEnvironment": true,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
