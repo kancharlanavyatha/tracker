@@ -19,7 +19,7 @@ try:
     import torch
     import torch.nn as nn
     TORCH_AVAILABLE = True
-except ImportError:
+except (ImportError, OSError, Exception):
     TORCH_AVAILABLE = False
 
 if TORCH_AVAILABLE:
