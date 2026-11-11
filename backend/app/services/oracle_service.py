@@ -138,28 +138,28 @@ def _render_clinical_guidance(
     elif intent == "training_load":
         if phase == "follicular":
             return (
-                f"⚡ **Training Prescription for Follicular Phase (Day {day}):**\n\n"
+                f" **Training Prescription for Follicular Phase (Day {day}):**\n\n"
                 f"• **Target Intensity:** {effort}% 1RM. You are in your prime neuro-muscular window!\n"
                 "• **Athletic Focus:** Compound lifts (back squats, bench press, deadlifts) with progressive overload. Your muscles recover faster under estrogen, and delayed-onset soreness clears quickly.\n"
                 "• **Conditioning:** VO2 max intervals and tempo cardio yield maximum aerobic adaptations right now."
             )
         elif phase == "ovulatory":
             return (
-                f"⚡ **Training Prescription for Ovulatory Peak (Day {day}):**\n\n"
+                f" **Training Prescription for Ovulatory Peak (Day {day}):**\n\n"
                 f"• **Target Intensity:** {effort}% 1RM. Peak force generation and neurological recruitment!\n"
                 "• **Athletic Focus:** Test personal records, plyometrics, and high-velocity sprints.\n"
                 "• **Safety Note:** Estrogen and relaxin temporarily loosen ligaments (patellar tendon laxity). Ensure thorough dynamic warm-ups and avoid fatigued cutting maneuvers."
             )
         elif phase == "luteal":
             return (
-                f"⚡ **Training Prescription for Luteal Phase (Day {day}):**\n\n"
+                f" **Training Prescription for Luteal Phase (Day {day}):**\n\n"
                 f"• **Target Intensity:** {effort}% 1RM (Controlled Effort).\n"
                 "• **Athletic Focus:** Steady-state Zone 2 endurance, technical barbell drills, and hypertrophy circuits.\n"
                 "• **Thermoregulation Alert:** Elevated progesterone increases core body temperature by 0.3°–0.5°C. Train in cool environments and extend rest intervals between sets."
             )
         else:  # Menstrual
             return (
-                f"⚡ **Training Prescription for Menstrual Phase (Day {day}):**\n\n"
+                f" **Training Prescription for Menstrual Phase (Day {day}):**\n\n"
                 f"• **Target Intensity:** {effort}% 1RM (Restorative Effort).\n"
                 "• **Athletic Focus:** Low-impact pelvic mobility, walking, swimming, and light bodyweight circuits.\n"
                 "• **Listen to Your Body:** If energy is high, moderate resistance is safe; if cramping is severe, prioritize active recovery."
@@ -204,7 +204,7 @@ def _render_clinical_guidance(
 
     elif intent == "ovulation_fertility":
         return (
-            f"✨ **Ovulation & Vitality Tracking (Day {day}):**\n\n"
+            f" **Ovulation & Vitality Tracking (Day {day}):**\n\n"
             "• **Biological Indicators:** Ovulation typically occurs 24–36 hours following a Luteinizing Hormone (LH) surge, accompanied by clear, stretchy cervical mucus (egg-white consistency).\n"
             "• **Thermal Shift:** Basal body temperature jumps by ~0.3°C immediately *after* ovulation and remains elevated throughout the luteal phase.\n"
             "• **Athletic Peak:** The 48-hour window surrounding ovulation is biologically primed for strength and maximal velocity."
@@ -212,7 +212,7 @@ def _render_clinical_guidance(
 
     elif intent == "injury_laxity_prevention":
         return (
-            f"️ **Joint Stability & Injury Prevention (Day {day} {phase_title}):**\n\n"
+            f" **Joint Stability & Injury Prevention (Day {day} {phase_title}):**\n\n"
             "• **Relaxin & Estrogen Dynamics:** Research shows female athletes experience a 2–3x higher rate of non-contact ACL and ankle sprains around late follicular and ovulatory phases due to increased joint laxity.\n"
             "• **Activation Routine:** Dedicate 10 minutes to glute medius activation (clamshells, banded lateral walks) and hamstring eccentrics prior to explosive cutting or lifting.\n"
             "• **Footwear & Technique:** Prioritize stable, flat-soled lifting shoes on heavy compound days and ensure knees track squarely over the second toe during landing."

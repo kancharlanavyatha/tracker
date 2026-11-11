@@ -248,7 +248,7 @@ def _generate_health_guidance(phase: str, day: int, message: str) -> str:
     if any(w in msg for w in ["workout", "exercise", "training", "intensity", "run", "lift", "strength", "gym", "cardio"]):
         if phase == "menstrual":
             return (
-                f"‍♀️ **Training Guidance for Menstrual Phase (Day {day}):**\n\n"
+                f" **Training Guidance for Menstrual Phase (Day {day}):**\n\n"
                 "• **Primary Focus:** Restorative movement, joint mobility, and low-impact steady state (LISS).\n"
                 "• **Recommended Sessions:** Gentle Yin yoga, pelvic floor stretching, 30-minute nature walks, or light swimming.\n"
                 "• **Intensity Target:** RPE 3–5 / 10. Avoid maximum strain PRs if feeling pelvic pressure or fatigue.\n"
@@ -256,7 +256,7 @@ def _generate_health_guidance(phase: str, day: int, message: str) -> str:
             )
         elif phase == "follicular":
             return (
-                f"‍♀️ **Training Guidance for Follicular Phase (Day {day}):**\n\n"
+                f" **Training Guidance for Follicular Phase (Day {day}):**\n\n"
                 "• **Primary Focus:** Progressive strength overload, building muscle tissue, and speed.\n"
                 "• **Why it Works:** Estrogen is anabolic, promoting muscle protein synthesis, joint elasticity, and faster glycogen replenishment.\n"
                 "• **Recommended Sessions:** Heavy barbell lifts (squats, deadlifts), tempo intervals, and challenging HIIT sessions.\n"
@@ -264,7 +264,7 @@ def _generate_health_guidance(phase: str, day: int, message: str) -> str:
             )
         elif phase == "ovulatory":
             return (
-                f"‍♀️ **Training Guidance for Ovulation Window (Day {day}):**\n\n"
+                f" **Training Guidance for Ovulation Window (Day {day}):**\n\n"
                 "• **Primary Focus:** Personal records (PRs), maximum sprint power, and high-intensity competition.\n"
                 "• **Why it Works:** Peak estrogen combined with a subtle testosterone surge maximizes central nervous system output.\n"
                 "• **Recommended Sessions:** 1-rep max attempts, maximum-speed track sprints, powerlifting.\n"
@@ -272,7 +272,7 @@ def _generate_health_guidance(phase: str, day: int, message: str) -> str:
             )
         else:
             return (
-                f"‍♀️ **Training Guidance for Luteal Phase (Day {day}):**\n\n"
+                f" **Training Guidance for Luteal Phase (Day {day}):**\n\n"
                 "• **Primary Focus:** Zone-2 aerobic capacity, endurance volume, and functional hypertrophy.\n"
                 "• **Why it Works:** Higher progesterone raises core temperature and resting heart rate, shifting the body toward fat oxidation.\n"
                 "• **Recommended Sessions:** 45–60 min steady state cycling/jogging, Pilates, functional bodyweight circuits.\n"

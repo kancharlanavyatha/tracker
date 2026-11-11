@@ -375,16 +375,14 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">
-                    <span className="material-symbols-outlined text-sm">lock</span>
-                    <span>Zero-Knowledge Client-Side AES-GCM-256 Vault</span>
+                    <span className="material-symbols-outlined text-sm">edit_note</span>
+                    <span>Daily Journal & Notes</span>
                   </div>
                   <h1 className="font-display-hero text-3xl sm:text-4xl text-on-surface font-semibold tracking-tight mt-1">
-                    Private Somatic Journal & Photo Vault
+                    Your Journal & Reflections
                   </h1>
                   <p className="font-body-md text-on-surface-variant max-w-2xl mt-1">
-                    Your notes, photos, and reflections are encrypted in your browser with PBKDF2
-                    (100,000 iterations) + AES-GCM-256 before transmitting. The database server never sees
-                    unencrypted text or photos.
+                    A quiet space to write notes on your cycle, energy, and thoughts.
                   </p>
                 </div>
               </div>

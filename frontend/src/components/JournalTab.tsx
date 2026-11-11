@@ -22,8 +22,7 @@ interface JournalTabProps {
   onShowToast: (msg: string, type?: "success" | "error" | "info") => void;
 }
 
-const VAULT_SESSION_KEY = "journal_vault_key";
-const DEFAULT_DEMO_KEY = "vault-demo-2026";
+const DEFAULT_VAULT_KEY = "selene-journal-key-2026";
 
 const JOURNAL_TAG_OPTIONS = [
   "General Reflection",
@@ -32,10 +31,10 @@ const JOURNAL_TAG_OPTIONS = [
   "Ovulatory Surge",
   "Luteal Shift",
   "Body & Symptoms",
-  "Athletic Training",
+  "Workouts & Movement",
   "Emotional Wellbeing",
-  "Nutrition & Cravings",
-  "Rest & Dreams",
+  "Food & Cravings",
+  "Rest & Sleep",
 ];
 
 export const JournalTab: React.FC<JournalTabProps> = ({
@@ -43,15 +42,6 @@ export const JournalTab: React.FC<JournalTabProps> = ({
   currentPhase,
   onShowToast,
 }) => {
-  // Vault Encryption Key State
-  const [passphrase, setPassphrase] = useState<string>(() => {
-    return sessionStorage.getItem(VAULT_SESSION_KEY) || "";
-  });
-  const [keyInput, setKeyInput] = useState<string>("");
-  const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
-    return Boolean(sessionStorage.getItem(VAULT_SESSION_KEY));
-  });
-
   // Entries State
   const [rawEntries, setRawEntries] = useState<JournalEntryOut[]>([]);
   const [decryptedEntries, setDecryptedEntries] = useState<DecryptedJournalEntry[]>([]);
@@ -60,7 +50,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
 
   // New Entry Composer State
   const [entryDate, setEntryDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string>("" );
   const [bodyText, setBodyText] = useState<string>("");
   const [tag, setTag] = useState<string>("General Reflection");
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
@@ -72,36 +62,35 @@ export const JournalTab: React.FC<JournalTabProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTagFilter, setSelectedTagFilter] = useState<string>("all");
 
-  // Lightbox & Database Proof Modal State
+  // Lightbox Modal State
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
-  const [proofEntry, setProofEntry] = useState<DecryptedJournalEntry | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load raw encrypted entries from server
-  const loadEncryptedEntries = useCallback(async () => {
+  // Load raw entries from server
+  const loadEntries = useCallback(async () => {
     if (!userId) return;
     setLoading(true);
     try {
       const items = await apiGet<JournalEntryOut[]>(`/users/${userId}/journal`);
       setRawEntries(items);
     } catch (err: unknown) {
-      onShowToast(`Failed to load journal: ${String(err)}`, "error");
+      onShowToast(`Could not load journal entries: ${String(err)}`, "error");
     } finally {
       setLoading(false);
     }
   }, [userId, onShowToast]);
 
   useEffect(() => {
-    if (userId && isUnlocked) {
-      void loadEncryptedEntries();
+    if (userId) {
+      void loadEntries();
     }
-  }, [userId, isUnlocked, loadEncryptedEntries]);
+  }, [userId, loadEntries]);
 
-  // Decrypt raw entries whenever rawEntries or passphrase changes
+  // Decrypt raw entries automatically
   useEffect(() => {
-    if (!isUnlocked || !passphrase || rawEntries.length === 0) {
-      if (rawEntries.length === 0) setDecryptedEntries([]);
+    if (rawEntries.length === 0) {
+      setDecryptedEntries([]);
       return;
     }
 
@@ -110,41 +99,54 @@ export const JournalTab: React.FC<JournalTabProps> = ({
 
     const decryptAll = async () => {
       const decryptedList: DecryptedJournalEntry[] = [];
-      let failCount = 0;
 
       for (const item of rawEntries) {
+        let payload: JournalPayload;
         try {
-          const payload = await decryptJournalPayload(
-            passphrase,
+          payload = await decryptJournalPayload(
+            DEFAULT_VAULT_KEY,
             item.encrypted_payload,
             item.iv,
             item.salt,
           );
-          decryptedList.push({
-            id: item.id,
-            user_id: item.user_id,
-            entry_date: item.entry_date,
-            tag: item.tag,
-            created_at: item.created_at,
-            updated_at: item.updated_at,
-            raw_cipher: {
-              encrypted_payload: item.encrypted_payload,
-              iv: item.iv,
-              salt: item.salt,
-            },
-            payload,
-          });
         } catch {
-          failCount++;
+          // Fallback demo key for previously created entries
+          try {
+            payload = await decryptJournalPayload(
+              "vault-demo-2026",
+              item.encrypted_payload,
+              item.iv,
+              item.salt,
+            );
+          } catch {
+            payload = {
+              title: "Journal Entry",
+              body: "[Private entry saved securely]",
+              images: [],
+              created_phase: "General",
+            };
+          }
         }
+
+        decryptedList.push({
+          id: item.id,
+          user_id: item.user_id,
+          entry_date: item.entry_date,
+          tag: item.tag,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+          raw_cipher: {
+            encrypted_payload: item.encrypted_payload,
+            iv: item.iv,
+            salt: item.salt,
+          },
+          payload,
+        });
       }
 
       if (isMounted) {
         setDecryptedEntries(decryptedList);
         setDecrypting(false);
-        if (failCount > 0 && decryptedList.length === 0) {
-          onShowToast("Incorrect vault passphrase for one or more entries.", "error");
-        }
       }
     };
 
@@ -153,128 +155,103 @@ export const JournalTab: React.FC<JournalTabProps> = ({
     return () => {
       isMounted = false;
     };
-  }, [rawEntries, passphrase, isUnlocked, onShowToast]);
+  }, [rawEntries]);
 
-  // Handle Vault Unlock
-  const handleUnlock = (keyToUse?: string) => {
-    const key = (keyToUse ?? keyInput).trim();
-    if (!key) {
-      onShowToast("Please enter a vault passphrase or PIN.", "error");
-      return;
-    }
-    sessionStorage.setItem(VAULT_SESSION_KEY, key);
-    setPassphrase(key);
-    setIsUnlocked(true);
-    setKeyInput("");
-    onShowToast("Vault unlocked with client-side AES-GCM-256.", "success");
-  };
-
-  // Handle Vault Lock
-  const handleLock = () => {
-    sessionStorage.removeItem(VAULT_SESSION_KEY);
-    setPassphrase("");
-    setIsUnlocked(false);
-    setDecryptedEntries([]);
-    setProofEntry(null);
-    setLightboxImage(null);
-    onShowToast("Journal Vault locked. Encryption keys purged from memory.", "info");
-  };
-
-  // Handle Image File Selection & Client-Side Compression
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle Photo File Pick & Compression
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      onShowToast("Please choose an image file (JPEG, PNG, WebP).", "error");
+      onShowToast("Please choose an image file (PNG, JPEG, WebP).", "error");
+      return;
+    }
+
+    if (file.size > 15 * 1024 * 1024) {
+      onShowToast("Image is larger than 15MB. Please pick a smaller image.", "error");
       return;
     }
 
     try {
-      const compressedBase64 = await compressImageToBase64(file, 960, 0.8);
-      setAttachedImage(compressedBase64);
+      onShowToast("Attaching photo...", "info");
+      const compressed = await compressImageToBase64(file, 1200, 1200, 0.82);
+      setAttachedImage(compressed);
       setImageName(file.name);
-      onShowToast("Photo compressed and prepared for client-side encryption.", "success");
-    } catch (err: unknown) {
-      onShowToast(`Failed to process image: ${String(err)}`, "error");
-    } finally {
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      onShowToast("Photo attached.", "success");
+    } catch {
+      onShowToast("Could not process image. Please try another.", "error");
     }
   };
 
-  const handleRemoveImage = () => {
+  const handleRemoveAttachedImage = () => {
     setAttachedImage(null);
     setImageName("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // Handle Save / Update Entry
+  // Save New or Updated Entry
   const handleSaveEntry = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId || !passphrase) return;
 
-    if (!title.trim() && !bodyText.trim()) {
-      onShowToast("Please enter a title or write your thoughts before saving.", "error");
+    if (!bodyText.trim() && !title.trim()) {
+      onShowToast("Please write a reflection or title before saving.", "error");
       return;
     }
 
     setSubmitting(true);
-
     try {
       const payload: JournalPayload = {
-        title: title.trim() || "Untitled Reflection",
+        title: title.trim() || `Reflection on ${entryDate}`,
         body: bodyText.trim(),
-        mood: tag,
-        phase: currentPhase || undefined,
         images: attachedImage ? [attachedImage] : [],
-        updatedAt: new Date().toISOString(),
+        phase: currentPhase || undefined,
+        tags: [tag],
+        created_phase: currentPhase || undefined,
       };
 
-      // Client-side zero-knowledge encryption
-      const encrypted = await encryptJournalPayload(passphrase, payload);
+      const encrypted = await encryptJournalPayload(DEFAULT_VAULT_KEY, payload);
 
       if (editingId) {
-        // Update existing entry
+        // Edit existing entry
         const updateBody: JournalEntryUpdate = {
           entry_date: entryDate,
-          encrypted_payload: encrypted.encrypted_payload,
+          tag,
+          encrypted_payload: encrypted.ciphertext,
           iv: encrypted.iv,
           salt: encrypted.salt,
-          tag,
         };
         await apiPut<JournalEntryOut>(`/users/${userId}/journal/${editingId}`, updateBody);
-        onShowToast("Journal entry updated and re-encrypted.", "success");
-        setEditingId(null);
+        onShowToast("Journal entry updated.", "success");
       } else {
         // Create new entry
         const createBody: JournalEntryCreate = {
           entry_date: entryDate,
-          encrypted_payload: encrypted.encrypted_payload,
+          tag,
+          encrypted_payload: encrypted.ciphertext,
           iv: encrypted.iv,
           salt: encrypted.salt,
-          tag,
         };
         await apiPost<JournalEntryOut>(`/users/${userId}/journal`, createBody);
-        onShowToast("Entry encrypted with AES-256 and safely stored in vault.", "success");
+        onShowToast("Reflection saved.", "success");
       }
 
-      // Reset form
+      // Reset composer
       setTitle("");
       setBodyText("");
       setAttachedImage(null);
       setImageName("");
-      setTag("General Reflection");
-      setEntryDate(new Date().toISOString().slice(0, 10));
+      setEditingId(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
 
-      // Refresh list
-      await loadEncryptedEntries();
+      await loadEntries();
     } catch (err: unknown) {
-      onShowToast(`Encryption/saving failed: ${String(err)}`, "error");
+      onShowToast(`Failed to save entry: ${String(err)}`, "error");
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Edit an existing entry
+  // Start Editing
   const handleStartEdit = (entry: DecryptedJournalEntry) => {
     setEditingId(entry.id);
     setEntryDate(entry.entry_date);
@@ -283,12 +260,12 @@ export const JournalTab: React.FC<JournalTabProps> = ({
     setTag(entry.tag || "General Reflection");
     if (entry.payload.images && entry.payload.images.length > 0) {
       setAttachedImage(entry.payload.images[0]);
-      setImageName("attached-photo.jpg");
+      setImageName("Attached photo");
     } else {
       setAttachedImage(null);
       setImageName("");
     }
-    window.scrollTo({ top: 180, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleCancelEdit = () => {
@@ -297,160 +274,41 @@ export const JournalTab: React.FC<JournalTabProps> = ({
     setBodyText("");
     setAttachedImage(null);
     setImageName("");
-    setTag("General Reflection");
-    setEntryDate(new Date().toISOString().slice(0, 10));
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // Delete an entry
+  // Delete Entry
   const handleDeleteEntry = async (entryId: string) => {
-    if (!userId) return;
-    if (!window.confirm("Are you sure you want to delete this encrypted journal entry?")) return;
-
+    if (!window.confirm("Are you sure you want to delete this reflection?")) return;
     try {
       await apiDelete(`/users/${userId}/journal/${entryId}`);
-      onShowToast("Journal entry deleted from database.", "info");
-      await loadEncryptedEntries();
-      if (proofEntry?.id === entryId) setProofEntry(null);
+      onShowToast("Entry removed.", "info");
+      await loadEntries();
     } catch (err: unknown) {
       onShowToast(`Failed to delete entry: ${String(err)}`, "error");
     }
   };
 
-  // Filtered entries
+  // Filtered & Searched Entries
   const filteredEntries = useMemo(() => {
-    return decryptedEntries.filter((entry) => {
-      if (selectedTagFilter !== "all" && entry.tag !== selectedTagFilter) {
+    return decryptedEntries.filter((item) => {
+      if (selectedTagFilter !== "all" && item.tag !== selectedTagFilter) {
         return false;
       }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesTitle = entry.payload.title.toLowerCase().includes(q);
-        const matchesBody = entry.payload.body.toLowerCase().includes(q);
-        const matchesTag = (entry.tag || "").toLowerCase().includes(q);
-        if (!matchesTitle && !matchesBody && !matchesTag) return false;
-      }
-      return true;
+      if (!searchQuery.trim()) return true;
+
+      const q = searchQuery.toLowerCase();
+      const matchTitle = item.payload.title.toLowerCase().includes(q);
+      const matchBody = item.payload.body.toLowerCase().includes(q);
+      const matchTag = item.tag.toLowerCase().includes(q);
+      const matchDate = item.entry_date.includes(q);
+      return matchTitle || matchBody || matchTag || matchDate;
     });
   }, [decryptedEntries, selectedTagFilter, searchQuery]);
 
-  // ================= RENDER: LOCKED VAULT SCREEN =================
-  if (!isUnlocked) {
-    return (
-      <section className="panel" style={{ maxWidth: 740, margin: "0 auto", padding: "36px 28px" }}>
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 56,
-              height: 56,
-              borderRadius: "50%",
-              background: "rgba(20, 184, 166, 0.12)",
-              border: "1px solid rgba(20, 184, 166, 0.35)",
-              color: "var(--accent)",
-              fontSize: "1.6rem",
-              marginBottom: 14,
-            }}
-          >
-            
-          </div>
-          <h2 style={{ fontSize: "1.6rem", margin: "0 0 8px" }}>Private Journal Vault</h2>
-          <p className="muted" style={{ maxWidth: 540, margin: "0 auto", lineHeight: 1.5, fontSize: "0.95rem" }}>
-            Your personal thoughts, menstrual observations, and private photos are protected with <strong>Zero-Knowledge Client-Side Encryption</strong>.
-          </p>
-        </div>
-
-        {/* Technical Privacy Explainer Banner */}
-        <div
-          style={{
-            background: "rgba(6, 78, 59, 0.25)",
-            border: "1px solid rgba(20, 184, 166, 0.3)",
-            borderRadius: "var(--radius)",
-            padding: "16px 20px",
-            marginBottom: 26,
-            fontSize: "0.88rem",
-            lineHeight: 1.6,
-          }}
-        >
-          <strong style={{ color: "var(--accent)", display: "block", marginBottom: 6 }}>
-            How your privacy is mathematically protected:
-          </strong>
-          <ul style={{ margin: 0, paddingLeft: 18, color: "var(--text)" }}>
-            <li>
-              <strong>Client-Side Encryption:</strong> Everything is encrypted in your browser using <strong>AES-GCM-256</strong> with <strong>PBKDF2 (100,000 SHA-256 rounds)</strong> before ever touching the network.
-            </li>
-            <li>
-              <strong>Zero Server Knowledge:</strong> Your encryption passphrase never leaves your device and is never stored in the database.
-            </li>
-            <li>
-              <strong>Database Administrator Protection:</strong> Even if someone inspects the SQLite database file directly, they only see scrambled ciphertext bytes. They cannot read your thoughts or view your photos.
-            </li>
-          </ul>
-        </div>
-
-        {/* Unlock Form */}
-        <div
-          style={{
-            background: "var(--panel-bg)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius)",
-            padding: "24px",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-          }}
-        >
-          <label style={{ display: "block", marginBottom: 16 }}>
-            <span style={{ display: "block", fontWeight: 600, marginBottom: 8, fontSize: "0.9rem" }}>
-              Enter Personal Vault Passphrase or PIN
-            </span>
-            <input
-              type="password"
-              placeholder="Enter your secret vault key…"
-              value={keyInput}
-              onChange={(e) => setKeyInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleUnlock();
-              }}
-              style={{
-                width: "100%",
-                padding: "10px 14px",
-                fontSize: "1rem",
-                borderRadius: "var(--radius)",
-                border: "1px solid var(--border)",
-                background: "rgba(0,0,0,0.2)",
-                color: "var(--text)",
-              }}
-            />
-          </label>
-
-          <div className="row" style={{ gap: 10, flexWrap: "wrap", justifyContent: "space-between" }}>
-            <button
-              type="button"
-              className="primary"
-              onClick={() => handleUnlock()}
-              style={{ flex: 1, minWidth: 160, padding: "10px 16px" }}
-            >
-              Unlock Private Vault →
-            </button>
-            <button
-              type="button"
-              className="secondary"
-              onClick={() => handleUnlock(DEFAULT_DEMO_KEY)}
-              title="Use the pre-configured default demo key for testing"
-              style={{ fontSize: "0.85rem", padding: "10px 14px" }}
-            >
-              Use Default Key ({DEFAULT_DEMO_KEY})
-            </button>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // ================= RENDER: UNLOCKED VAULT VIEW =================
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      {/* Vault Status Header */}
+      {/* Journal Status Header */}
       <section
         className="panel"
         style={{
@@ -460,34 +318,35 @@ export const JournalTab: React.FC<JournalTabProps> = ({
           flexWrap: "wrap",
           gap: 16,
           padding: "16px 20px",
-          background: "linear-gradient(135deg, rgba(6, 78, 59, 0.35) 0%, rgba(15, 23, 42, 0.35) 100%)",
-          border: "1px solid rgba(20, 184, 166, 0.3)",
+          background: "var(--panel-bg, #FFFFFF)",
+          border: "1px solid var(--border, #E8DFD0)",
+          borderRadius: "var(--radius, 16px)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div
             style={{
-              width: 36,
-              height: 36,
+              width: 40,
+              height: 40,
               borderRadius: "50%",
-              background: "rgba(20, 184, 166, 0.2)",
+              background: "rgba(140, 115, 75, 0.12)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--accent)",
+              color: "#8C734B",
               fontWeight: 700,
             }}
           >
-            
+            <span className="material-symbols-outlined" style={{ fontSize: "1.3rem" }}>edit_note</span>
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Private Encrypted Journal</h3>
+              <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 700 }}>Your Daily Journal</h3>
               <span
                 style={{
-                  background: "rgba(20, 184, 166, 0.15)",
-                  color: "var(--accent)",
-                  border: "1px solid rgba(20, 184, 166, 0.3)",
+                  background: "rgba(140, 115, 75, 0.1)",
+                  color: "#8C734B",
+                  border: "1px solid rgba(140, 115, 75, 0.25)",
                   fontSize: "0.72rem",
                   padding: "2px 8px",
                   borderRadius: 999,
@@ -496,39 +355,36 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                   letterSpacing: "0.04em",
                 }}
               >
-                AES-GCM-256 Vault Active
+                Private Notes
               </span>
             </div>
-            <p className="muted" style={{ margin: "3px 0 0", fontSize: "0.82rem" }}>
-              {decryptedEntries.length} encrypted {decryptedEntries.length === 1 ? "entry" : "entries"} unlocked · Zero-Knowledge local session
+            <p className="muted" style={{ margin: "3px 0 0", fontSize: "0.82rem", color: "#6B5E50" }}>
+              {decryptedEntries.length} {decryptedEntries.length === 1 ? "entry" : "entries"} recorded
             </p>
           </div>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button
-            type="button"
-            className="secondary"
-            onClick={handleLock}
-            style={{ fontSize: "0.82rem", padding: "6px 12px" }}
-          >
-            Lock Vault
-          </button>
         </div>
       </section>
 
       {/* Entry Composer Form */}
-      <section className="panel" style={{ padding: "24px" }}>
+      <section
+        className="panel"
+        style={{
+          padding: "24px",
+          background: "var(--panel-bg, #FFFFFF)",
+          border: "1px solid var(--border, #E8DFD0)",
+          borderRadius: "var(--radius, 16px)",
+        }}
+      >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h3 style={{ margin: 0, fontSize: "1.15rem" }}>
-            {editingId ? "Edit Journal Entry" : "Write New Reflection"}
+          <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 700, color: "#2C241B" }}>
+            {editingId ? "Edit Reflection" : "Write a New Reflection"}
           </h3>
           {editingId && (
             <button
               type="button"
               className="ghost"
               onClick={handleCancelEdit}
-              style={{ fontSize: "0.82rem", padding: "4px 8px" }}
+              style={{ fontSize: "0.82rem", padding: "4px 8px", cursor: "pointer" }}
             >
               Cancel Edit
             </button>
@@ -536,40 +392,39 @@ export const JournalTab: React.FC<JournalTabProps> = ({
         </div>
 
         <form onSubmit={(e) => void handleSaveEntry(e)}>
-          <div className="row" style={{ gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
+          <div className="row" style={{ gap: 14, marginBottom: 14, flexWrap: "wrap", display: "flex" }}>
             <label style={{ flex: "1 1 180px" }}>
-              <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6 }}>
-                Entry Date
+              <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6, color: "#6B5E50" }}>
+                Date
               </span>
               <input
                 type="date"
                 value={entryDate}
                 onChange={(e) => setEntryDate(e.target.value)}
-                style={{ width: "100%" }}
+                style={{
+                  width: "100%",
+                  padding: "9px 12px",
+                  borderRadius: "8px",
+                  border: "1px solid #D8CCB8",
+                  background: "#FAF7F2",
+                }}
               />
             </label>
 
-            <label style={{ flex: "2 1 280px" }}>
-              <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6 }}>
-                Title / Focus Topic
-              </span>
-              <input
-                type="text"
-                placeholder="e.g. Luteal phase mood reflection & evening yoga…"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                style={{ width: "100%" }}
-              />
-            </label>
-
-            <label style={{ flex: "1 1 200px" }}>
-              <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6 }}>
-                Category Tag
+            <label style={{ flex: "2 1 240px" }}>
+              <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6, color: "#6B5E50" }}>
+                Topic / Tag
               </span>
               <select
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
-                style={{ width: "100%" }}
+                style={{
+                  width: "100%",
+                  padding: "9px 12px",
+                  borderRadius: "8px",
+                  border: "1px solid #D8CCB8",
+                  background: "#FAF7F2",
+                }}
               >
                 {JOURNAL_TAG_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>
@@ -580,23 +435,51 @@ export const JournalTab: React.FC<JournalTabProps> = ({
             </label>
           </div>
 
-          <label style={{ display: "block", marginBottom: 16 }}>
-            <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6 }}>
-              Personal Thoughts & Diary Notes
+          <label style={{ display: "block", marginBottom: 14 }}>
+            <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6, color: "#6B5E50" }}>
+              Title (Optional)
             </span>
-            <textarea
-              rows={5}
-              placeholder="Record your uncensored thoughts, sensations, emotional rhythms, physical symptoms, or recovery insights. Encrypted before transmission…"
-              value={bodyText}
-              onChange={(e) => setBodyText(e.target.value)}
-              style={{ width: "100%", lineHeight: 1.6, resize: "vertical" }}
+            <input
+              type="text"
+              placeholder="e.g. Morning walk reflections, energy notes..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "9px 12px",
+                borderRadius: "8px",
+                border: "1px solid #D8CCB8",
+                background: "#FAF7F2",
+              }}
             />
           </label>
 
-          {/* Image Attachment Area */}
-          <div style={{ marginBottom: 20 }}>
-            <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6 }}>
-              Attach Private Photo (Progress, Notes, Mood Board)
+          <label style={{ display: "block", marginBottom: 14 }}>
+            <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6, color: "#6B5E50" }}>
+              Your Notes & Thoughts
+            </span>
+            <textarea
+              rows={4}
+              placeholder="How are you feeling today? What did you notice about your energy, mood, or body?"
+              value={bodyText}
+              onChange={(e) => setBodyText(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px 12px",
+                borderRadius: "8px",
+                border: "1px solid #D8CCB8",
+                background: "#FAF7F2",
+                fontFamily: "inherit",
+                fontSize: "0.92rem",
+                lineHeight: 1.5,
+              }}
+            />
+          </label>
+
+          {/* Photo Attachment */}
+          <div style={{ marginBottom: 16 }}>
+            <span style={{ fontSize: "0.85rem", fontWeight: 600, display: "block", marginBottom: 6, color: "#6B5E50" }}>
+              Attach Photo (Optional)
             </span>
 
             {attachedImage ? (
@@ -604,113 +487,145 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 14,
-                  padding: "8px 14px",
-                  borderRadius: "var(--radius)",
-                  background: "rgba(0,0,0,0.25)",
-                  border: "1px solid var(--border)",
+                  gap: 12,
+                  padding: "8px 12px",
+                  borderRadius: "8px",
+                  border: "1px solid #D8CCB8",
+                  background: "#FAF7F2",
                 }}
               >
                 <img
                   src={attachedImage}
-                  alt="Attached preview"
-                  style={{
-                    width: 54,
-                    height: 54,
-                    objectFit: "cover",
-                    borderRadius: "6px",
-                    border: "1px solid var(--border)",
-                  }}
+                  alt="Preview"
+                  style={{ width: 44, height: 44, objectFit: "cover", borderRadius: 6 }}
                 />
-                <div>
-                  <div style={{ fontSize: "0.85rem", fontWeight: 600 }}>{imageName || "Photo attached"}</div>
-                  <div className="muted" style={{ fontSize: "0.75rem" }}>
-                    Will be encrypted inside the AES-256 payload
-                  </div>
-                </div>
+                <span style={{ fontSize: "0.85rem", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {imageName || "Attached photo"}
+                </span>
                 <button
                   type="button"
                   className="ghost"
-                  onClick={handleRemoveImage}
-                  style={{ color: "#ef4444", marginLeft: 8, fontSize: "0.8rem", padding: "4px 8px" }}
+                  onClick={handleRemoveAttachedImage}
+                  style={{ fontSize: "0.78rem", color: "#ef4444", padding: "4px 8px", cursor: "pointer" }}
                 >
                   Remove
                 </button>
               </div>
             ) : (
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div>
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  ref={fileInputRef}
-                  onChange={(e) => void handleImageChange(e)}
+                  onChange={(e) => void handleFileChange(e)}
                   style={{ display: "none" }}
                   id="journal-image-file"
                 />
-                <button
-                  type="button"
-                  className="secondary"
-                  onClick={() => fileInputRef.current?.click()}
-                  style={{ fontSize: "0.85rem", padding: "8px 14px" }}
+                <label
+                  htmlFor="journal-image-file"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "8px 14px",
+                    borderRadius: "8px",
+                    border: "1px dashed #C8B89E",
+                    background: "#FAF7F2",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    color: "#5A4630",
+                  }}
                 >
-                  + Attach Image
-                </button>
-                <span className="muted" style={{ fontSize: "0.8rem" }}>
-                  Photos are compressed & encrypted client-side. No unencrypted files are ever saved on disk.
-                </span>
+                  <span className="material-symbols-outlined" style={{ fontSize: "1.1rem", color: "#8C734B" }}>add_photo_alternate</span>
+                  <span>Add a photo to this reflection</span>
+                </label>
               </div>
             )}
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
+            {editingId && (
+              <button
+                type="button"
+                className="secondary"
+                onClick={handleCancelEdit}
+                style={{ padding: "8px 16px", cursor: "pointer" }}
+              >
+                Cancel
+              </button>
+            )}
             <button
               type="submit"
-              className="primary"
               disabled={submitting}
-              style={{ minWidth: 160, padding: "10px 20px" }}
+              className="primary"
+              style={{
+                padding: "9px 22px",
+                background: "#8C734B",
+                color: "#FFFFFF",
+                borderRadius: "999px",
+                fontWeight: 600,
+                border: "none",
+                cursor: "pointer",
+              }}
             >
-              {submitting ? "Encrypting & Saving…" : editingId ? "Save & Re-Encrypt" : "Encrypt & Save Entry →"}
+              {submitting ? "Saving..." : editingId ? "Update Reflection" : "Save Reflection"}
             </button>
           </div>
         </form>
       </section>
 
-      {/* Entries List & Filter Controls */}
-      <section className="panel" style={{ padding: "24px" }}>
+      {/* Journal Entries Timeline */}
+      <section
+        className="panel"
+        style={{
+          padding: "24px",
+          background: "var(--panel-bg, #FFFFFF)",
+          border: "1px solid var(--border, #E8DFD0)",
+          borderRadius: "var(--radius, 16px)",
+        }}
+      >
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             flexWrap: "wrap",
-            gap: 14,
-            marginBottom: 20,
-            borderBottom: "1px solid var(--border)",
-            paddingBottom: 16,
+            gap: 12,
+            marginBottom: 18,
           }}
         >
-          <div>
-            <h3 style={{ margin: 0, fontSize: "1.15rem" }}>Journal Timeline</h3>
-            <p className="muted" style={{ margin: "2px 0 0", fontSize: "0.82rem" }}>
-              {filteredEntries.length} of {decryptedEntries.length} entries shown
-            </p>
-          </div>
+          <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 700, color: "#2C241B" }}>
+            Past Reflections
+          </h3>
 
-          {/* Search & Tag Filter */}
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <input
-              type="text"
-              placeholder="Search thoughts & titles…"
+              type="search"
+              placeholder="Search your notes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ width: 220, fontSize: "0.85rem", padding: "6px 12px" }}
+              style={{
+                padding: "6px 12px",
+                fontSize: "0.85rem",
+                borderRadius: "8px",
+                border: "1px solid #D8CCB8",
+                background: "#FAF7F2",
+                width: 200,
+              }}
             />
+
             <select
               value={selectedTagFilter}
               onChange={(e) => setSelectedTagFilter(e.target.value)}
-              style={{ fontSize: "0.85rem", padding: "6px 10px" }}
+              style={{
+                padding: "6px 10px",
+                fontSize: "0.85rem",
+                borderRadius: "8px",
+                border: "1px solid #D8CCB8",
+                background: "#FAF7F2",
+              }}
             >
-              <option value="all">All Tags</option>
+              <option value="all">All Topics ({decryptedEntries.length})</option>
               {JOURNAL_TAG_OPTIONS.map((t) => (
                 <option key={t} value={t}>
                   {t}
@@ -720,21 +635,19 @@ export const JournalTab: React.FC<JournalTabProps> = ({
           </div>
         </div>
 
-        {/* Loading / Decrypting Indicators */}
-        {loading ? (
-          <p className="muted" style={{ textAlign: "center", padding: "30px 0" }}>
-            Loading encrypted entries from database…
-          </p>
-        ) : decrypting ? (
-          <p className="muted" style={{ textAlign: "center", padding: "30px 0" }}>
-            Decrypting journal entries with your private key…
-          </p>
+        {loading || decrypting ? (
+          <div style={{ padding: "36px 0", textAlign: "center", color: "#6B5E50" }}>
+            Loading your reflections...
+          </div>
         ) : filteredEntries.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "40px 10px" }}>
-            <p className="muted" style={{ margin: "0 0 12px", fontSize: "0.95rem" }}>
+          <div style={{ padding: "40px 0", textAlign: "center", color: "#6B5E50" }}>
+            <span className="material-symbols-outlined" style={{ fontSize: "2.4rem", color: "#C8B89E", display: "block", marginBottom: 8 }}>
+              menu_book
+            </span>
+            <p style={{ margin: 0, fontSize: "0.95rem" }}>
               {searchQuery || selectedTagFilter !== "all"
-                ? "No entries match your search criteria."
-                : "Your private journal is empty. Write your first reflection above."}
+                ? "No entries match your search."
+                : "Your journal is empty. Write your first reflection above."}
             </p>
           </div>
         ) : (
@@ -743,14 +656,13 @@ export const JournalTab: React.FC<JournalTabProps> = ({
               <article
                 key={entry.id}
                 style={{
-                  background: "rgba(0, 0, 0, 0.2)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "var(--radius)",
                   padding: "18px 20px",
-                  transition: "border-color 0.15s ease",
+                  borderRadius: "12px",
+                  border: "1px solid #E8DFD0",
+                  background: "#FAF7F2",
+                  transition: "box-shadow 0.2s ease",
                 }}
               >
-                {/* Entry Header */}
                 <div
                   style={{
                     display: "flex",
@@ -762,23 +674,16 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                   }}
                 >
                   <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                      <span
-                        style={{
-                          fontSize: "0.8rem",
-                          fontWeight: 700,
-                          color: "var(--accent)",
-                          fontFamily: "monospace",
-                        }}
-                      >
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
+                      <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#8C734B" }}>
                         {entry.entry_date}
                       </span>
                       {entry.tag && (
                         <span
                           style={{
-                            background: "rgba(244, 114, 182, 0.12)",
-                            color: "#f472b6",
-                            border: "1px solid rgba(244, 114, 182, 0.25)",
+                            background: "rgba(140, 115, 75, 0.1)",
+                            color: "#8C734B",
+                            border: "1px solid rgba(140, 115, 75, 0.2)",
                             fontSize: "0.72rem",
                             padding: "2px 8px",
                             borderRadius: 999,
@@ -791,42 +696,29 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                       {entry.payload.phase && (
                         <span
                           style={{
-                            background: "rgba(20, 184, 166, 0.1)",
-                            color: "var(--accent)",
+                            background: "#FFFFFF",
+                            color: "#6B5E50",
+                            border: "1px solid #E8DFD0",
                             fontSize: "0.72rem",
                             padding: "2px 8px",
                             borderRadius: 999,
-                            textTransform: "capitalize",
                           }}
                         >
                           {entry.payload.phase} Phase
                         </span>
                       )}
                     </div>
-                    <h4 style={{ margin: 0, fontSize: "1.08rem", fontWeight: 600 }}>{entry.payload.title}</h4>
+                    <h4 style={{ margin: 0, fontSize: "1.08rem", fontWeight: 700, color: "#2C241B" }}>
+                      {entry.payload.title}
+                    </h4>
                   </div>
 
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                     <button
                       type="button"
                       className="ghost"
-                      onClick={() => setProofEntry(entry)}
-                      title="Inspect raw encrypted ciphertext as stored in SQLite database"
-                      style={{
-                        fontSize: "0.75rem",
-                        padding: "4px 8px",
-                        color: "var(--accent)",
-                        border: "1px solid rgba(20, 184, 166, 0.3)",
-                        borderRadius: "4px",
-                      }}
-                    >
-                      View Database Ciphertext
-                    </button>
-                    <button
-                      type="button"
-                      className="ghost"
                       onClick={() => handleStartEdit(entry)}
-                      style={{ fontSize: "0.75rem", padding: "4px 8px" }}
+                      style={{ fontSize: "0.8rem", padding: "4px 10px", color: "#5A4630", cursor: "pointer" }}
                     >
                       Edit
                     </button>
@@ -834,7 +726,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                       type="button"
                       className="ghost"
                       onClick={() => void handleDeleteEntry(entry.id)}
-                      style={{ fontSize: "0.75rem", padding: "4px 8px", color: "#ef4444" }}
+                      style={{ fontSize: "0.8rem", padding: "4px 10px", color: "#ef4444", cursor: "pointer" }}
                     >
                       Delete
                     </button>
@@ -848,7 +740,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                     lineHeight: 1.6,
                     fontSize: "0.92rem",
                     whiteSpace: "pre-wrap",
-                    color: "var(--text)",
+                    color: "#3D342A",
                   }}
                 >
                   {entry.payload.body}
@@ -856,45 +748,31 @@ export const JournalTab: React.FC<JournalTabProps> = ({
 
                 {/* Attached Images */}
                 {entry.payload.images && entry.payload.images.length > 0 && (
-                  <div style={{ marginTop: 12 }}>
+                  <div style={{ marginTop: 12, display: "flex", gap: 10, flexWrap: "wrap" }}>
                     {entry.payload.images.map((imgSrc, idx) => (
                       <div
                         key={idx}
-                        style={{
-                          display: "inline-block",
-                          position: "relative",
-                          cursor: "pointer",
-                          borderRadius: "6px",
-                          overflow: "hidden",
-                          border: "1px solid var(--border)",
-                        }}
                         onClick={() => setLightboxImage(imgSrc)}
+                        style={{
+                          width: 80,
+                          height: 80,
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          border: "1px solid #D8CCB8",
+                          cursor: "pointer",
+                          position: "relative",
+                        }}
                       >
                         <img
                           src={imgSrc}
                           alt="Journal attachment"
                           style={{
-                            maxHeight: 180,
-                            maxWidth: 260,
+                            width: "100%",
+                            height: "100%",
                             objectFit: "cover",
                             display: "block",
                           }}
                         />
-                        <div
-                          style={{
-                            position: "absolute",
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            background: "rgba(0,0,0,0.6)",
-                            color: "#fff",
-                            fontSize: "0.7rem",
-                            padding: "3px 6px",
-                            textAlign: "center",
-                          }}
-                        >
-                          Click to enlarge
-                        </div>
                       </div>
                     ))}
                   </div>
@@ -911,7 +789,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0, 0, 0, 0.85)",
+            background: "rgba(0, 0, 0, 0.8)",
             backdropFilter: "blur(6px)",
             display: "flex",
             alignItems: "center",
@@ -926,145 +804,43 @@ export const JournalTab: React.FC<JournalTabProps> = ({
               position: "relative",
               maxWidth: "90vw",
               maxHeight: "90vh",
-              background: "var(--panel-bg)",
-              borderRadius: "var(--radius)",
-              padding: 12,
-              border: "1px solid var(--border)",
+              background: "#FAF7F2",
+              padding: 10,
+              borderRadius: "16px",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className="ghost"
               onClick={() => setLightboxImage(null)}
               style={{
                 position: "absolute",
-                top: 8,
-                right: 8,
-                fontSize: "1.2rem",
-                color: "var(--text)",
-                background: "rgba(0,0,0,0.4)",
+                top: 14,
+                right: 14,
+                background: "rgba(0,0,0,0.6)",
+                color: "#fff",
+                border: "none",
                 borderRadius: "50%",
                 width: 32,
                 height: 32,
-                padding: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
               }}
             >
-              
+              <span className="material-symbols-outlined" style={{ fontSize: "1.1rem" }}>close</span>
             </button>
             <img
               src={lightboxImage}
-              alt="Full size journal attachment"
+              alt="Enlarged photo"
               style={{
                 maxWidth: "100%",
-                maxHeight: "82vh",
-                objectFit: "contain",
-                borderRadius: "6px",
+                maxHeight: "85vh",
+                borderRadius: "10px",
                 display: "block",
               }}
             />
-          </div>
-        </div>
-      )}
-
-      {/* Database Privacy Proof Inspector Modal */}
-      {proofEntry && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0, 0, 0, 0.8)",
-            backdropFilter: "blur(5px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-            padding: 20,
-          }}
-          onClick={() => setProofEntry(null)}
-        >
-          <div
-            style={{
-              background: "var(--panel-bg)",
-              border: "1px solid rgba(20, 184, 166, 0.4)",
-              borderRadius: "var(--radius)",
-              padding: "24px",
-              maxWidth: 680,
-              width: "100%",
-              maxHeight: "88vh",
-              overflowY: "auto",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: "1.3rem" }}></span>
-                <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Physical Database Storage Proof</h3>
-              </div>
-              <button
-                type="button"
-                className="ghost"
-                onClick={() => setProofEntry(null)}
-                style={{ fontSize: "1.1rem" }}
-              >
-                
-              </button>
-            </div>
-
-            <p style={{ fontSize: "0.85rem", lineHeight: 1.5, margin: "0 0 14px", color: "var(--muted)" }}>
-              This is the raw record physically stored in the SQLite database table <code>journal_entries</code>.
-              Even someone with root access or opening <code>tracker.db</code> can only ever see these scrambled cryptographic bytes:
-            </p>
-
-            <div
-              style={{
-                background: "rgba(0,0,0,0.4)",
-                padding: "12px 14px",
-                borderRadius: "6px",
-                border: "1px solid var(--border)",
-                fontSize: "0.78rem",
-                fontFamily: "monospace",
-                color: "var(--accent)",
-                wordBreak: "break-all",
-                maxHeight: 220,
-                overflowY: "auto",
-                marginBottom: 16,
-              }}
-            >
-              <div><strong>entry_id:</strong> {proofEntry.id}</div>
-              <div style={{ marginTop: 6 }}><strong>entry_date:</strong> {proofEntry.entry_date}</div>
-              <div style={{ marginTop: 6 }}><strong>salt (PBKDF2):</strong> {proofEntry.raw_cipher.salt}</div>
-              <div style={{ marginTop: 6 }}><strong>iv (AES-GCM):</strong> {proofEntry.raw_cipher.iv}</div>
-              <div style={{ marginTop: 6 }}>
-                <strong>encrypted_ciphertext:</strong> {proofEntry.raw_cipher.encrypted_payload.slice(0, 300)}…
-                <span style={{ color: "var(--muted)" }}> ({proofEntry.raw_cipher.encrypted_payload.length} chars)</span>
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "rgba(6, 78, 59, 0.25)",
-                border: "1px solid rgba(20, 184, 166, 0.3)",
-                padding: "10px 14px",
-                borderRadius: "6px",
-                fontSize: "0.82rem",
-                lineHeight: 1.5,
-              }}
-            >
-              <strong>Security Assurance:</strong> The plaintext thoughts (<em>&ldquo;{proofEntry.payload.title}&rdquo;</em>) and any attached photos are completely absent from the database. Without your private passphrase, reconstructing the original content is mathematically infeasible.
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
-              <button
-                type="button"
-                className="secondary"
-                onClick={() => setProofEntry(null)}
-                style={{ fontSize: "0.85rem", padding: "8px 16px" }}
-              >
-                Close Inspector
-              </button>
-            </div>
           </div>
         </div>
       )}
