@@ -298,24 +298,31 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
           {selectedFanCard && (
             <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#E8DFD0] flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_12px_36px_rgba(215,205,190,0.3)]">
               <div className="flex items-center gap-5">
-                {/* Mini Arched Card Preview */}
-                <div className="w-24 h-36 rounded-t-[2.5rem] rounded-b-xl bg-white p-1.5 shadow-md flex flex-col justify-between items-center text-center border-[1.5px] border-[#D4AF37]/50 flex-shrink-0">
-                  <span className="font-serif text-[11px] text-[#8C734B] font-bold">
-                    {selectedFanCard.numeral}
-                  </span>
-                  <div className="w-full h-16 rounded-t-[2.2rem] rounded-b-sm overflow-hidden border border-[#E8DFD0]">
+                {/* Stitch Card Thumbnail Preview */}
+                <div className="w-24 h-36 rounded-xl bg-[#FAF7F2] overflow-hidden shadow-md border-[1.5px] border-[#E2D7C5] flex-shrink-0 flex items-center justify-center">
+                  {selectedFanCard.fullCardUrl ? (
                     <img
-                      src={selectedFanCard.artUrl}
+                      src={selectedFanCard.fullCardUrl}
                       alt={selectedFanCard.name}
                       className="w-full h-full object-cover object-top"
-                      style={{
-                        filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
-                      }}
                     />
-                  </div>
-                  <span className="font-serif text-[10px] text-[#2C2825] font-bold truncate max-w-[80px]">
-                    {selectedFanCard.name}
-                  </span>
+                  ) : (
+                    <div className="w-full h-full p-1 flex flex-col justify-between items-center text-center">
+                      <span className="font-serif text-[10px] text-[#8C734B] font-bold">
+                        {selectedFanCard.numeral}
+                      </span>
+                      <div className="w-full h-20 rounded-lg overflow-hidden border border-[#C8B89E]/40">
+                        <img
+                          src={selectedFanCard.artUrl}
+                          alt={selectedFanCard.name}
+                          className="w-full h-full object-cover object-top"
+                        />
+                      </div>
+                      <span className="font-serif text-[10px] text-[#2C241B] font-bold truncate max-w-[80px]">
+                        {selectedFanCard.name}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Card Details */}
@@ -410,24 +417,32 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                   </span>
                 </div>
 
-                {/* Art Nouveau Arched Window */}
-                <div className="w-full rounded-t-[2.2rem] rounded-b-lg border border-[#D4AF37]/45 p-0.5 bg-[#FAF7F2] shadow-inner mb-2">
-                  <div className="w-full h-28 rounded-t-[2rem] rounded-b-md overflow-hidden relative">
+                {/* Card Artwork (Stitch Design or Inspired Art) */}
+                {card.fullCardUrl ? (
+                  <div className="w-full h-36 rounded-xl overflow-hidden relative shadow-inner mb-2 border border-[#E0D5C3]">
                     <img
-                      src={card.artUrl}
+                      src={card.fullCardUrl}
                       alt={card.name}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                      style={{
-                        filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
-                      }}
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-transparent to-transparent pointer-events-none" />
-                    <span className="absolute bottom-1 left-2 text-[9px] text-[#4A423A] font-serif italic truncate max-w-[90%]">
-                      {card.artArtist.split(',')[0]}
-                    </span>
                   </div>
-                </div>
+                ) : (
+                  <div className="w-full rounded-xl border border-[#D8CCB8] p-1 bg-[#FAF7F2] shadow-inner mb-2 relative">
+                    <div className="w-full h-28 rounded-lg overflow-hidden relative">
+                      <img
+                        src={card.artUrl}
+                        alt={card.name}
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                      <span className="absolute bottom-1 left-1.5 text-[9px] text-white font-serif italic truncate max-w-[90%]">
+                        {card.artArtist.split(',')[0]}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 <div className="w-full">
                   <h4 className="font-serif text-xs font-bold text-[#2C2825] truncate tracking-wide">
@@ -473,34 +488,35 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               </span>
             </div>
 
-            {/* Large Art Nouveau Arched Window Frame */}
-            <div className="w-full rounded-t-[3.5rem] rounded-b-xl border-[1.5px] border-[#D4AF37]/50 p-1 bg-gradient-to-b from-[#FDFBF7] to-[#F8F5EE] shadow-inner">
-              <div className="w-full h-64 rounded-t-[3.2rem] rounded-b-lg border border-[#C5A059]/30 overflow-hidden relative">
+            {/* Inspect Card Artwork (Full Stitch Card or Inspired Artwork) */}
+            {inspectCard.fullCardUrl ? (
+              <div className="w-full rounded-2xl overflow-hidden relative shadow-lg border-[1.5px] border-[#E2D7C5] bg-[#FAF7F2] max-h-[420px] flex items-center justify-center">
                 <img
-                  src={inspectCard.artUrl}
+                  src={inspectCard.fullCardUrl}
                   alt={inspectCard.name}
-                  className="w-full h-full object-cover object-top"
-                  style={{
-                    filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
-                  }}
+                  className="w-full h-full object-contain max-h-[420px]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/20 to-transparent pointer-events-none" />
-
-                {/* Starlight spark at apex */}
-                <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm border border-[#D4AF37]/40 flex items-center justify-center text-[#8C734B] shadow-sm">
-                  <span className="material-symbols-outlined text-sm">auto_awesome</span>
-                </div>
-
-                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[#2C2825]">
-                  <span className="font-serif italic text-xs tracking-wide text-[#4A423A] bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-[#E8DFD0]">
-                    {inspectCard.artArtist}
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-[10px] font-semibold uppercase tracking-wider text-[#8C734B] border border-[#D4AF37]/30">
-                    {inspectCard.theme}
-                  </span>
+              </div>
+            ) : (
+              <div className="w-full rounded-2xl border-[1.5px] border-[#D8CCB8] p-2 bg-[#FAF7F2] shadow-inner relative">
+                <div className="w-full h-64 rounded-xl overflow-hidden relative shadow-sm border border-[#C8B89E]/50">
+                  <img
+                    src={inspectCard.artUrl}
+                    alt={inspectCard.name}
+                    className="w-full h-full object-cover object-top"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+                    <span className="font-serif italic text-xs tracking-wide text-white/95">
+                      {inspectCard.artArtist}
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-md text-[10px] font-semibold uppercase tracking-wider text-white border border-white/30">
+                      {inspectCard.theme}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div>
               <h3 className="font-serif text-2xl font-bold text-[#2C2825] tracking-wide">

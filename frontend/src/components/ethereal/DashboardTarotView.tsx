@@ -473,36 +473,42 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
               </div>
 
               <div className="flex flex-col sm:flex-row gap-5 items-center">
-                {/* Art Nouveau Arched Window Frame (Ethereal Bloom White/Gold) */}
+                {/* Stitch Card Graphic (Exact Stitch Design or Inspired Art) */}
                 <div
-                  className="w-36 h-52 rounded-t-[3.2rem] rounded-b-xl border-[1.5px] border-[#D4AF37]/50 p-1 bg-gradient-to-b from-[#FDFBF7] to-[#F8F5EE] shadow-md flex-shrink-0 group cursor-pointer"
+                  className="w-36 h-56 sm:w-44 sm:h-64 rounded-2xl overflow-hidden relative shadow-md border-[1.5px] border-[#E2D7C5] bg-[#FAF7F2] flex-shrink-0 group cursor-pointer transition-transform duration-500 hover:scale-102"
                   onClick={() => setTarotModalOpen(true)}
                 >
-                  <div className="w-full h-full rounded-t-[2.9rem] rounded-b-lg border border-[#C5A059]/30 overflow-hidden relative">
+                  {focusCard.fullCardUrl ? (
                     <img
-                      src={focusCard.artUrl}
+                      src={focusCard.fullCardUrl}
                       alt={focusCard.name}
-                      className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                      style={{
-                        filter: "brightness(1.12) contrast(0.92) saturate(0.55) sepia(0.08)",
-                      }}
+                      className="w-full h-full object-cover object-top"
+                      loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/20 to-transparent pointer-events-none" />
-
-                    {/* Starlight apex spark */}
-                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm border border-[#D4AF37]/40 flex items-center justify-center text-[#8C734B] shadow-sm">
-                      <span className="material-symbols-outlined text-xs">auto_awesome</span>
-                    </div>
-
-                    <div className="absolute bottom-2 left-2 right-2 text-center">
-                      <span className="font-serif font-bold text-xs block text-[#2C2825] tracking-wide">
-                        {focusCard.name}
+                  ) : (
+                    <div className="w-full h-full p-2 flex flex-col justify-between relative bg-[#FAF7F2]">
+                      <div className="absolute inset-1 rounded-xl border border-[#D8CCB8] pointer-events-none" />
+                      <span className="font-serif text-[11px] text-[#8C734B] text-center font-bold tracking-widest pt-0.5 z-10">
+                        — {focusCard.numeral} —
                       </span>
-                      <span className="text-[9px] text-[#4A423A] font-serif italic block truncate">
-                        {focusCard.artArtist.split(",")[0]}
-                      </span>
+                      <div className="w-full h-36 rounded-xl overflow-hidden relative border border-[#C8B89E]/50 my-1 z-10 shadow-sm">
+                        <img
+                          src={focusCard.artUrl}
+                          alt={focusCard.name}
+                          className="w-full h-full object-cover object-top"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="text-center pb-0.5 z-10">
+                        <span className="font-serif font-bold text-xs block text-[#2C241B] tracking-wider truncate">
+                          {focusCard.name}
+                        </span>
+                        <span className="font-serif italic text-[10px] text-[#6B5E50] block truncate">
+                          "{focusCard.quote || focusCard.subtitle}"
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Card Wisdom */}
