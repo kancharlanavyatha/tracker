@@ -1,256 +1,151 @@
-# Menstrual Health Tracker (FYP)
+# SELENE: Phase-Intelligent Health, Energy & Training Sanctuary
 
-A full-stack menstrual health app: **PostgreSQL → FastAPI → React**. Log cycles, symptoms, and wearable data; get phase estimates, workout/diet recommendations, analytics, and in-app alerts.
+SELENE is a full-stack, phase-intelligent cyclical health sanctuary. Built with FastAPI (Python 3.10+) and React 18 (TypeScript + Vite), SELENE aligns daily workouts, nutrition, biometrics, and mental reflection with natural hormonal rhythms.
 
 **Repository:** [github.com/kancharlanavyatha/tracker](https://github.com/kancharlanavyatha/tracker)
 
 ---
 
-## What this project does
+## Highlights & Features
 
-| Feature | Status |
-|---------|--------|
-| User registration & dashboard | Working |
-| Cycle, symptom, wearable logging | Working |
-| Phase estimation (median cycle + calendar rules) | Working |
-| Training intensity score (sklearn or rule fallback) | Working |
-| Diet recommendations (JSON knowledge base) | Working |
-| Workout templates by phase | Working |
-| Analytics charts | Working |
-| Phase-change notifications (scheduler) | Working |
-| AI chat assistant (Ollama, optional) | Working with fallback |
-| ESP32 wearable demo firmware | Sample sketch included |
+### 1. Daily Cycle & Energy Mapping
+- Automatically calculates and tracks Menstrual, Follicular, Ovulatory, and Luteal phases.
+- Calculates estimated cycle days, next predicted cycle windows, and hormonal phase transitions.
+- Quick period logging with flow intensity tracking (Light, Medium, Moderate, Heavy, Very Heavy).
 
----
+### 2. Ethereal Bloom Tarot Card System
+- Features all 22 Major Arcana cards styled in an archival cream and white aesthetic with delicate gold accents and Art Nouveau olive-branch arches.
+- Directly incorporates user Stitch design cards (The High Priestess, The Empress, The Alchemist, The Star, The Moon) alongside bespoke poetic archetypes for all 22 cards.
+- Interactive deck views: Daily Phase Card, 3-Card Cycle Spread, Interactive Deck Fan with fluid hover elevation, and a 22-Card Major Arcana Gallery with full inspect modals.
 
-## Tech stack
+### 3. Daily Journal & Reflections (Unlocked & Frictionless)
+- Clean, open, everyday journaling space with zero locks, PINs, or passphrases.
+- Add daily notes, categorize by topics (Rest & Sleep, Emotional Wellbeing, Workouts & Movement, Body & Symptoms, Food & Cravings), and attach photos.
+- Full text search and topic filters.
+- Client-side encryption functions transparently under the hood to ensure privacy while maintaining immediate accessibility.
 
-- **Database:** PostgreSQL 16 (Docker)
-- **Backend:** Python 3.10+, FastAPI, SQLAlchemy, scikit-learn, APScheduler
-- **Frontend:** React 18, TypeScript, Vite
-- **Firmware:** ESP32 (Arduino) sample for wearable sync
+### 4. Movement & Workout Guidance
+- Workout intensity prescriptions (30% to 95%) tailored to your active phase.
+- Clear guidance for restorative movement, progressive strength, peak velocity, and Zone 2 endurance.
 
----
+### 5. Daily Fuel & Nutrition Protocols
+- Tailored meal ideas and macro suggestions aligned with metabolic shifts across each phase.
+- Step-by-step recipe modals with clear ingredient lists and culinary preparation steps.
 
-## Prerequisites
-
-Install these before you start:
-
-| Tool | Version | Purpose |
-|------|---------|---------|
-| [Docker Desktop](https://www.docker.com/products/docker-desktop/) | Latest | Runs PostgreSQL |
-| [Python](https://www.python.org/downloads/) | 3.10+ | Backend API |
-| [Node.js](https://nodejs.org/) | 20+ | Frontend UI |
-
-Optional:
-
-- [Ollama](https://ollama.com) — local LLM for the Assistant tab
-- [Arduino IDE](https://www.arduino.cc/en/software) — ESP32 firmware
+### 6. Biometrics, Wearable Sync & ESP32 Firmware
+- Biometric charts for Resting Heart Rate (RHR), Heart Rate Variability (HRV), and SpO2.
+- Wearable sync endpoint (`/api/v1/wearable-sync`) and ready-to-flash ESP32 Arduino firmware (`firmware/esp32_wearable/`).
 
 ---
 
-## Quick start (Windows)
+## Quick Start (Windows)
 
-Open **three terminals** from the project root.
+You can launch both the backend API and frontend interface with a single command:
 
-### Terminal 1 — Database
-
-```powershell
-docker compose up -d
+```cmd
+.\run_app.bat
 ```
 
-Wait until Postgres is healthy (`docker compose ps`).
+This automated launcher:
+1. Cleans up any orphaned processes holding port 8000.
+2. Activates the Python virtual environment (`backend/.venv`).
+3. Starts the FastAPI server on `http://127.0.0.1:8000`.
+4. Automatically opens your default web browser to the SELENE dashboard.
 
-### Terminal 2 — Backend
+### Frictionless Sign-In
+- Enter any email and password on the login screen.
+- Auto-onboarding creates your account instantly, so you can test or use the app immediately without manual setup.
+- Alternatively, click **Instant Demo Access** for one-click access.
 
+---
+
+## Manual Development Setup
+
+If you prefer running services individually:
+
+### Backend
 ```powershell
 cd backend
-Copy-Item .env.example .env
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
+- API Docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- Health Check: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
 
-API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)  
-Health check: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
-
-### Terminal 3 — Frontend
-
+### Frontend
 ```powershell
 cd frontend
 npm install
 npm run dev
 ```
+- Frontend Dev Server: [http://localhost:5173](http://localhost:5173)
 
-Open [http://localhost:5173](http://localhost:5173), register with your email, then explore the tabs.
-
----
-
-## Quick start (macOS / Linux)
-
-```bash
-# Terminal 1
-docker compose up -d
-
-# Terminal 2
-cd backend
-cp .env.example .env
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-
-# Terminal 3
+### Production Build
+```powershell
 cd frontend
-npm install
-npm run dev
+npm run build
 ```
+The compiled files are automatically served by FastAPI from `backend/app/static/`.
 
 ---
 
-## Environment variables
-
-Copy `backend/.env.example` to `backend/.env`:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | `postgresql+psycopg2://cycleapp:cycleapp@localhost:5432/menstrual_health` | Postgres connection string |
-| `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server (optional) |
-| `OLLAMA_MODEL` | `llama3.2` | Model name for chat |
-| `SCHEDULER_ENABLED` | `true` | Background phase notifications every 4 hours |
-
-Set `SCHEDULER_ENABLED=false` if you do not want background jobs during development.
-
----
-
-## Project structure
+## Project Structure
 
 ```
 tracker/
-├── docker-compose.yml       # PostgreSQL
+├── run_app.bat                      # One-click Windows launch script
+├── run_app.ps1                      # PowerShell runner
 ├── backend/
 │   ├── app/
-│   │   ├── main.py          # FastAPI entry point
-│   │   ├── models.py        # Database tables
-│   │   ├── routers/         # API endpoints
-│   │   ├── services/        # Phase, ML, diet, workouts, scheduler
-│   │   └── knowledge_base/  # Diet JSON by cycle phase
-│   ├── scripts/
-│   │   └── train_models.py  # Train intensity regressor
-│   ├── artifacts/           # Saved ML model (generated locally)
-│   ├── requirements.txt
-│   └── .env.example
+│   │   ├── main.py                  # FastAPI application entry point
+│   │   ├── config.py                # App configuration and database path
+│   │   ├── database.py              # SQLAlchemy engine and session setup
+│   │   ├── models.py                # Database models
+│   │   ├── routers/                 # API routers (auth, journal, cycles, etc.)
+│   │   ├── services/                # Business logic, ML models, guidance
+│   │   ├── static/                  # Production frontend build & tarot card art
+│   │   └── knowledge_base/          # Nutritional & phase protocols
+│   ├── artifacts/                   # Trained ML models and evaluation metrics
+│   └── requirements.txt             # Python dependencies
 ├── frontend/
-│   └── src/
-│       ├── App.tsx          # Main UI (tabs)
-│       ├── api.ts           # API client
-│       └── components/
-└── firmware/
-    └── esp32_wearable/      # Sample ESP32 sketch
+│   ├── public/tarot/                # 22 Major Arcana card image assets
+│   ├── src/
+│   │   ├── App.tsx                  # Top-level application shell and navigation
+│   │   ├── api.ts                   # Backend API client
+│   │   ├── components/
+│   │   │   ├── JournalTab.tsx       # Unlocked Daily Journal & Reflections
+│   │   │   ├── CycleCalendar.tsx    # Cycle mapping calendar & reminders
+│   │   │   ├── ProfileModal.tsx     # Athlete profile editor
+│   │   │   ├── RecipeModal.tsx      # Culinary recipe instructions
+│   │   │   └── ethereal/            # Ethereal Bloom Tarot & Dashboard views
+│   │   ├── data/tarotDeck.ts        # Tarot deck definitions, archetypes & quotes
+│   │   └── utils/cryptoVault.ts     # Client-side encryption utilities
+│   └── package.json                 # Frontend dependencies and build scripts
+├── firmware/
+│   └── esp32_wearable/              # ESP32 wearable sensor firmware
+└── docs/
+    ├── final_project_docs/          # Project synopsis, research paper drafts & hardware docs
+    ├── tarot_design_stitch/         # Source Stitch tarot card design exports
+    ├── stitch_ui_design/            # Source Stitch UI design archives
+    ├── HARDWARE_DEVELOPER_GUIDE.md  # Comprehensive hardware sensor guide
+    ├── RESEARCH_PAPER_FINAL_CORRECTED.md # Full academic research paper text
+    └── VS_CODE_DEMO_GUIDE.md        # VS Code launch and demo instructions
 ```
 
 ---
 
-## Using the app
+## Documentation & Design Archives
 
-1. **Register** — enter email on the first tab; your user ID is saved in the browser.
-2. **Log data** — add period start dates, mood/fatigue, and optional wearable readings.
-3. **Dashboard** — view current phase estimate and summary.
-4. **Plans** — click **Run recommendation** for diet + workout suggestions.
-5. **Analytics** — cycle length, mood/fatigue, and HRV trends.
-6. **Alerts** — in-app notifications when your estimated phase changes.
-7. **Assistant** — chat; uses Ollama if running, otherwise a stub reply.
+Detailed project documentation and original design assets are organized in the `docs/` directory:
 
----
-
-## Train the ML model (optional)
-
-The app predicts a **training intensity score** (30–95) from phase, HRV, SpO₂, resting HR, mood, and fatigue.
-
-**Without a trained model**, the API uses built-in rules (`rule_fallback_pending_xgboost`).
-
-**To train** (uses synthetic demo data until you add a real CSV):
-
-```powershell
-cd backend
-.\.venv\Scripts\Activate.ps1
-python scripts/train_models.py
-```
-
-This creates `backend/artifacts/intensity_gb.joblib`. Restart the API, then run a recommendation — `intensity_source` should show `sklearn_gradient_boosting_regressor`.
-
-### Model inputs
-
-| Feature | Source |
-|---------|--------|
-| Phase (one-hot) | Estimated from cycle history |
-| `hrv_ms`, `spo2_pct`, `resting_hr` | Latest wearable sync |
-| `fatigue`, `mood` | Latest symptom log |
-
-For a real FYP dataset, collect rows with an `intensity_score` label (survey, workout RPE, or pseudo-labels) and extend `train_models.py` to read a CSV. See the training section in your project notes or ask in issues.
-
----
-
-## API overview
-
-Base URL: `http://127.0.0.1:8000/api/v1`
-
-| Area | Endpoints |
-|------|-----------|
-| Health | `GET /health` |
-| Users | `POST /users/`, `GET /users/{user_id}` |
-| Cycles | `POST /cycles/`, `GET /cycles/recent` |
-| Symptoms | `POST /symptom-logs/` |
-| Wearables | `POST /wearable-sync` |
-| ML / guidance | `POST /predict-phase`, `POST /recommend`, `POST /chat` |
-| Dashboard | `GET /dashboard/{user_id}` |
-| Analytics | `GET /analytics/{user_id}/cycles`, `/symptoms`, `/wearables` |
-| Notifications | `GET /notifications?user_id=`, `PATCH /notifications/{id}?user_id=` |
-
----
-
-## ESP32 wearable prototype
-
-Flash `firmware/esp32_wearable/esp32_wearable.ino` to an ESP32. Update Wi‑Fi credentials and set the API URL to your laptop’s LAN IP (the machine running uvicorn), e.g. `http://192.168.1.10:8000/api/v1/wearable-sync`.
-
-The sample sends demo vitals via HTTP POST. Replace with real sensor reads for production use.
-
----
-
-## Optional: local LLM (Ollama)
-
-```powershell
-# Install Ollama from https://ollama.com, then:
-ollama pull llama3.2
-```
-
-Ensure `OLLAMA_BASE_URL` and `OLLAMA_MODEL` in `backend/.env` match your setup. Restart the backend. The Assistant tab will use Ollama instead of the stub.
-
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| `Connection refused` on API | Start backend: `uvicorn app.main:app --reload --port 8000` |
-| Database errors | Run `docker compose up -d` and check `DATABASE_URL` in `.env` |
-| Frontend cannot reach API | Vite proxies `/api` to port 8000; keep backend on 8000 |
-| `rule_fallback_pending_xgboost` | Run `python scripts/train_models.py` and restart API |
-| Scheduler noise in logs | Set `SCHEDULER_ENABLED=false` in `.env` |
-| CORS errors | Backend allows `http://localhost:5173` by default |
-
----
-
-## Development notes
-
-- **Phase prediction** uses median cycle length and proportional phase windows (LSTM planned for future work).
-- **Intensity model** uses sklearn `GradientBoostingRegressor`; XGBoost can replace it when real training data is ready.
-- **Auth** is minimal (UUID in localStorage); add JWT/login for production.
-- **No Alembic migrations yet** — schema is created on startup via SQLAlchemy `create_all()`.
+- **Project Synopsis & Research Papers:** Located in `docs/final_project_docs/` (`Project Synopsis Format.docx`, `Research paper draft.pdf`, `research paper approach.docx`).
+- **Hardware Documentation:** Located in `docs/HARDWARE_DEVELOPER_GUIDE.md` and `docs/final_project_docs/` (`hardware components.docx`, `hardware_functionality.docx`).
+- **Tarot & UI Design Sources:** Original Stitch UI and Tarot card exports located in `docs/tarot_design_stitch/` and `docs/stitch_ui_design/`.
 
 ---
 
 ## License
 
-Academic / FYP project
+Academic / Final Year Project (FYP). All rights reserved.
