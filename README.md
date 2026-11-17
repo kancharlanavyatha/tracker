@@ -146,6 +146,17 @@ Detailed project documentation and original design assets are organized in the `
 
 ---
 
+---
+
+## Development Team & Contributors
+
+- **K. Lakshmi Navyatha** ([@kancharlanavyatha](https://github.com/kancharlanavyatha)) - Project Lead, Frontend Architecture & ML Modeling
+- **Keerthana D.** ([@KeerthanaD-2005](https://github.com/KeerthanaD-2005)) - Android Integration, API & Telemetry Testing
+- **Manasa C.** - Hardware Firmware & Clinical Validation
+- **Prof. Anusha B.** - Project Guide & Faculty Mentor
+
+---
+
 ## License
 
 Academic / Final Year Project (FYP). All rights reserved.
