@@ -1,0 +1,14 @@
+Rank,Feature_Name,Weight,Percentage
+1,p_luteal,0.373791,37.38%
+2,training_intensity_score,0.214106,21.41%
+3,p_menstrual,0.150012,15.00%
+4,p_follicular,0.086943,8.69%
+5,p_ovulatory,0.058923,5.89%
+6,fatigue,0.047379,4.74%
+7,p_unknown,0.023143,2.31%
+8,hrv_ms,0.020959,2.10%
+9,sleep_hours,0.020414,2.04%
+10,resting_hr,0.001437,0.14%
+11,spo2_pct,0.000996,0.10%
+12,mood,0.000955,0.10%
+13,body_weight_kg,0.000943,0.09%

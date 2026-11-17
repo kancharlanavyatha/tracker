@@ -1,0 +1,11 @@
+Rank,Feature_Name,Gini_Gain_Weight,Relative_Percentage
+1,p_follicular,0.671700,67.17%
+2,p_ovulatory,0.199400,19.94%
+3,p_luteal,0.029300,2.93%
+4,p_menstrual,0.028500,2.85%
+5,mood,0.023400,2.34%
+6,fatigue,0.022600,2.26%
+7,hrv_ms,0.015000,1.50%
+8,p_unknown,0.005100,0.51%
+9,resting_hr,0.004500,0.45%
+10,spo2_pct,0.000400,0.04%

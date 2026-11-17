@@ -1,0 +1,5 @@
+True_Phase / Predicted_Phase,Pred_Menstrual,Pred_Follicular,Pred_Ovulatory,Pred_Luteal
+True_Menstrual,212,25,0,0
+True_Follicular,16,535,22,1
+True_Ovulatory,0,46,106,55
+True_Luteal,0,0,21,761

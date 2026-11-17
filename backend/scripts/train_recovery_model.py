@@ -138,7 +138,7 @@ def generate_recovery_dataset(n_samples: int = 12000, seed: int = 42) -> tuple[n
         sleep_debt = (7.5 - sleep_hours) * 1.8
 
         calc_recovery = (strain_hours * phase_mod) + fatigue_penalty + hrv_bonus + sleep_debt
-        noise = rng.normal(0.0, 0.8)
+        noise = rng.normal(0.0, 2.4)
         y_recovery[i] = float(np.clip(calc_recovery + noise, 8.0, 48.0))
 
         # -------------------------------------------------------------------
@@ -153,7 +153,7 @@ def generate_recovery_dataset(n_samples: int = 12000, seed: int = 42) -> tuple[n
 
         # Luteal thermogenic elevation (+180 kcal/day from elevated progesterone)
         luteal_thermogenesis = 180.0 if p_idx == 3 else 0.0
-        tdee = tdee_base + luteal_thermogenesis + rng.normal(0.0, 25.0)
+        tdee = tdee_base + luteal_thermogenesis + rng.normal(0.0, 65.0)
 
         # Protein: 1.4 - 1.9 g/kg (higher in luteal to prevent catabolism)
         protein_factor = 1.8 if p_idx == 3 else (1.6 if intensity > 70 else 1.45)

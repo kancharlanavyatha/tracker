@@ -1,0 +1,48 @@
+{
+  "dataset_source": "FedCycle Real Menstrual Cycle Dataset (1,507 clean cycles / 157 women)",
+  "empirical_stats": {
+    "cycle_length_mean": 29.21,
+    "ovulation_day_mean": 15.97,
+    "luteal_length_mean": 13.24,
+    "menses_length_mean": 5.24
+  },
+  "phase_classification_benchmark": {
+    "total_days_evaluated": 43955,
+    "overall_accuracy": 0.8406,
+    "macro_f1": 0.7716,
+    "mean_ovulation_abs_error_days": 2.07,
+    "mean_luteal_abs_error_days": 2.08,
+    "per_class": {
+      "menstrual": {
+        "precision": 0.935,
+        "recall": 0.891,
+        "f1_score": 0.913,
+        "support_days": 7889
+      },
+      "follicular": {
+        "precision": 0.879,
+        "recall": 0.766,
+        "f1_score": 0.819,
+        "support_days": 13138
+      },
+      "ovulatory": {
+        "precision": 0.435,
+        "recall": 0.435,
+        "f1_score": 0.435,
+        "support_days": 4515
+      },
+      "luteal": {
+        "precision": 0.874,
+        "recall": 0.972,
+        "f1_score": 0.92,
+        "support_days": 18413
+      }
+    }
+  },
+  "metabolic_evaluation": {
+    "mean_real_bmr_kcal": 1343.4,
+    "mean_tdee_follicular_kcal": 2149.5,
+    "mean_tdee_luteal_kcal": 2329.5,
+    "luteal_metabolic_boost_pct": 13.4
+  }
+}

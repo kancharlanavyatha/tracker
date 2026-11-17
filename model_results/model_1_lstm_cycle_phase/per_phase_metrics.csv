@@ -1,0 +1,5 @@
+Phase,Precision,Recall,F1_Score,Support_Samples
+Menstrual,0.9298,0.8945,0.9118,237
+Follicular,0.8828,0.9321,0.9068,574
+Ovulatory,0.7114,0.5121,0.5955,207
+Luteal,0.9315,0.9731,0.9518,782

@@ -1,61 +1,61 @@
 {
   "architecture": "Extreme Gradient Boosted Trees Regressor (XGBRegressor)",
-  "best_iteration": 299,
-  "test_r2": 0.9911,
-  "test_mae": 1.47,
-  "test_rmse": 1.9,
-  "pct_within_3_points": 88.9,
-  "pct_within_5_points": 98.9,
+  "best_iteration": 265,
+  "test_r2": 0.9388,
+  "test_mae": 3.93,
+  "test_rmse": 5.01,
+  "pct_within_3_points": 47.2,
+  "pct_within_5_points": 68.1,
   "feature_importances": [
     {
       "rank": 1,
       "feature": "p_follicular",
-      "importance": 0.688
+      "importance": 0.6717
     },
     {
       "rank": 2,
       "feature": "p_ovulatory",
-      "importance": 0.2182
+      "importance": 0.1994
     },
     {
       "rank": 3,
-      "feature": "p_menstrual",
-      "importance": 0.0242
+      "feature": "p_luteal",
+      "importance": 0.0293
     },
     {
       "rank": 4,
-      "feature": "fatigue",
-      "importance": 0.0194
+      "feature": "p_menstrual",
+      "importance": 0.0285
     },
     {
       "rank": 5,
       "feature": "mood",
-      "importance": 0.0187
+      "importance": 0.0234
     },
     {
       "rank": 6,
-      "feature": "p_luteal",
-      "importance": 0.0129
+      "feature": "fatigue",
+      "importance": 0.0226
     },
     {
       "rank": 7,
       "feature": "hrv_ms",
-      "importance": 0.0125
+      "importance": 0.015
     },
     {
       "rank": 8,
-      "feature": "resting_hr",
-      "importance": 0.0041
+      "feature": "p_unknown",
+      "importance": 0.0051
     },
     {
       "rank": 9,
-      "feature": "p_unknown",
-      "importance": 0.0017
+      "feature": "resting_hr",
+      "importance": 0.0045
     },
     {
       "rank": 10,
       "feature": "spo2_pct",
-      "importance": 0.0002
+      "importance": 0.0004
     }
   ],
   "sample_partitions": {
