@@ -1,0 +1,5 @@
+Phase,Precision,Recall,F1_Score,Clinical_Days_Evaluated
+Menstrual,0.9350,0.8910,0.9130,7889
+Follicular,0.8790,0.7660,0.8190,13138
+Ovulatory,0.4350,0.4350,0.4350,4515
+Luteal,0.8740,0.9720,0.9200,18413
