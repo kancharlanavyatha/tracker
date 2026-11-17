@@ -15,21 +15,21 @@
 - **Validation Protocol**: 10-Fold Stratified Cross Validation + 800-sample unseen test partition
 
 ## Global Evaluation Metrics
-- **Test Accuracy**: **100.00%**
-- **Test Macro F1-Score**: **1.0000**
-- **10-Fold Cross-Validation Accuracy**: **100.00% (std = 0.0000)**
+- **Test Accuracy**: **98.25%**
+- **Test Macro F1-Score**: **0.9825**
+- **10-Fold Cross-Validation Accuracy**: **98.19% (std = 0.0038)**
 
 ## Per-Class Breakdown
 | Domain / Intent | Precision | Recall | F1-Score | Support |
 | :--- | :--- | :--- | :--- | :--- |
-| `nutrition_fuel` | 1.000 | 1.000 | **1.000** | 100 |
+| `nutrition_fuel` | 1.000 | 0.943 | **0.971** | 105 |
 | `training_load` | 1.000 | 1.000 | **1.000** | 100 |
 | `recovery_soreness` | 1.000 | 1.000 | **1.000** | 100 |
-| `symptom_cramps` | 1.000 | 1.000 | **1.000** | 100 |
-| `sleep_insomnia` | 1.000 | 1.000 | **1.000** | 100 |
+| `symptom_cramps` | 0.941 | 1.000 | **0.969** | 95 |
+| `sleep_insomnia` | 0.970 | 0.951 | **0.960** | 102 |
 | `hormone_phase_inquiry` | 1.000 | 1.000 | **1.000** | 100 |
-| `ovulation_fertility` | 1.000 | 1.000 | **1.000** | 100 |
-| `injury_laxity_prevention` | 1.000 | 1.000 | **1.000** | 100 |
+| `ovulation_fertility` | 0.950 | 1.000 | **0.974** | 95 |
+| `injury_laxity_prevention` | 1.000 | 0.971 | **0.985** | 103 |
 
 ## Clinical Significance
 Provides deterministic, zero-hallucination routing of conversational athletic queries to validated clinical literature and deterministic biometric calculations before invoking LLM synthesis.

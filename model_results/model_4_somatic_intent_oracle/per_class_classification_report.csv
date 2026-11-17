@@ -1,11 +1,11 @@
 Intent_Class,Precision,Recall,F1_Score,Test_Support
-nutrition_fuel,1.0000,1.0000,1.0000,100
+nutrition_fuel,1.0000,0.9429,0.9706,105
 training_load,1.0000,1.0000,1.0000,100
 recovery_soreness,1.0000,1.0000,1.0000,100
-symptom_cramps,1.0000,1.0000,1.0000,100
-sleep_insomnia,1.0000,1.0000,1.0000,100
+symptom_cramps,0.9406,1.0000,0.9694,95
+sleep_insomnia,0.9700,0.9510,0.9604,102
 hormone_phase_inquiry,1.0000,1.0000,1.0000,100
-ovulation_fertility,1.0000,1.0000,1.0000,100
-injury_laxity_prevention,1.0000,1.0000,1.0000,100
-macro avg,1.0000,1.0000,1.0000,800
-weighted avg,1.0000,1.0000,1.0000,800
+ovulation_fertility,0.9500,1.0000,0.9744,95
+injury_laxity_prevention,1.0000,0.9709,0.9852,103
+macro avg,0.9826,0.9831,0.9825,800
+weighted avg,0.9832,0.9825,0.9825,800

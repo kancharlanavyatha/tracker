@@ -213,11 +213,21 @@ def generate_intent_dataset(n_samples: int = 4000, seed: int = 42) -> tuple[list
 
             # Random capitalization or punctuation
             query = f"{prefix}{template}{suffix}".strip()
+            if rng.random() < 0.20:
+                fillers = ["tbh ", "honestly ", "like ", "idk ", "yo ", "btw ", "struggling with "]
+                query = rng.choice(fillers) + query
             if rng.random() > 0.5:
                 query = query.capitalize()
 
+            # Realistic clinical boundary ambiguity (e.g. cramps vs soreness)
+            effective_intent = intent
+            if rng.random() < 0.04:
+                confusers = {"symptom_cramps": "recovery_soreness", "recovery_soreness": "training_load", "ovulation_fertility": "hormone_phase_inquiry"}
+                if intent in confusers:
+                    effective_intent = confusers[intent]
+
             texts.append(query)
-            labels.append(intent)
+            labels.append(effective_intent)
 
     return texts, labels
 

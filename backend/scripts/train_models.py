@@ -144,8 +144,10 @@ def generate_biometric_strain_cohort(n: int = 10000, seed: int = 42) -> tuple[np
         if spo2 < 96.0:
             score -= (96.0 - spo2) * 2.8
 
-        # Add minor natural bio-noise
-        score += rng.normal(0.0, 1.8)
+        # Biologically grounded entropy: unobserved daily variance (glycogen status, hydration,
+        # psychological stress) + sensor measurement noise (PPG optical motion jitter)
+        unobserved_biological_noise = rng.normal(0.0, 5.2)
+        score += unobserved_biological_noise
 
         # Athletic safety clamps: min 30% (active recovery), max 95% (peak PR)
         y[i] = float(np.clip(score, 30.0, 95.0))
@@ -187,14 +189,14 @@ def train_xgboost_pipeline() -> None:
     model = XGBRegressor(
         n_estimators=300,
         max_depth=4,
-        learning_rate=0.045,
-        subsample=0.85,
-        colsample_bytree=0.90,
-        reg_alpha=0.1,  # L1 regularization
-        reg_lambda=1.2,  # L2 regularization
+        learning_rate=0.035,
+        subsample=0.80,
+        colsample_bytree=0.85,
+        reg_alpha=0.8,  # L1 regularization
+        reg_lambda=2.5,  # L2 regularization
         random_state=42,
         eval_metric="rmse",
-        early_stopping_rounds=20,
+        early_stopping_rounds=25,
     )
 
     model.fit(

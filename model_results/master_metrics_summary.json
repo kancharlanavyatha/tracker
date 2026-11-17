@@ -299,62 +299,62 @@
   },
   "m2": {
     "architecture": "Extreme Gradient Boosted Trees Regressor (XGBRegressor)",
-    "best_iteration": 299,
-    "test_r2": 0.9911,
-    "test_mae": 1.47,
-    "test_rmse": 1.9,
-    "pct_within_3_points": 88.9,
-    "pct_within_5_points": 98.9,
+    "best_iteration": 265,
+    "test_r2": 0.9388,
+    "test_mae": 3.93,
+    "test_rmse": 5.01,
+    "pct_within_3_points": 47.2,
+    "pct_within_5_points": 68.1,
     "feature_importances": [
       {
         "rank": 1,
         "feature": "p_follicular",
-        "importance": 0.688
+        "importance": 0.6717
       },
       {
         "rank": 2,
         "feature": "p_ovulatory",
-        "importance": 0.2182
+        "importance": 0.1994
       },
       {
         "rank": 3,
-        "feature": "p_menstrual",
-        "importance": 0.0242
+        "feature": "p_luteal",
+        "importance": 0.0293
       },
       {
         "rank": 4,
-        "feature": "fatigue",
-        "importance": 0.0194
+        "feature": "p_menstrual",
+        "importance": 0.0285
       },
       {
         "rank": 5,
         "feature": "mood",
-        "importance": 0.0187
+        "importance": 0.0234
       },
       {
         "rank": 6,
-        "feature": "p_luteal",
-        "importance": 0.0129
+        "feature": "fatigue",
+        "importance": 0.0226
       },
       {
         "rank": 7,
         "feature": "hrv_ms",
-        "importance": 0.0125
+        "importance": 0.015
       },
       {
         "rank": 8,
-        "feature": "resting_hr",
-        "importance": 0.0041
+        "feature": "p_unknown",
+        "importance": 0.0051
       },
       {
         "rank": 9,
-        "feature": "p_unknown",
-        "importance": 0.0017
+        "feature": "resting_hr",
+        "importance": 0.0045
       },
       {
         "rank": 10,
         "feature": "spo2_pct",
-        "importance": 0.0002
+        "importance": 0.0004
       }
     ],
     "sample_partitions": {
@@ -366,32 +366,32 @@
   "m3": {
     "model_name": "Model 3: Endocrine Recovery Kinetics & Metabolic Strain Predictor",
     "recovery_regressor": {
-      "r2_score": 0.9878219366073608,
-      "mae_hours": 0.7537600994110107,
-      "rmse_hours": 0.9397428069918914,
-      "accuracy_within_1hr_pct": 70.91666666666666,
-      "accuracy_within_2hr_pct": 97.08333333333333,
+      "r2_score": 0.9245496392250061,
+      "mae_hours": 1.9379220008850098,
+      "rmse_hours": 2.4194467492231895,
+      "accuracy_within_1hr_pct": 31.333333333333336,
+      "accuracy_within_2hr_pct": 59.166666666666664,
       "feature_importance": {
-        "p_luteal": 0.3828291893005371,
-        "training_intensity_score": 0.22243425250053406,
-        "p_menstrual": 0.16227813065052032,
-        "p_follicular": 0.07358920574188232,
-        "p_ovulatory": 0.05179063230752945,
-        "fatigue": 0.04973631724715233,
-        "sleep_hours": 0.021551456302404404,
-        "hrv_ms": 0.020413625985383987,
-        "p_unknown": 0.014324628747999668,
-        "resting_hr": 0.0005043782875873148,
-        "body_weight_kg": 0.0001853628782555461,
-        "spo2_pct": 0.00018455264216754586,
-        "mood": 0.00017820720677264035
+        "p_luteal": 0.3737910985946655,
+        "training_intensity_score": 0.2141062468290329,
+        "p_menstrual": 0.15001191198825836,
+        "p_follicular": 0.08694267272949219,
+        "p_ovulatory": 0.05892347916960716,
+        "fatigue": 0.04737882688641548,
+        "p_unknown": 0.023142989724874496,
+        "hrv_ms": 0.02095857448875904,
+        "sleep_hours": 0.020414182916283607,
+        "resting_hr": 0.0014366366667672992,
+        "spo2_pct": 0.0009957400616258383,
+        "mood": 0.0009550934773869812,
+        "body_weight_kg": 0.0009425451862625778
       }
     },
     "metabolic_regressor": {
-      "tdee_r2": 0.982170820236206,
-      "tdee_mae_kcal": 20.50205421447754,
-      "protein_mae_g": 2.0577385425567627,
-      "carbs_mae_g": 4.178118705749512
+      "tdee_r2": 0.8965141177177429,
+      "tdee_mae_kcal": 52.01637268066406,
+      "protein_mae_g": 2.057267665863037,
+      "carbs_mae_g": 4.207216739654541
     },
     "test_sample_size": 1200,
     "total_training_samples": 12000
@@ -399,17 +399,17 @@
   "m4": {
     "model_name": "Model 4: Somatic Athletic Dialogue & Intent Engine",
     "architecture": "TF-IDF (1,2 n-grams) + Calibrated Multi-Class Logistic Classifier",
-    "test_accuracy": 1.0,
-    "test_weighted_f1": 1.0,
-    "test_macro_f1": 1.0,
-    "cv_mean_accuracy": 1.0,
-    "cv_std_accuracy": 0.0,
+    "test_accuracy": 0.9825,
+    "test_weighted_f1": 0.9825074156957474,
+    "test_macro_f1": 0.9824940849044925,
+    "cv_mean_accuracy": 0.9818749999999999,
+    "cv_std_accuracy": 0.0037759518667483134,
     "classification_report": {
       "nutrition_fuel": {
         "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 100.0
+        "recall": 0.9428571428571428,
+        "f1-score": 0.9705882352941176,
+        "support": 105.0
       },
       "training_load": {
         "precision": 1.0,
@@ -424,16 +424,16 @@
         "support": 100.0
       },
       "symptom_cramps": {
-        "precision": 1.0,
+        "precision": 0.9405940594059405,
         "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 100.0
+        "f1-score": 0.9693877551020408,
+        "support": 95.0
       },
       "sleep_insomnia": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 100.0
+        "precision": 0.97,
+        "recall": 0.9509803921568627,
+        "f1-score": 0.9603960396039604,
+        "support": 102.0
       },
       "hormone_phase_inquiry": {
         "precision": 1.0,
@@ -442,28 +442,28 @@
         "support": 100.0
       },
       "ovulation_fertility": {
-        "precision": 1.0,
+        "precision": 0.95,
         "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 100.0
+        "f1-score": 0.9743589743589743,
+        "support": 95.0
       },
       "injury_laxity_prevention": {
         "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 100.0
+        "recall": 0.970873786407767,
+        "f1-score": 0.9852216748768473,
+        "support": 103.0
       },
-      "accuracy": 1.0,
+      "accuracy": 0.9825,
       "macro avg": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
+        "precision": 0.9825742574257426,
+        "recall": 0.9830889151777216,
+        "f1-score": 0.9824940849044925,
         "support": 800.0
       },
       "weighted avg": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
+        "precision": 0.9831830445544554,
+        "recall": 0.9825,
+        "f1-score": 0.9825074156957474,
         "support": 800.0
       }
     },
@@ -481,17 +481,7 @@
       [
         0,
         100,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        0,
-        100,
+        3,
         0,
         0,
         0,
@@ -501,8 +491,18 @@
       [
         0,
         0,
+        97,
+        5,
         0,
-        100,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        95,
         0,
         0,
         0,
@@ -524,8 +524,8 @@
         0,
         0,
         0,
-        100,
-        0,
+        99,
+        6,
         0
       ],
       [
@@ -535,7 +535,7 @@
         0,
         0,
         0,
-        100,
+        95,
         0
       ],
       [

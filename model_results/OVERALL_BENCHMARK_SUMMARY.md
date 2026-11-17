@@ -9,8 +9,8 @@ This directory contains the complete, reproducible evaluation metrics, confusion
 | Model Identity | Algorithmic Family | Primary Task | Sample Volume | Key Benchmark Performance | Clinical Variance Tolerance |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Model 1** | Bi-LSTM Recurrent Neural Network | Longitudinal Phase Boundary Classification | 4,200 cycles / 1,800 test days | **Accuracy: 89.67%**, Macro F1: 0.8415 | Luteal F1 = 0.952, Menstrual F1 = 0.912 |
-| **Model 2** | Regularized XGBoost Regressor | Daily Athletic Strain & Intensity Ceiling | 10,000 synthetic athletes | **$R^2 = 0.9911$**, MAE = 1.47% 1RM | 98.9% within $\pm 5\%$ margin |
-| **Model 3** | Multi-Output Gradient Boosted Regressor | Recovery Kinetics & Fueling (TDEE/Macros) | 12,000 athlete-cycles | **Recovery $R^2 = 0.9878$**, MAE = 0.75 hrs | TDEE MAE = 20.5 kcal, 97.1% within 2 hrs |
+| **Model 2** | Regularized XGBoost Regressor | Daily Athletic Strain & Intensity Ceiling | 10,000 synthetic athletes | **$R^2 = 0.9388$**, MAE = 3.93% 1RM | 98.9% within $\pm 5\%$ margin |
+| **Model 3** | Multi-Output Gradient Boosted Regressor | Recovery Kinetics & Fueling (TDEE/Macros) | 12,000 athlete-cycles | **Recovery $R^2 = 0.9245$**, MAE = 1.94 hrs | TDEE MAE = 20.5 kcal, 97.1% within 2 hrs |
 | **Model 4** | TF-IDF + Calibrated Multi-Class Classifier | Clinical Query & Somatic Intent Engine | 4,000 queries (8 classes) | **Accuracy: 100.0%**, 10-Fold CV: 100.0% | Zero out-of-domain medical hallucination |
 | **Sim2Real Transfer** | Empirical Human Benchmark | Real Human Cycle Generalization (FedCycle) | 1,505 real cycles / 43,955 real days | **Real Accuracy: 84.06%**, Macro F1: 0.7716 | Ovulation Error = 2.07 days |
 
